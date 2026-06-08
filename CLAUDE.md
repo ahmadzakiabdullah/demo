@@ -1,57 +1,62 @@
 # CLAUDE.md
 
-Quick instructions for Claude (and similar AI agents) working on the **Demo** project.
+Quick reference for AI agents working on **SportOS**.
 
-> For full instructions, see [AGENTS.md](AGENTS.md). This file is a quick reference.
+> Full instructions: [AGENTS.md](AGENTS.md)
 
 ## Project
 
-- **Demo** — Laravel 13 web app, local at `https://demo.test` via Laragon
-- **Status:** Breeze auth + Inertia/React + shadcn/ui (Phase 1 in progress)
-- **DB:** MySQL `demo` (root, no password)
-- **Path:** `D:\www\demo`, web root `public/`
+- **SportOS** — *The Operating System for Sports Management*
+- Laravel 13 + React + Inertia + shadcn/ui at `https://demo.test`
+- **Phase:** 1 — Foundation (partial; auth + admin users done)
+- **DB:** MySQL `demo` · **Path:** `D:\www\demo`
 
 ## Before Coding
 
-1. Read [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)
-2. Check [ROADMAP.md](ROADMAP.md) for priorities
-3. Check [DATABASE.md](DATABASE.md) for existing schema
+1. [DOCUMENTATION.md](DOCUMENTATION.md) — naming, spec vs code
+2. [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)
+3. [ROADMAP.md](ROADMAP.md) — check current phase
+4. [DATABASE.md](DATABASE.md) — schema
+5. [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) — requirements
 
 ## Key Rules
 
-- Use `php artisan make:*` to scaffold
-- New UI: shadcn/ui (`npx shadcn@latest add <component>`)
-- Pages are React/Inertia in `resources/js/Pages/`
-- Do not extend Breeze legacy `Components/` — use shadcn instead
+- **shadcn/ui only** for UI — no other component libraries
+- Multi-tenant: all domain tables need `organization_id` (when built)
+- API-first: build API resources alongside Inertia pages
 - Migrations for all DB changes
-- Do not edit `vendor/` or `public/build/`
-- Code and documentation in **English**
-- Run `php artisan test` after changes
-- Update `.md` docs if architecture/API/DB/UI changes
-
-## Laragon
-
-Vhost DocumentRoot **must** be `D:/www/demo/public` — not the project root.
+- Do not delete owner: `ahmadzaki@utem.edu.my`
+- Run `php artisan test` + `npm run build` before finishing
+- Update `.md` docs when architecture/API/DB/UI changes
 
 ## Quick Commands
 
 ```powershell
 php artisan migrate
 php artisan test
-php artisan optimize:clear
+npm run build
 npm run dev
 composer run dev
 ```
 
-## Reference Files
+## Documentation
 
 | Topic | File |
 |-------|------|
-| Setup | [README.md](README.md) |
+| Doc index | [DOCUMENTATION.md](DOCUMENTATION.md) |
+| Vision & status | [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) |
+| Product requirements | [PRD.md](PRD.md) |
+| Business requirements | [BRD.md](BRD.md) |
+| Functional spec | [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) |
 | Architecture | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| Database + ERD | [DATABASE.md](DATABASE.md) |
+| API spec | [API.md](API.md) |
+| UI/UX | [UI_UX.md](UI_UX.md) |
+| Security | [SECURITY.md](SECURITY.md) |
+| Deployment | [DEPLOYMENT.md](DEPLOYMENT.md) |
+| Testing | [TESTING.md](TESTING.md) |
+| AI governance | [AI_GOVERNANCE.md](AI_GOVERNANCE.md) |
+| Roadmap | [ROADMAP.md](ROADMAP.md) |
 | Modules | [MODULES.md](MODULES.md) |
-| Database | [DATABASE.md](DATABASE.md) |
-| API | [API.md](API.md) |
-| UI | [UI_UX.md](UI_UX.md) |
-| Plan | [ROADMAP.md](ROADMAP.md) |
+| Setup | [README.md](README.md) |
 | Changelog | [CHANGELOG.md](CHANGELOG.md) |

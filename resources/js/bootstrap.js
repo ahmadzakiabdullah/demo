@@ -1,4 +1,23 @@
 /**
  * Bootstrap any application-wide JavaScript configuration.
- * Inertia handles HTTP requests; extend this file if you add axios or Echo.
  */
+
+const reverbKey = import.meta.env.VITE_REVERB_APP_KEY;
+
+if (reverbKey) {
+    import('laravel-echo').then(({ default: Echo }) => {
+        import('pusher-js').then(({ default: Pusher }) => {
+            window.Pusher = Pusher;
+
+            window.Echo = new Echo({
+                broadcaster: 'reverb',
+                key: reverbKey,
+                wsHost: import.meta.env.VITE_REVERB_HOST,
+                wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
+                wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
+                forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+                enabledTransports: ['ws', 'wss'],
+            });
+        });
+    });
+}

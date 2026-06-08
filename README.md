@@ -1,50 +1,61 @@
-# Demo Project
+# SportOS
 
-**Laravel 13** — A Laravel project using Laragon for local development.
+**The Operating System for Sports Management**
 
-## Project Info
+Enterprise-grade, multi-tenant sports management platform built with Laravel 13, React, Inertia.js, and shadcn/ui.
 
-| Item              | Details                          |
-|-------------------|----------------------------------|
-| Project Name      | Demo                             |
-| Local URL         | https://demo.test                |
-| Framework         | Laravel 13.14                    |
-| PHP Version       | 8.4 (Laragon)                    |
-| Database          | MySQL 8.0.30                     |
-| Web Server        | Laragon (Apache / Nginx)         |
-| Frontend          | React 18 + Inertia.js            |
-| UI Library        | shadcn/ui + Tailwind CSS 4       |
+| Item | Details |
+|------|---------|
+| Product | SportOS |
+| Local URL | https://demo.test |
+| Framework | Laravel 13.14 |
+| PHP | 8.4 (Laragon) |
+| Database | MySQL 8.0.30 |
+| Frontend | React 18 + Inertia.js |
+| UI | shadcn/ui + Tailwind CSS 4 |
+| Repository | [github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo) |
+| Pilot target | University sports carnival (Malaysia) |
+
+> **Note:** Product is **SportOS**; local folder/URL/DB still use `demo` until Phase 1 rebrand. See [DOCUMENTATION.md](DOCUMENTATION.md).
 
 ## Documentation
 
 | File | Contents |
 |------|----------|
-| [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) | Project context & status |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture |
-| [MODULES.md](MODULES.md) | Modules & components |
-| [DATABASE.md](DATABASE.md) | Database schema |
-| [API.md](API.md) | API endpoints |
+| [DOCUMENTATION.md](DOCUMENTATION.md) | **Start here** — master index & maintenance |
+| [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) | Project overview & status |
+| [PRD.md](PRD.md) | Product Requirement Document |
+| [BRD.md](BRD.md) | Business Requirement Document |
+| [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) | Functional specification |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Technical architecture |
+| [DATABASE.md](DATABASE.md) | Database design + ERD |
+| [API.md](API.md) | API specification |
 | [UI_UX.md](UI_UX.md) | UI/UX guidelines |
+| [SECURITY.md](SECURITY.md) | Security guidelines |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Deployment guide |
+| [TESTING.md](TESTING.md) | Testing strategy |
+| [AI_GOVERNANCE.md](AI_GOVERNANCE.md) | AI governance |
 | [ROADMAP.md](ROADMAP.md) | Development roadmap |
+| [MODULES.md](MODULES.md) | Modules & components |
 | [AGENTS.md](AGENTS.md) | Instructions for AI agents |
-| [CLAUDE.md](CLAUDE.md) | Quick reference for Claude |
 | [CHANGELOG.md](CHANGELOG.md) | Change history |
 
 ## Requirements
 
 - [Laragon](https://laragon.org/) (Full version recommended)
-- PHP 8.3 / 8.4 (provided by Laragon)
+- PHP 8.3 / 8.4
 - Composer
-- Node.js (for Vite & frontend assets)
+- Node.js 20+
 - Git
+- MySQL 8
 
 ## Local Setup (Laragon)
 
-### 1. Clone / Setup Project
+### 1. Clone
 
 ```powershell
-# Place this folder at:
-# D:\www\demo   (or according to your Laragon Document Root)
+git clone https://github.com/ahmadzakiabdullah/demo.git D:\www\demo
+cd D:\www\demo
 ```
 
 ### 2. Install Dependencies
@@ -54,13 +65,10 @@ composer install
 npm install
 ```
 
-### 3. Environment Configuration
-
-The `.env` file should be configured as follows:
+### 3. Environment
 
 ```env
 APP_URL=https://demo.test
-
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -69,195 +77,87 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 4. Create Database
+### 4. Database & Migrations
 
 ```powershell
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS demo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-```
-
-Or create it manually via HeidiSQL / Laragon MySQL.
-
-### 5. Run Migrations
-
-```powershell
-php artisan migrate
-```
-
-### 6. Laragon Configuration (IMPORTANT)
-
-For `https://demo.test` to work correctly with Laravel:
-
-1. Open **Laragon**
-2. Ensure Laragon **Document Root** is set to `D:\www`
-3. Find `demo.test` in the site list
-4. **Right click** → **Open vhost file**
-5. Change the following line:
-
-   ```apache
-   DocumentRoot "D:/www/demo"
-   ```
-
-   to:
-
-   ```apache
-   DocumentRoot "D:/www/demo/public"
-   ```
-
-   Also update `<Directory "D:/www/demo/public">` if present.
-
-6. **Restart All** in Laragon.
-
-### 7. Enable HTTPS (Optional)
-
-- Right click Laragon tray icon → **Menu → SSL**
-- Select **Enable SSL** for all sites
-- Restart Laragon
-
-### 8. Open Project
-
-Open your browser and go to:
-
-**https://demo.test**
-
-You should see the default Laravel welcome page.
-
----
-
-## Useful Commands
-
-### Artisan
-
-```powershell
-# Clear cache
-php artisan optimize:clear
-
-# Migration
-php artisan migrate
-php artisan migrate:fresh --seed
-
-# Tinker (REPL)
-php artisan tinker
-
-# Create model + migration + controller
-php artisan make:model Post -mcr
-
-# Queue & Schedule
-php artisan queue:work
-php artisan schedule:work
-```
-
-### Frontend (Vite + React + shadcn/ui)
-
-```powershell
-# Install (one-time)
-npm install
-
-# Development mode (auto reload)
-npm run dev
-
-# Production build
-npm run build
-
-# Add shadcn/ui component
-npx shadcn@latest add button dialog table
-```
-
-UI components live in `resources/js/components/ui/`. Pages are React/Inertia components in `resources/js/Pages/`. See [UI_UX.md](UI_UX.md) for full guidelines.
-
-### Testing
-
-```powershell
-# Run tests
-php artisan test
-
-# or
-vendor/bin/phpunit
-```
-
----
-
-## Important Folder Structure
-
-```
-demo/
-├── app/                  # Business logic, Models, Controllers
-├── bootstrap/            # App bootstrap & providers
-├── config/               # Application configuration
-├── database/
-│   ├── factories/
-│   ├── migrations/
-│   └── seeders/
-├── public/               # Web root (DocumentRoot must point here!)
-├── resources/
-│   ├── views/            # Blade templates (app.blade.php)
-│   ├── js/
-│   │   ├── Pages/        # Inertia React pages
-│   │   ├── components/ui/  # shadcn/ui components
-│   │   └── app.jsx       # React entry point
-│   └── css/              # Tailwind + shadcn theme
-├── routes/
-│   ├── web.php
-│   ├── auth.php
-│   └── console.php
-├── storage/              # Logs, cache, uploaded files
-└── tests/
-```
-
----
-
-## Development Notes
-
-- Use `php artisan` for most tasks.
-- Do not edit files inside `vendor/` or `public/build/`.
-- For new assets, edit files in `resources/` then run `npm run dev`.
-- Storage link (if using file uploads):
-
-  ```powershell
-  php artisan storage:link
-  ```
-
-- Laravel logs are at `storage/logs/laravel.log`
-
----
-
-## Git
-
-Repository: [github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo)
-
-```powershell
-git clone https://github.com/ahmadzakiabdullah/demo.git
-cd demo
-composer install
-npm install
-cp .env.example .env
 php artisan key:generate
 php artisan migrate
 ```
 
-Suggested branches: `main` or `develop`
+### 5. Laragon vhost (IMPORTANT)
 
----
+DocumentRoot **must** be `D:/www/demo/public` — not the project root.
 
-## Deployment (Coming Soon)
+1. Laragon → right-click `demo.test` → Open vhost file
+2. Set `DocumentRoot "D:/www/demo/public"`
+3. Restart Laragon
 
-- Production server (Forge, Ploi, VPS, etc.)
-- Environment: `APP_ENV=production`
-- `php artisan config:cache`
-- `php artisan route:cache`
-- `npm run build`
+### 6. Run
 
----
+```powershell
+npm run dev          # Terminal 1 — Vite HMR
+# Browse: https://demo.test
+
+# Or all-in-one:
+composer run dev
+```
+
+## Useful Commands
+
+```powershell
+php artisan migrate
+php artisan test
+php artisan optimize:clear
+npm run dev
+npm run build
+npx shadcn@latest add <component>
+composer run dev
+```
+
+## Folder Structure
+
+```
+demo/
+├── app/
+│   ├── Http/Controllers/    # Web + Admin controllers
+│   ├── Models/
+│   ├── Policies/
+│   └── Services/            # (planned) Bracket, Scheduling, etc.
+├── database/migrations/
+├── resources/js/
+│   ├── Pages/               # Inertia React pages
+│   ├── Layouts/
+│   └── Components/ui/     # shadcn/ui (import: @/components/ui/)
+├── routes/
+│   ├── web.php
+│   └── auth.php
+└── tests/Feature/
+```
+
+## Current Features
+
+- Full authentication (login, register, profile, password reset, email verification)
+- Admin user management (CRUD, search, role filter) — admin only
+- shadcn/ui across all pages
+- 35 passing tests
+
+## Roadmap
+
+See [ROADMAP.md](ROADMAP.md). Current phase: **Phase 1 — Foundation** (organizations, RBAC, events, API v1).
+
+## Deployment
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for staging and production guide.
 
 ## Troubleshooting
 
-If you encounter issues during setup:
-
 1. Ensure Laragon MySQL is running
-2. Ensure DocumentRoot in vhost points to `/public`
+2. DocumentRoot must point to `/public`
 3. Run `php artisan optimize:clear`
 4. Check `storage/logs/laravel.log`
+5. Run `npm run build` before tests that render Inertia pages
 
 ---
 
-**Prepared for local development using Laragon**  
-Setup date: 2026
+**SportOS** — Prepared for local development using Laragon

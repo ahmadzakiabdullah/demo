@@ -1,10 +1,214 @@
 # Changelog
 
-All notable changes to the **Demo** project are documented here.
+All notable changes to the **SportOS** project are documented here.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+
+### Added
+
+- Phase 3 (complete): Competition engine finished
+  - Formats: double elimination, Swiss, ladder; hybrid group stage → knockout phase
+  - Seeding: name, random, manual via `competition_participants` + `competitions.settings`
+  - Sport-specific `score_schema` on sports; `ScoreSchema` helper (goals, sets, time)
+  - Configurable ranking rules per competition (`RankingRules`)
+  - Live results: `ResultScoreUpdated` broadcast on `events.{id}.results` + Laravel Echo client
+  - Medal tally by recipient, organization, and country; medal ceremony scheduling UI
+  - Tables: `competition_participants`, `medal_ceremonies`; match loser-advance columns
+  - API: knockout-phase, medal tally aggregation; 6 tests (`Phase3CompletionTest`); **167 tests** total
+
+- Phase 3 (continued): Result appeals (RES-04)
+  - Table: `result_appeals` with workflow: submitted → under_review → upheld/overturned
+  - `AppealWorkflow`: team managers / athletes can submit; org admins resolve
+  - Overturn resets result to pending with corrected scores; recalculates rankings/medals; reverses knockout advance when winner changes
+  - Admin UI: appeal form on competition match results; API: `POST /api/v1/results/{id}/appeals`, `PATCH /api/v1/appeals/{id}/status`
+  - `ResultAppealPolicy` + 4 feature tests (`ResultAppealTest`, `ResultAppealApiTest`); 161 PHPUnit tests total
+
+- Phase 3 (initial): Competition engine — results, rankings, medals
+  - Tables: `results`, `rankings`, `medals`; `matches.winner_advances_to_match_id` for knockout progression
+  - Draw generation: round robin, league, knockout, group stage (`DrawGenerator`)
+  - Score entry with workflow: pending → confirmed → published (`ResultWorkflow`)
+  - Officials / sports managers can enter scores; org admins confirm & publish
+  - League standings auto-recalculate on confirm (`RankingCalculator`)
+  - Medal auto-assign from standings or knockout finals (`MedalAllocator`)
+  - Knockout winner auto-advances to next bracket match
+  - Admin: score entry on competition show, standings, bracket view, `/admin/events/{event}/rankings`, `/admin/events/{event}/medals`
+  - `results.*` RBAC permissions; `ResultPolicy`, `MatchGamePolicy` + audit logging
+  - API: draw, bracket, match result, result status, rankings, medals
+  - 4 feature tests (`CompetitionEngineTest`, `ResultApiTest`); 157 PHPUnit tests total
+
+- Phase 2.6: Scheduling (initial)
+  - Tables: `competition_formats`, `competitions`, `groups`, `fixtures`, `matches`, `match_participants`, `match_officials`
+  - Seeded formats: league, round robin, knockout, group stage
+  - Event-scoped competition CRUD at `/admin/events/{event}/competitions`
+  - Manual fixture and match creation with venue/facility allocation
+  - Official assignment per match; conflict detection (venue, official, athlete double-booking)
+  - Week schedule calendar at `/admin/events/{event}/schedule`
+  - `competitions.*` RBAC permissions; `CompetitionPolicy` + audit logging
+  - API: `/api/v1/events/{event}/competitions`, fixtures, matches, `/api/v1/events/{event}/schedule`
+  - 10 feature tests (`CompetitionManagementTest`, `ScheduleTest`, `CompetitionApiTest`)
+  - 153 PHPUnit tests total
+
+- Phase 2.4: Official module
+  - Table: `officials` (types: referee, judge, technical_officer, timekeeper)
+  - Certification level + expiry tracking; eligibility blocks expired certs
+  - Event registration via polymorphic `registrations` workflow
+  - Event-scoped CRUD at `/admin/events/{event}/officials`
+  - `officials.*` RBAC permissions; `OfficialPolicy` + audit logging
+  - API: `GET/POST /api/v1/events/{event}/officials` (+ show/update/delete)
+  - 8 feature tests (`OfficialManagementTest`, `OfficialApiTest`)
+
+- Phase 2.5: Venue module
+  - Tables: `venues`, `facilities`, `event_venue`, `event_sport_venue`
+  - Org-scoped venue CRUD at `/admin/venues` with facility management
+  - Link venues to events; link venues to sports per event
+  - `venues.*` RBAC permissions; `VenuePolicy` + audit logging
+  - API: `/api/v1/venues` + `/api/v1/events/{event}/venues`
+  - 13 feature tests (`VenueManagementTest`, `EventVenueTest`, `VenueApiTest`)
+  - 143 PHPUnit tests total
+
+- Phase 2.3: Team module
+  - Tables: `teams`, `team_athlete` (roster pivot)
+  - Event + sport scoped teams with coach/manager assignment
+  - Team registration via polymorphic `registrations` workflow
+  - Roster management: add/remove athletes with role & jersey number
+  - Event-scoped CRUD at `/admin/events/{event}/teams`
+  - `teams.*` RBAC permissions; `TeamPolicy` + audit logging
+  - API: `GET/POST /api/v1/events/{event}/teams` (+ show/update/delete)
+  - Roster API: `POST/DELETE .../teams/{id}/athletes`
+  - 8 feature tests (`TeamManagementTest`, `TeamApiTest`); 122 PHPUnit tests total
+
+- Phase 2.2: Athlete module
+  - Tables: `athletes`, `registrations` (polymorphic registrable)
+  - Org-scoped athlete profiles with optional `user_id` link
+  - Event registration workflow: draft → submitted → verified → approved → rejected
+  - Eligibility checks: medical clearance, age/gender vs sport category
+  - Participation history across events on athlete show page
+  - Event-scoped CRUD at `/admin/events/{event}/athletes`
+  - `athletes.*` RBAC permissions; `AthletePolicy`, `RegistrationPolicy` + audit logging
+  - API: `GET/POST /api/v1/events/{event}/athletes` (+ show/update/delete)
+  - `PATCH /api/v1/events/{event}/registrations/{id}/status` for workflow transitions
+  - 9 feature tests (`AthleteManagementTest`, `AthleteApiTest`); 114 PHPUnit tests total
+
+- Phase 2.1: Sports module
+  - Tables: `sports`, `sport_disciplines`, `sport_categories`, `sport_divisions`
+  - Sport templates: Football, Badminton, Swimming, Athletics, Esports (`SportTemplates`)
+  - Event-scoped sport CRUD at `/admin/events/{event}/sports`
+  - Discipline / category / division structure management on sport show page
+  - `sports.*` RBAC permissions; `SportPolicy` + audit logging
+  - API: `GET/POST /api/v1/events/{event}/sports` (+ show/update/delete)
+  - 8 feature tests (`SportManagementTest`, `SportApiTest`); 105 PHPUnit tests total
+
+- Phase 1.7: UI foundation (admin shell)
+  - `AdminLayout` with shadcn Sidebar, header, breadcrumbs
+  - `AppSidebar` — module navigation (Dashboard, Events, Orgs, Users, Audit)
+  - `OrganizationSwitcher` — tenant context via `POST /admin/organization/switch`
+  - `DashboardController` — KPI widgets (orgs, events, active events, users) + recent events table
+  - Shared Inertia props: `organizations`, `currentOrganization`
+  - Auto-select first org for non–system-owner users in middleware
+  - shadcn components: `sidebar`, `breadcrumb`, `tooltip`, `skeleton`
+  - 6 feature tests (`DashboardTest`, `OrganizationSwitchTest`); 97 PHPUnit tests total
+
+- Phase 1.6: API v1 skeleton
+  - `routes/api.php` registered at `/api/v1/` prefix
+  - Sanctum bearer auth: login, logout, refresh, me
+  - REST controllers: organizations, users, events, audit-logs
+  - API Resources + `ApiResponse` envelope helper
+  - `X-Organization-Id` header support in `SetCurrentOrganization`
+  - Rate limiter: `api` (60/min authenticated)
+  - `UserPolicy` org-scoped checks for API tenant context
+  - 25 feature tests (`tests/Feature/Api/V1/`); 91 PHPUnit tests total
+
+- Phase 1.5: Events module
+  - Tables: `event_types`, `event_categories`, `events`, `event_user`
+  - `EventStatus` lifecycle enum with transition validation
+  - Event CRUD at `/admin/events` with org scoping
+  - Event dashboard (`Show`) with stats placeholders
+  - Team assignments: `event_organizer`, `sports_manager`
+  - `EventReferenceDataSeeder` — types + categories
+  - 9 feature tests (`EventManagementTest`); 66 PHPUnit tests total
+
+- Phase 1.4: Audit logs & auth rate limiting
+  - Table: `audit_logs` (append-only, polymorphic)
+  - `Auditable` trait on `User`, `Organization`, `Branch`
+  - `AuditLogger` service; sensitive fields (`password`) excluded
+  - Admin UI at `/admin/audit-logs` with search, action, and org filters
+  - `AuditLogPolicy` — system owner sees all; org admin sees own tenant
+  - Rate limiters: `auth` (10/min), `register` (5/min), `password-reset` (3/min)
+  - 7 feature tests (`AuditLogTest`); 57 PHPUnit tests total
+
+- Phase 1.3: RBAC (roles + permissions)
+  - Tables: `roles`, `permissions`, `role_permission`, `role_user`
+  - `organization_user.role` string replaced with `role_id` FK
+  - `users.role` binary column removed; legacy `admin` migrated to `system_owner`
+  - Models: `Role`, `Permission`; `User` RBAC helpers (`hasPermission`, `isSystemOwner`)
+  - `RolesAndPermissionsSeeder` — 9 system roles + module permission matrix
+  - `EnsureUserHasPermission` middleware; policies/requests use permission slugs
+  - Admin user UI: system role assignment (`system_owner` / member)
+  - 5 feature tests (`RbacTest`); 50 PHPUnit tests total
+
+- Phase 1.2: Organizations module
+  - Tables: `organizations`, `branches`, `organization_user`
+  - Models, enums (`OrganizationType`, `OrganizationStatus`), factories, `OrganizationPolicy`
+  - Admin CRUD at `/admin/organizations` with search, type/status filters, branch management
+  - `SetCurrentOrganization` middleware + shared `currentOrganization` Inertia prop
+  - `OrganizationSeeder` — pilot UTeM org linked to owner `ahmadzaki@utem.edu.my`
+  - 9 feature tests (`OrganizationManagementTest`)
+
+### Added
+
+- [DOCUMENTATION.md](DOCUMENTATION.md) — master documentation index, naming guide, maintenance rules
+- Documentation adjustments:
+  - SportOS vs `demo` naming clarified across all docs
+  - Bootstrap (pre-SportOS) vs SportOS phases separated in [ROADMAP.md](ROADMAP.md)
+  - MVP scope (Phases 1–3) and university pilot target in [PRD.md](PRD.md), [BRD.md](BRD.md)
+  - API build strategy: parallel with web modules, not a late standalone phase
+  - Protected owner account documented in [SECURITY.md](SECURITY.md), [DATABASE.md](DATABASE.md)
+  - shadcn path corrected: `Components/ui/` (import `@/components/ui/`)
+  - Implementation vs specification status tables
+
+### Added
+
+- SportOS enterprise documentation suite:
+  - [PRD.md](PRD.md) — Product Requirement Document
+  - [BRD.md](BRD.md) — Business Requirement Document
+  - [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) — Functional specification (all modules)
+  - [SECURITY.md](SECURITY.md) — Security guidelines (RBAC, OWASP, audit)
+  - [DEPLOYMENT.md](DEPLOYMENT.md) — Deployment guide
+  - [TESTING.md](TESTING.md) — Testing strategy
+  - [AI_GOVERNANCE.md](AI_GOVERNANCE.md) — AI governance framework
+- [ROADMAP.md](ROADMAP.md) rewritten for SportOS 6-phase enterprise plan
+
+### Changed
+
+- Project rebranded from Demo → **SportOS** across all root documentation
+- [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — SportOS vision, multi-tenancy model, doc index
+- [README.md](README.md) — SportOS branding and full doc links
+- [ARCHITECTURE.md](ARCHITECTURE.md) — Enterprise architecture, multi-tenancy, module diagram
+- [DATABASE.md](DATABASE.md) — Full planned ERD + Phase 1–4 table specs
+- [API.md](API.md) — Complete `/api/v1/` specification by phase
+- [UI_UX.md](UI_UX.md) — SportOS layout system, page patterns, accessibility
+- [MODULES.md](MODULES.md) — All 20+ modules with phase mapping
+- [AGENTS.md](AGENTS.md) — SportOS rules for AI agents
+- [CLAUDE.md](CLAUDE.md) — Updated quick reference
+
+### Added
+
+- Phase 2 (legacy): User Management (admin panel)
+  - `role` column on `users` (`admin` / `user`); owner `ahmadzaki@utem.edu.my` set to admin via migration
+  - `EnsureUserIsAdmin` middleware and `UserPolicy` for authorization
+  - Admin CRUD: `Admin\UserController`, form requests, Inertia pages (`Admin/Users/`)
+  - User listing with pagination, search (name/email), and role filter
+  - shadcn components: Table, Badge, Select, Alert Dialog
+  - Admin nav link in authenticated layout (visible to admins only)
+  - 10 feature tests (`tests/Feature/Admin/UserManagementTest.php`)
+
+### Changed
+
+- Base `Controller` now uses `AuthorizesRequests` trait
+- `UserFactory` includes `role` and `admin()` state
+- Shared Inertia `auth.user` props include `role` and `is_admin`
 
 ### Added
 

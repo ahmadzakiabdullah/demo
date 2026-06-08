@@ -1,20 +1,24 @@
 # AGENTS.md
 
-Instructions for AI coding agents working on the **Demo** project (Laravel 13).
+Instructions for AI coding agents working on **SportOS** (Laravel 13).
 
 ## Read First
 
 Before making changes, read:
 
-1. [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — project status & goals
-2. [ARCHITECTURE.md](ARCHITECTURE.md) — structure & patterns
-3. [DATABASE.md](DATABASE.md) — DB schema
-4. [ROADMAP.md](ROADMAP.md) — development priorities
+1. [DOCUMENTATION.md](DOCUMENTATION.md) — naming, doc index, maintenance rules
+2. [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — project status & vision
+3. [ROADMAP.md](ROADMAP.md) — development priorities & current phase
+4. [ARCHITECTURE.md](ARCHITECTURE.md) — structure & patterns
+5. [DATABASE.md](DATABASE.md) — DB schema (implemented + planned)
+6. [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) — module requirements
+7. [SECURITY.md](SECURITY.md) — security rules
 
-## Environment
+## Project
 
 | Item | Value |
 |------|-------|
+| Product | **SportOS** — The Operating System for Sports Management |
 | OS | Windows 10 |
 | Shell | PowerShell |
 | Web root | `D:\www\demo\public` |
@@ -26,66 +30,90 @@ Before making changes, read:
 
 ### Laravel
 
-- Follow Laravel 13 conventions: `bootstrap/app.php` for routing/middleware, not `Kernel.php`.
-- Use `php artisan make:*` to scaffold (model, migration, controller).
-- Model attributes: use PHP 8 attributes (`#[Fillable]`, `#[Hidden]`) as in `User.php`.
-- Do not add packages without a clear need.
-- Do not edit files inside `vendor/`.
+- Follow Laravel 13 conventions: `bootstrap/app.php` for routing/middleware.
+- Use `php artisan make:*` to scaffold.
+- Model attributes: PHP 8 attributes (`#[Fillable]`, `#[Hidden]`) as in `User.php`.
+- All domain models must include `organization_id` scope (when multi-tenancy is implemented).
+- Do not add packages without clear need.
+- Do not edit `vendor/`.
 
 ### Database
 
-- All schema changes via migrations — do not modify the DB manually.
-- Table names: plural snake_case (`users`, `job_batches`).
+- All schema changes via migrations.
+- Table names: plural snake_case.
 - Foreign keys: `{model}_id` with `foreignId()`.
+- Add composite indexes on `(organization_id, status)` for tenant tables.
+- Do not delete deployed migrations.
 
 ### Frontend
 
 - Stack: **Inertia.js + React + shadcn/ui + Tailwind CSS 4**.
-- Pages: `resources/js/Pages/` (Inertia page components).
-- UI components: `resources/js/components/ui/` (shadcn — add via CLI, customize freely).
-- Legacy Breeze components in `resources/js/Components/` — migrate to shadcn, do not extend.
-- Path alias: `@/` maps to `resources/js/`.
-- Add new shadcn components: `npx shadcn@latest add <component>`.
-- Run `npm run dev` during development; `npm run build` for production.
-- Font: Geist Variable (loaded in `app.css`).
+- **shadcn/ui ONLY** — no Bootstrap, MUI, Ant Design, Chakra.
+- Pages: `resources/js/Pages/`.
+- UI: `resources/js/Components/ui/` — import as `@/components/ui/` (add via `npx shadcn@latest add <component>`).
+- Path alias: `@/` → `resources/js/`.
+- Font: Geist Variable.
+
+### API
+
+- REST JSON at `/api/v1/` (when implemented).
+- Sanctum bearer tokens.
+- API Resources for output; Form Requests for input.
+- Write feature tests for every endpoint.
+
+### Security
+
+- RBAC via policies — never rely on middleware alone.
+- Test cross-tenant access denial for every new model.
+- Audit log all mutations (when audit module is implemented).
+- Do not modify or delete owner account: `ahmadzaki@utem.edu.my`.
 
 ### Testing
 
-- Write feature tests for new routes/endpoints.
-- Run `php artisan test` before finishing a task.
-- Use the `RefreshDatabase` trait for tests that touch the DB.
-
-## File Structure
-
-```
-app/
-├── Http/Controllers/     # HTTP handlers
-├── Models/               # Eloquent models
-└── Providers/            # Service providers
-
-routes/
-├── web.php               # Web routes (existing)
-└── console.php           # Artisan commands
-
-database/
-├── migrations/           # Schema changes
-├── seeders/              # Data seeding
-└── factories/            # Model factories
-
-resources/
-├── views/                # Blade templates
-├── css/app.css           # Tailwind entry
-└── js/app.js             # JS entry
-```
+- Feature tests for new routes/endpoints.
+- `npm run build` before tests that render Inertia pages.
+- Run `php artisan test` before finishing.
+- Use `RefreshDatabase` trait.
 
 ## Workflow
 
-1. Understand scope — do not refactor outside it.
-2. Read existing code before writing new code.
-3. Create migration + model + controller + view as needed.
-4. Update root `.md` documentation if architecture/API/DB changes.
-5. Update `CHANGELOG.md` for significant changes.
-6. Run tests and ensure there are no errors.
+1. Check [ROADMAP.md](ROADMAP.md) for current phase scope.
+2. Read existing code before writing.
+3. Migration → model → policy → controller → Inertia page → tests.
+4. Update documentation (see table below).
+5. Update [CHANGELOG.md](CHANGELOG.md) for significant changes.
+6. Run tests.
+
+## Documentation Updates
+
+| Change | File(s) |
+|--------|---------|
+| Doc structure / naming | `DOCUMENTATION.md` |
+| DB schema | `DATABASE.md` |
+| New endpoint | `API.md` |
+| New module | `MODULES.md`, `ROADMAP.md`, `FUNCTIONAL_SPEC.md` |
+| UI changes | `UI_UX.md` |
+| Architecture | `ARCHITECTURE.md` |
+| Security | `SECURITY.md` |
+| Any release | `CHANGELOG.md` |
+
+## Full Documentation Index
+
+| File | Contents |
+|------|----------|
+| [DOCUMENTATION.md](DOCUMENTATION.md) | Master doc index |
+| [PRD.md](PRD.md) | Product requirements |
+| [BRD.md](BRD.md) | Business requirements |
+| [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) | Functional specification |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Technical architecture |
+| [DATABASE.md](DATABASE.md) | Database design |
+| [API.md](API.md) | API specification |
+| [UI_UX.md](UI_UX.md) | UI/UX guidelines |
+| [SECURITY.md](SECURITY.md) | Security guidelines |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Deployment guide |
+| [TESTING.md](TESTING.md) | Testing strategy |
+| [AI_GOVERNANCE.md](AI_GOVERNANCE.md) | AI governance |
+| [ROADMAP.md](ROADMAP.md) | Development roadmap |
 
 ## Useful Commands
 
@@ -93,41 +121,19 @@ resources/
 composer install
 npm install
 php artisan migrate
-php artisan migrate:fresh --seed
-php artisan optimize:clear
 php artisan test
-npm run dev
 npm run build
-composer run dev    # server + queue + logs + vite concurrently
+npm run dev
+composer run dev
+php artisan optimize:clear
 ```
 
 ## Laragon — Critical
 
 - Vhost DocumentRoot: `D:/www/demo/public`
-- If `https://demo.test` returns 404/403, check vhost and restart Laragon.
-- MySQL must be running before `php artisan migrate`.
-
-## Documentation
-
-Update the following files when relevant:
-
-| Change | File |
-|--------|------|
-| DB schema | `DATABASE.md` |
-| New endpoint | `API.md` |
-| New module/feature | `MODULES.md`, `ROADMAP.md` |
-| UI changes | `UI_UX.md` |
-| Architecture changes | `ARCHITECTURE.md` |
-| Any release | `CHANGELOG.md` |
-
-## Do Not
-
-- Commit `.env` or secrets.
-- Delete migrations that have been deployed.
-- Write documentation inside `vendor/`.
-- Assume an API exists — check `routes/` and `API.md` first.
+- MySQL must be running before migrate.
 
 ## Language
 
-- Code & technical comments: **English**.
-- Project documentation: **English**.
+- Code & comments: **English**
+- Documentation: **English**

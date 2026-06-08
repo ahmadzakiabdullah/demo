@@ -3,22 +3,13 @@ import { Input as InputPrimitive } from "@base-ui/react/input"
 
 import { cn } from "@/lib/utils"
 
-const Input = React.forwardRef(function Input(
-  { className, type, autoFocus, isFocused, ...props },
-  ref,
-) {
-  const localRef = React.useRef(null)
-  const inputRef = ref || localRef
-
-  React.useEffect(() => {
-    if (autoFocus || isFocused) {
-      inputRef.current?.focus?.()
-    }
-  }, [autoFocus, isFocused, inputRef])
-
+function Input({
+  className,
+  type,
+  ...props
+}) {
   return (
     <InputPrimitive
-      ref={inputRef}
       type={type}
       data-slot="input"
       className={cn(
@@ -27,6 +18,6 @@ const Input = React.forwardRef(function Input(
       )}
       {...props} />
   );
-})
+}
 
 export { Input }

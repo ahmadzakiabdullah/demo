@@ -1,17 +1,29 @@
 # Project Context
 
-A brief overview of the **Demo** project for developers and AI agents.
+A brief overview of **SportOS** for developers and AI agents.
 
 ## Summary
 
 | Item | Value |
 |------|-------|
-| Name | Demo |
-| Type | Web application (Laravel monolith + React SPA via Inertia) |
-| Status | Phase 1 complete — full auth + shadcn/ui |
+| Name | **SportOS** |
+| Tagline | *The Operating System for Sports Management* |
+| Type | Enterprise multi-tenant sports management SaaS |
+| Status | Phase 1 — Foundation (partial) |
 | Local URL | https://demo.test |
 | Location | `D:\www\demo` |
 | Git | [github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo) |
+| Docs | [DOCUMENTATION.md](DOCUMENTATION.md) — master index |
+
+## Naming Note
+
+- **Product name:** SportOS (all documentation and future UI)
+- **Codebase paths:** still `demo` (folder, URL, database) until Phase 1 rebrand
+- See [DOCUMENTATION.md](DOCUMENTATION.md) for full naming table
+
+## Vision
+
+SportOS is a comprehensive multi-tenant platform for sports organizations at all levels — from school sports day to international multi-sport games. It manages organizations, events, sports, competitions, athletes, teams, officials, venues, scheduling, results, rankings, medals, accreditation, and analytics from a single unified system.
 
 ## Technology Stack
 
@@ -19,28 +31,62 @@ A brief overview of the **Demo** project for developers and AI agents.
 |-------|------------|
 | Backend | PHP 8.4, Laravel 13.14 |
 | Frontend | React 18, Inertia.js 2 |
-| UI | shadcn/ui 4 (Base UI + Tailwind CSS 4) |
+| UI | shadcn/ui only + Tailwind CSS 4 |
 | Database | MySQL 8.0.30 (local Laragon) |
+| Cache / Queue | Redis (planned; database driver now) |
 | Build | Vite 8 |
-| Auth | Laravel Breeze (session-based) |
-| API (future) | Laravel Sanctum (installed) |
-| Testing | PHPUnit 12 (25 tests) |
+| Auth (web) | Laravel Breeze (session-based) |
+| Auth (API) | Laravel Sanctum (planned `/api/v1/`) |
+| Testing | PHPUnit 12 (35 tests passing) |
+
+## Design Principles
+
+Modular · Scalable · Multi-Tenant · API First · Mobile Ready · Cloud Ready · AI Ready · Secure by Design · Audit Compliant · Accessibility Compliant
+
+## Pilot Target
+
+First production use case: **university sports carnival** (e.g. UTeM inter-faculty games), then school/state (MSSM-style), then national/international scale.
+
+Defaults: timezone `Asia/Kuala_Lumpur`, locale `en`.
+
+## Development Layers
+
+| Layer | Status |
+|-------|--------|
+| **Bootstrap** (Laravel, Breeze, shadcn, admin users) | Complete |
+| **SportOS Phase 1** (orgs, RBAC, events, API v1) | In progress |
+| **SportOS Phases 2–6** | Not started |
+
+**MVP** = Phases 1–3 (foundation + sports registration + competition engine).
 
 ## Current State
 
-### What exists
+### Implemented
 
-- Laravel 13 + Breeze with full authentication (login, register, profile, password reset, email verification).
-- Inertia.js + React frontend with 12+ page components.
-- shadcn/ui initialized with Button, Input, Label, Card, Checkbox.
-- All pages migrated to shadcn/ui (auth, dashboard, profile, layouts).
-- 25 passing feature/unit tests.
+- Laravel 13 + Breeze with full authentication (login, register, profile, password reset, email verification)
+- Inertia.js + React frontend with shadcn/ui (all pages migrated)
+- **RBAC** — `roles`, `permissions`, `role_permission`, `role_user`; org-scoped roles via `organization_user.role_id`
+- Admin user CRUD with system role assignment (`system_owner` / member)
+- **Organizations module** — CRUD, branches, `organization_user` pivot, UTeM pilot seeder
+- **Audit logs** — append-only `audit_logs`, `Auditable` trait, admin activity UI
+- **Events module** — CRUD, lifecycle, dashboard, team assignments (`event_user`)
+- Permission-based policies, admin middleware, 66 passing PHPUnit tests total
+- Git repository connected to GitHub
 
-### What does not exist yet
+### Not Yet Built
 
-- REST API endpoints.
-- Admin user management.
-- Production deployment.
+- Sports, competitions, athletes, teams
+- REST API `/api/v1/`
+- Redis, public portal, AI layer
+
+## Multi-Tenancy Model (Target)
+
+```
+Organization (tenant)
+└── Event
+    └── Sport
+        └── Competition
+```
 
 ## Important Configuration
 
@@ -67,21 +113,40 @@ npm run dev        # Vite HMR
 composer run dev   # Full stack (server + queue + logs + vite)
 ```
 
-## Related Documentation
+## Protected Account
+
+Do not modify or delete: **Ahmad Zaki Abdullah** (`ahmadzaki@utem.edu.my`, `admin`).
+
+## Documentation Index
+
+> Full guide: [DOCUMENTATION.md](DOCUMENTATION.md)
 
 | File | Contents |
 |------|----------|
+| [DOCUMENTATION.md](DOCUMENTATION.md) | Master index, naming, maintenance |
 | [README.md](README.md) | Setup & daily commands |
-| [UI_UX.md](UI_UX.md) | shadcn/ui guidelines |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture |
+| [PRD.md](PRD.md) | Product Requirement Document |
+| [BRD.md](BRD.md) | Business Requirement Document |
+| [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) | Functional specification |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Technical architecture |
+| [DATABASE.md](DATABASE.md) | Database design + ERD |
+| [API.md](API.md) | API specification |
+| [UI_UX.md](UI_UX.md) | UI/UX guidelines |
+| [SECURITY.md](SECURITY.md) | Security guidelines |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Deployment guide |
+| [TESTING.md](TESTING.md) | Testing strategy |
+| [AI_GOVERNANCE.md](AI_GOVERNANCE.md) | AI governance |
+| [ROADMAP.md](ROADMAP.md) | Development roadmap |
 | [MODULES.md](MODULES.md) | Modules & components |
-| [ROADMAP.md](ROADMAP.md) | Development plan |
 | [AGENTS.md](AGENTS.md) | Instructions for AI agents |
+| [CLAUDE.md](CLAUDE.md) | Quick reference |
+| [CHANGELOG.md](CHANGELOG.md) | Change history |
 
 ## Conventions
 
-- Code language: **English**.
-- Documentation: **English**.
-- New UI: **shadcn/ui** components (`npx shadcn@latest add <name>`).
-- Legacy Breeze components in `Components/` — migrate, don't extend.
-- Path alias: `@/` → `resources/js/`.
+- Code language: **English**
+- Documentation: **English**
+- New UI: **shadcn/ui only** — no Bootstrap, MUI, Ant Design, Chakra
+- Path alias: `@/` → `resources/js/`
+- All schema changes via migrations
+- Do not modify or delete the project owner account (`ahmadzaki@utem.edu.my`)

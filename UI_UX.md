@@ -1,42 +1,71 @@
-# UI / UX
+# UI / UX Guidelines
 
-User interface design guidelines for the **Demo** project.
+# SportOS
 
-## UI Stack Decision
+User interface design guidelines for the SportOS platform.
+
+**Rule: shadcn/ui only.** No Bootstrap, Material UI, Ant Design, Chakra UI, or Tailwind UI component kits.
+
+> **Path note:** Files live in `resources/js/Components/ui/`; import via `@/components/ui/`. Normalize casing on Linux during Phase 1 rebrand. See [DOCUMENTATION.md](DOCUMENTATION.md).
+
+---
+
+## 1. UI Stack
 
 | Layer | Technology | Role |
 |-------|------------|------|
 | Backend views | Inertia.js | Bridges Laravel to React |
-| Frontend framework | React 18 | Page components |
-| UI components | [shadcn/ui](https://github.com/shadcn-ui/ui) | Copy-paste component library |
-| Primitives | Base UI (`@base-ui/react`) | Accessible component primitives |
+| Frontend | React 18 | Page components |
+| UI components | [shadcn/ui](https://github.com/shadcn-ui/ui) | **Only** approved component library |
+| Primitives | Base UI (`@base-ui/react`) | Accessible primitives |
 | Styling | Tailwind CSS 4 | Utility-first CSS |
 | Build | Vite 8 | Asset bundling & HMR |
 | Icons | Lucide React | Icon set |
 | Font | Geist Variable | Primary typeface |
 
-**Architecture:** Laravel handles routing and auth → Inertia renders React pages → shadcn/ui provides UI components.
+---
 
-## Directory Structure
+## 2. UI Architecture
+
+```
+Laravel (routing, auth, policies)
+    │
+    ▼
+Inertia.js (JSON props + page name)
+    │
+    ▼
+React Pages (resources/js/Pages/)
+    │
+    ├── Layouts (Guest, Authenticated, Admin, Public)
+    └── shadcn/ui components (resources/js/Components/ui/)
+```
+
+### Directory Structure (Target)
 
 ```
 resources/js/
-├── Pages/                  # Inertia pages (route-level)
+├── Pages/
 │   ├── Auth/               # Login, register, etc.
-│   ├── Profile/
-│   └── Dashboard.jsx
-├── Layouts/                # Page layouts
-├── Components/             # Breeze legacy components (migrate to shadcn)
-├── components/ui/          # shadcn/ui components (do not edit manually)
-├── lib/utils.js            # cn() helper for class merging
-└── app.jsx                 # Inertia entry point
+│   ├── Admin/              # Organization, events, sports, users
+│   │   ├── Organizations/
+│   │   ├── Events/
+│   │   ├── Sports/
+│   │   └── Users/
+│   ├── Public/             # Live results, rankings (Phase 5)
+│   └── Profile/
+├── Layouts/
+│   ├── GuestLayout.jsx
+│   ├── AuthenticatedLayout.jsx
+│   ├── AdminLayout.jsx     # Sidebar shell (planned)
+│   └── PublicLayout.jsx    # (planned)
+├── Components/ui/          # shadcn/ui only (import: @/components/ui/)
+├── lib/utils.js
+└── app.jsx
 ```
 
-## shadcn/ui Setup
+---
 
-Initialized via `components.json` at the project root.
-
-### Configuration
+## 3. shadcn/ui Configuration
 
 | Setting | Value |
 |---------|-------|
@@ -48,46 +77,140 @@ Initialized via `components.json` at the project root.
 
 ### Installed Components
 
-| Component | Path | Use |
-|-----------|------|-----|
-| Button | `components/ui/button.jsx` | Primary actions |
-| Input | `components/ui/input.jsx` | Text fields |
-| Label | `components/ui/label.jsx` | Form labels |
-| Card | `components/ui/card.jsx` | Content containers |
-| Checkbox | `components/ui/checkbox.jsx` | Boolean inputs |
-| Dialog | `components/ui/dialog.jsx` | Confirmation modals |
-| Dropdown Menu | `components/ui/dropdown-menu.jsx` | User menu |
-| Sheet | `components/ui/sheet.jsx` | Mobile navigation |
-| Separator | `components/ui/separator.jsx` | Visual dividers |
+| Component | Use |
+|-----------|-----|
+| Button | Primary, secondary, destructive actions |
+| Input | Text fields |
+| Label | Form labels |
+| Card | Content containers |
+| Checkbox | Boolean inputs |
+| Dialog | Confirmation modals |
+| Dropdown Menu | User nav menu |
+| Sheet | Mobile navigation |
+| Sidebar | Admin shell navigation (Phase 1.7) |
+| Breadcrumb | Page hierarchy in admin header |
+| Tooltip | Sidebar collapsed labels |
+| Skeleton | Loading placeholders |
+| Separator | Dividers |
+| Table | Data listings |
+| Badge | Status, role labels |
+| Select | Filters, dropdowns |
+| Alert Dialog | Destructive confirmations |
 
-### Add More Components
+### Components to Add (by Phase)
 
 ```powershell
-npx shadcn@latest add dropdown-menu dialog table badge
+# Phase 1
+npx shadcn@latest add sidebar breadcrumb tabs
+
+# Phase 2
+npx shadcn@latest add calendar popover command
+
+# Phase 3
+npx shadcn@latest add tooltip progress
+
+# Phase 4
+npx shadcn@latest add sonner avatar
+
+# Phase 5 (public portal)
+npx shadcn@latest add skeleton carousel
 ```
 
-Components are copied into `resources/js/components/ui/` and can be customized.
+---
 
-### Usage Example
+## 4. Layout System
 
-```jsx
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
+### 4.1 Guest Layout (Auth)
 
-<Card>
-    <CardContent>
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" />
-        <Button type="submit">Save</Button>
-    </CardContent>
-</Card>
+- Centered card with SportOS logo
+- `max-w-md` on desktop; full width on mobile
+- Used for: login, register, password reset
+
+### 4.2 Authenticated Layout
+
+- Thin wrapper around `AdminLayout` (backward compatible import path)
+- All authenticated pages use the admin shell
+
+### 4.3 Admin Layout (Active — Phase 1.7)
+
+```
+┌──────────┬──────────────────────────────────────┐
+│ Sidebar  │  Header (org switcher, breadcrumbs)  │
+│          ├──────────────────────────────────────┤
+│ Dashboard│                                      │
+│ Orgs     │  Page content                        │
+│ Events   │                                      │
+│ Sports   │                                      │
+│ Users    │                                      │
+│ Reports  │                                      │
+│ Settings │                                      │
+└──────────┴──────────────────────────────────────┘
 ```
 
-## Design Tokens
+- shadcn `Sidebar` + `SidebarProvider` (`Layouts/AdminLayout.jsx`)
+- `AppSidebar` — grouped nav: Platform + Administration
+- `OrganizationSwitcher` in header (`Components/OrganizationSwitcher.jsx`)
+- Breadcrumb navigation (optional `breadcrumbs` prop per page)
+- Collapsible sidebar; mobile uses sheet via `SidebarTrigger`
+- `POST /admin/organization/switch` persists tenant in session
 
-CSS variables are defined in `resources/css/app.css` and mapped to Tailwind via `@theme inline`.
+### 4.4 Public Layout (Planned — Phase 5)
+
+- SportOS branding + event name header
+- No auth required
+- Optimized for mobile spectators
+- Live results ticker
+
+---
+
+## 5. Page Patterns
+
+### 5.1 List Pages (Index)
+
+Used for: users, organizations, events, athletes, teams.
+
+| Element | Component |
+|---------|-----------|
+| Page title + action button | Header with `Button` |
+| Search + filters | `Input` + `Select` |
+| Data table | `Table` with sortable columns |
+| Status badges | `Badge` |
+| Row actions | `Button` variant outline/destructive |
+| Pagination | `Button` group |
+| Empty state | Centered message in `TableCell` |
+| Delete confirm | `AlertDialog` |
+
+### 5.2 Form Pages (Create / Edit)
+
+| Element | Component |
+|---------|-----------|
+| Form container | `Card` + `CardHeader` + `CardContent` |
+| Fields | `Label` + `Input` / `Select` / `Checkbox` |
+| Errors | `InputError` below field |
+| Submit | `Button` disabled={processing} |
+| Cancel | `Button` variant outline → back link |
+
+### 5.3 Dashboard
+
+| Element | Component |
+|---------|-----------|
+| KPI cards | `Card` grid (4 columns desktop) |
+| Charts | Custom with Tailwind (or chart library TBD) |
+| Recent activity | `Table` or list |
+| Quick actions | `Button` group |
+
+### 5.4 Bracket View (Phase 3)
+
+- Horizontal tree layout for knockout
+- `Card` per match node
+- Connector lines via CSS/SVG
+- Responsive: scroll horizontally on mobile
+
+---
+
+## 6. Design Tokens
+
+CSS variables in `resources/css/app.css`:
 
 | Token | Purpose |
 |-------|---------|
@@ -97,100 +220,126 @@ CSS variables are defined in `resources/css/app.css` and mapped to Tailwind via 
 | `--destructive` | Danger actions |
 | `--border` / `--input` / `--ring` | Form & focus states |
 | `--radius` | Border radius scale |
-| `--sidebar-*` | Sidebar theming (future) |
+| `--sidebar-*` | Sidebar theming |
 
-Dark mode variables are defined under `.dark` — apply the class to `<html>` or a wrapper to enable.
+Dark mode: `.dark` class on `<html>`.
 
-## Typography
+### SportOS Branding (Planned)
+
+| Token | Value | Use |
+|-------|-------|-----|
+| Primary | TBD | CTAs, active nav |
+| Accent | TBD | Medals, live indicators |
+| Success | Green | Confirmed results |
+| Warning | Amber | Pending validation |
+| Live | Red pulse | Live match indicator |
+
+---
+
+## 7. Typography
 
 | Element | Font | Weight |
 |---------|------|--------|
 | Body | Geist Variable | 400 |
 | UI / Label | Geist Variable | 500 |
 | Heading | Geist Variable | 600 |
+| Data / Scores | Geist Variable | 700 (tabular nums) |
 
-Loaded via `@fontsource-variable/geist` in `app.css`.
+---
 
-## Component Guidelines
-
-### When to Use shadcn
-
-- All **new** UI — forms, buttons, cards, dialogs, tables, navigation.
-- Auth pages (Login already migrated as reference).
-- Dashboard and admin panels.
-
-### Breeze Legacy Components
-
-All pages use shadcn/ui. Remaining custom files in `resources/js/Components/`:
-
-| File | Status |
-|------|--------|
-| `ApplicationLogo.jsx` | SVG logo |
-| `InputError.jsx` | Form error message (`text-destructive`) |
-| `ui/` | shadcn/ui components |
-
-### Layouts
-
-| Layout | File | Status |
-|--------|------|--------|
-| Guest (auth) | `Layouts/GuestLayout.jsx` | shadcn Card |
-| Authenticated | `Layouts/AuthenticatedLayout.jsx` | shadcn Dropdown + Sheet |
-
-## UX Patterns
+## 8. UX Patterns
 
 ### Forms
 
-- Use shadcn `Label` + `Input` pairs.
-- Set `aria-invalid` on inputs when validation fails.
-- Show errors below the field via `InputError` (or shadcn form patterns).
-- Submit buttons use `Button` with `disabled={processing}`.
+- `Label` + `Input` pairs with matching `htmlFor` / `id`
+- `aria-invalid` on validation failure
+- Errors below field via `InputError`
+- `disabled={processing}` on submit
+- Multi-step forms use shadcn `Tabs` or step indicator
 
 ### Navigation
 
-- Authenticated layout: navbar with user dropdown.
-- Guest layout: centered card with logo.
-- Active route highlighted in nav.
+- Active route highlighted (background `bg-secondary`)
+- Admin sidebar: icon + label per module
+- Organization switcher: `Select` or `Command` palette
+- Breadcrumbs on all admin sub-pages
 
 ### Feedback
 
-- Inertia flash messages for success/error.
-- Form validation errors from Laravel returned via Inertia `errors` prop.
+- Success: green flash banner (current) → shadcn `Sonner` toast (planned)
+- Errors: Inertia `errors` prop + field-level messages
+- Loading: `Skeleton` placeholders (planned)
+- Live updates: optimistic UI + WebSocket refresh (Phase 3)
+
+### Data Tables
+
+- Server-side pagination (Laravel paginator)
+- Debounced search (300ms)
+- Filter state preserved in URL query string
+- Bulk actions: checkbox column + action bar (planned)
 
 ### Responsive
 
-- Mobile-first with Tailwind breakpoints (`sm`, `md`, `lg`).
-- Auth cards: full width on mobile, `max-w-md` on desktop.
+- Mobile-first: `sm`, `md`, `lg` breakpoints
+- Tables: horizontal scroll on mobile
+- Sidebar → Sheet on mobile
+- Public portal: score cards stack vertically
 
-### Accessibility
+---
 
-- shadcn/Base UI primitives include ARIA support.
-- Always pair `Label` with `htmlFor` matching input `id`.
-- Keyboard focus via `focus-visible:ring` (built into shadcn components).
+## 9. Accessibility (WCAG 2.1 AA)
 
-## Development Workflow
+| Requirement | Implementation |
+|-------------|----------------|
+| Keyboard navigation | shadcn/Base UI focus management |
+| Screen readers | ARIA labels on icons, tables, forms |
+| Color contrast | 4.5:1 minimum on text |
+| Focus visible | `focus-visible:ring` (built into shadcn) |
+| Live regions | `aria-live="polite"` for live results (Phase 5) |
+| Form labels | Always pair Label + Input |
+
+---
+
+## 10. Current Pages
+
+| Page | Path | Status |
+|------|------|--------|
+| Welcome | `/` | Active |
+| Login / Register | `/login`, `/register` | Active |
+| Dashboard | `/dashboard` | Active |
+| Profile | `/profile` | Active |
+| Admin Users | `/admin/users` | Active |
+
+## Planned Pages (by Phase)
+
+| Phase | Pages |
+|-------|-------|
+| 1 | Organizations, Events, Roles, Audit Logs, Admin Dashboard |
+| 2 | Sports, Athletes, Teams, Officials, Venues, Schedule |
+| 3 | Competitions, Brackets, Results Entry, Rankings, Medals |
+| 4 | Accreditations, Certificates, Reports, Announcements |
+| 5 | Public Event, Live Results, Medal Table, Schedule |
+| 6 | AI Insights Dashboard, AI Chat Panel |
+
+---
+
+## 11. Development Workflow
 
 ```powershell
-npm run dev          # Vite HMR
-npm run build        # Production build
-npx shadcn@latest add <component>   # Add new UI component
+npm run dev
+npm run build
+npx shadcn@latest add <component>
 ```
 
-Edit source files in `resources/js/` and `resources/css/app.css` — never edit `public/build/` directly.
+Never edit `public/build/` directly.
 
-## Key Files
+---
 
-| File | Role |
-|------|------|
-| `components.json` | shadcn CLI configuration |
-| `resources/css/app.css` | Tailwind 4 + shadcn theme variables |
-| `vite.config.js` | Vite + React + Tailwind + `@` alias |
-| `jsconfig.json` | Path aliases for `@/*` |
-| `resources/views/app.blade.php` | Inertia root template |
+## 12. Related Documents
 
-## References
-
-- [shadcn/ui Docs](https://ui.shadcn.com/docs)
-- [shadcn/ui GitHub](https://github.com/shadcn-ui/ui)
-- [Inertia.js React](https://inertiajs.com/)
-- [Tailwind CSS v4](https://tailwindcss.com/docs)
-- [Lucide Icons](https://lucide.dev/)
+| Document | Link |
+|----------|------|
+| Architecture | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| Functional spec | [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) |
+| Roadmap | [ROADMAP.md](ROADMAP.md) |
+| PRD | [PRD.md](PRD.md) |

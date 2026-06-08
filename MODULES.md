@@ -1,148 +1,241 @@
 # Modules
 
-List of modules and components in the **Demo** project.
+Module inventory for the **SportOS** platform.
 
-## Existing Modules
+> Spec vs code: [DOCUMENTATION.md](DOCUMENTATION.md). Only § Active Modules exist in codebase.
+
+---
+
+## Module Status Legend
+
+| Status | Meaning |
+|--------|---------|
+| **Active** | Implemented and in use |
+| **Partial** | Started; incomplete vs target spec |
+| **Planned** | Designed; not yet implemented |
+
+---
+
+## Active Modules
 
 ### 1. Core / Bootstrap
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| Application bootstrap | `bootstrap/app.php` | Routing, middleware, exceptions |
-| Inertia middleware | `app/Http/Middleware/HandleInertiaRequests.php` | Shared props to React |
-| App service provider | `app/Providers/AppServiceProvider.php` | Service registration |
-| Base controller | `app/Http/Controllers/Controller.php` | Abstract controller |
-| Root template | `resources/views/app.blade.php` | Inertia HTML shell |
+| Component | Location | Status |
+|-----------|----------|--------|
+| Application bootstrap | `bootstrap/app.php` | Active |
+| Inertia middleware | `app/Http/Middleware/HandleInertiaRequests.php` | Active |
+| Base controller | `app/Http/Controllers/Controller.php` | Active |
+| Root template | `resources/views/app.blade.php` | Active |
 
 ### 2. Authentication (Breeze)
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| Auth routes | `routes/auth.php` | Login, register, password reset |
-| Auth controllers | `app/Http/Controllers/Auth/` | 8 auth controllers |
-| Login page | `resources/js/Pages/Auth/Login.jsx` | shadcn/ui form |
-| Register page | `resources/js/Pages/Auth/Register.jsx` | shadcn/ui form |
-| Password reset | `resources/js/Pages/Auth/ForgotPassword.jsx` | shadcn/ui form |
-| Email verification | `resources/js/Pages/Auth/VerifyEmail.jsx` | shadcn/ui |
-| Auth tests | `tests/Feature/Auth/` | 16 auth tests |
+| Component | Location | Status |
+|-----------|----------|--------|
+| Auth routes | `routes/auth.php` | Active |
+| Auth controllers | `app/Http/Controllers/Auth/` | Active |
+| Auth pages | `resources/js/Pages/Auth/` | Active |
+| Auth tests | `tests/Feature/Auth/` | Active (16 tests) |
 
 ### 3. Dashboard & Profile
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| Dashboard route | `routes/web.php` | `GET /dashboard` (auth + verified) |
-| Dashboard page | `resources/js/Pages/Dashboard.jsx` | shadcn Card |
-| Profile controller | `app/Http/Controllers/ProfileController.php` | Edit/update/delete |
-| Profile pages | `resources/js/Pages/Profile/` | Profile forms |
-| Profile tests | `tests/Feature/ProfileTest.php` | 5 profile tests |
+| Component | Location | Status |
+|-----------|----------|--------|
+| Dashboard | `resources/js/Pages/Dashboard.jsx` | Active |
+| Profile | `resources/js/Pages/Profile/` | Active |
+| Profile tests | `tests/Feature/ProfileTest.php` | Active (5 tests) |
 
-### 4. Web — Welcome
+### 4. User Management (Admin) — Partial
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| Home route | `routes/web.php` | `GET /` → Welcome (Inertia) |
-| Welcome page | `resources/js/Pages/Welcome.jsx` | Landing page |
-| Health check | `/up` | Laravel health endpoint |
+| Component | Location | Status |
+|-----------|----------|--------|
+| RBAC models | `app/Models/Role.php`, `Permission.php` | Active |
+| RBAC seeder | `database/seeders/RolesAndPermissionsSeeder.php` | Active |
+| Permission helper | `app/Support/Permissions.php` | Active |
+| Admin middleware | `EnsureUserIsAdmin`, `EnsureUserHasPermission` | Active |
+| User controller | `app/Http/Controllers/Admin/UserController.php` | Active |
+| User policy | `app/Policies/UserPolicy.php` | Active |
+| Admin pages | `resources/js/Pages/Admin/Users/` | Active |
+| Admin tests | `tests/Feature/Admin/UserManagementTest.php` | Active (10 tests) |
+
+> System roles via `role_user`; org roles via `organization_user.role_id`.
 
 ### 5. UI — shadcn/ui
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| CLI config | `components.json` | shadcn configuration |
-| Utils | `resources/js/lib/utils.js` | `cn()` class merge helper |
-| Button | `components/ui/button.jsx` | Primary/secondary/destructive |
-| Input | `components/ui/input.jsx` | Text inputs |
-| Label | `components/ui/label.jsx` | Form labels |
-| Card | `components/ui/card.jsx` | Content containers |
-| Checkbox | `components/ui/checkbox.jsx` | Boolean inputs |
-| Dialog | `components/ui/dialog.jsx` | Delete account modal |
-| Dropdown Menu | `components/ui/dropdown-menu.jsx` | User nav menu |
-| Sheet | `components/ui/sheet.jsx` | Mobile nav |
-| Separator | `components/ui/separator.jsx` | Dividers |
+| Component | Location | Status |
+|-----------|----------|--------|
+| CLI config | `components.json` | Active |
+| Components | `resources/js/Components/ui/` | Active (import: `@/components/ui/`) |
+| Utils | `resources/js/lib/utils.js` | Active |
+
+Installed: Button, Input, Label, Card, Checkbox, Dialog, Dropdown Menu, Sheet, Separator, Table, Badge, Select, Alert Dialog.
 
 ### 6. Layouts
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| Guest layout | `resources/js/Layouts/GuestLayout.jsx` | Auth pages (shadcn Card) |
-| Authenticated layout | `resources/js/Layouts/AuthenticatedLayout.jsx` | Dropdown + Sheet nav |
+| Layout | File | Status |
+|--------|------|--------|
+| Guest | `Layouts/GuestLayout.jsx` | Active |
+| Authenticated | `Layouts/AuthenticatedLayout.jsx` | Active |
+| Admin (sidebar) | `Layouts/AdminLayout.jsx` | Planned |
 
-### 7. User (Data Layer)
+### 7. Infrastructure Tables
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| User model | `app/Models/User.php` | Authenticatable user |
-| User migration | `database/migrations/0001_01_01_000000_create_users_table.php` | `users` table |
-| User factory | `database/factories/UserFactory.php` | Fake user data |
-| Database seeder | `database/seeders/DatabaseSeeder.php` | 1 test user |
+| Table | Purpose | Status |
+|-------|---------|--------|
+| `users` | Authentication | Active |
+| `sessions` | Session storage | Active |
+| `cache`, `jobs` | Cache & queue | Active |
 
-### 8. Infrastructure Tables
+### 8. Organizations (Admin) — Active
 
-| Table | Migration | Purpose |
-|-------|-----------|---------|
-| `sessions` | `0001_01_01_000000` | Session storage |
-| `password_reset_tokens` | `0001_01_01_000000` | Password reset |
-| `cache`, `cache_locks` | `0001_01_01_000001` | Cache storage |
-| `jobs`, `job_batches`, `failed_jobs` | `0001_01_01_000002` | Queue system |
+| Component | Location | Status |
+|-----------|----------|--------|
+| Enums | `app/Enums/OrganizationType.php`, `OrganizationStatus.php` | Active |
+| Models | `app/Models/Organization.php`, `Branch.php` | Active |
+| Policy | `app/Policies/OrganizationPolicy.php` | Active |
+| Controller | `app/Http/Controllers/Admin/OrganizationController.php` | Active |
+| Middleware | `app/Http/Middleware/SetCurrentOrganization.php` | Partial |
+| Admin pages | `resources/js/Pages/Admin/Organizations/` | Active |
+| Seeder | `database/seeders/OrganizationSeeder.php` | Active |
+| Tests | `tests/Feature/Admin/OrganizationManagementTest.php` | Active (9 tests) |
 
-### 9. Frontend Assets
+| RBAC tests | `tests/Feature/Admin/RbacTest.php` | Active (5 tests) |
+| Audit logs | `AuditLog`, `Auditable`, `AuditLogger` | Active |
+| Audit UI | `resources/js/Pages/Admin/AuditLogs/` | Active |
+| Audit tests | `tests/Feature/Admin/AuditLogTest.php` | Active (7 tests) |
+| Events | `Event`, `EventType`, `EventCategory` | Active |
+| Event admin | `resources/js/Pages/Admin/Events/` | Active |
+| Event tests | `tests/Feature/Admin/EventManagementTest.php` | Active (9 tests) |
 
-| Component | Location | Description |
-|-----------|----------|-------------|
-| CSS entry | `resources/css/app.css` | Tailwind 4 + shadcn theme |
-| JS entry | `resources/js/app.jsx` | Inertia + React bootstrap |
-| Vite config | `vite.config.js` | Vite + React + Tailwind |
-
-### 10. Testing
-
-| Component | Location | Description |
-|-----------|----------|-------------|
-| Auth tests | `tests/Feature/Auth/` | Login, register, reset, verify |
-| Profile tests | `tests/Feature/ProfileTest.php` | Profile CRUD |
-| Example test | `tests/Feature/ExampleTest.php` | `GET /` returns 200 |
-
-**Total: 25 tests passing.**
+**Total tests: 66 passing.**
 
 ---
 
 ## Planned Modules
 
-See [ROADMAP.md](ROADMAP.md) for the full schedule.
+### Phase 1 — Foundation
 
-| Module | Priority | Description |
-|--------|----------|-------------|
+| Module | Key Tables | Status |
+|--------|-----------|--------|
+| Organizations | `organizations`, `branches`, `organization_user` | **Active** |
+| RBAC | `roles`, `permissions`, `role_permission`, `role_user` | **Active** |
+| Audit Logs | `audit_logs` | **Active** |
+| Events | `events`, `event_types`, `event_categories`, `event_user` | **Active** |
+| API v1 | Sanctum + `/api/v1/` routes | **Active** |
+| Admin Sidebar | `AdminLayout.jsx` | **Active** |
 
-| User Management | Medium | Admin CRUD with shadcn Table |
-| API Layer | Medium | REST API with Sanctum |
-| Notifications | Low | Email / in-app notifications |
+### Phase 2 — Sports & Registration
+
+| Module | Key Tables | Priority |
+|--------|-----------|----------|
+| Sports | `sports`, `sport_disciplines`, `sport_categories`, `sport_divisions` | **Active** |
+| Athletes | `athletes`, `registrations` | **Active** |
+| Teams | `teams`, `team_athlete` | **Active** |
+| Officials | `officials` (+ `registrations`) | **Active** |
+| Venues | `venues`, `facilities`, `event_venue`, `event_sport_venue` | **Active** |
+| Scheduling | `competition_formats`, `competitions`, `groups`, `fixtures`, `matches`, `match_participants`, `match_officials` | **Active** |
+
+### Phase 3 — Competition Engine
+
+| Module | Key Tables | Priority |
+|--------|-----------|----------|
+| Brackets / Draw | `DrawGenerator`, knockout auto-advance | **Active** |
+| Results | `results`, `result_appeals`, `ResultWorkflow`, `AppealWorkflow` | **Active** |
+| Rankings | `rankings`, `RankingCalculator` | **Active** |
+| Medals | `medals`, `MedalAllocator` | **Active** |
+| Live Results | `ResultScoreUpdated` broadcast + Echo | **Active** |
+
+### Phase 4 — Operations
+
+| Module | Key Tables | Priority |
+|--------|-----------|----------|
+| Accreditation | `accreditations` + QR | High |
+| Certificates | `certificates` + PDF | Medium |
+| Announcements | `announcements`, `notifications` | Medium |
+| Media | `media` | Low |
+| Reporting | Report generators (PDF/Excel/CSV) | High |
+| Analytics | Dashboard widgets | Medium |
+
+### Phase 5 — Public Portal
+
+| Module | Description | Priority |
+|--------|-------------|----------|
+| Public Event Pages | No-auth event landing | High |
+| Live Results Feed | Real-time scores | High |
+| Public Rankings / Medals | Read-only views | High |
+
+### Phase 6 — AI Layer
+
+| Module | Description | Priority |
+|--------|-------------|----------|
+| AI Scheduling | Constraint-based optimizer | Medium |
+| AI Predictions | Match outcome probabilities | Low |
+| AI Reports | Narrative event summaries | Medium |
+| AI Assistant | RAG chat for organizers | Medium |
 
 ---
-
-## Module Pattern
-
-```
-app/Http/Controllers/          # Laravel controllers
-resources/js/Pages/            # Inertia React pages
-resources/js/Layouts/          # Page layouts
-resources/js/components/ui/    # shadcn components (via CLI)
-routes/web.php                 # Web routes
-routes/auth.php                # Auth routes
-tests/Feature/                 # Feature tests
-```
 
 ## Module Dependencies
 
 ```
 ┌─────────────┐
-│   Welcome   │  ← active
-└─────────────┘
-
-┌─────────────┐     ┌──────────────┐
-│    Auth     │ ──► │  Dashboard   │  ← active (Breeze + partial shadcn)
-└──────┬──────┘     └──────┬───────┘
-       │                   │
-       ▼                   ▼
-┌─────────────┐     ┌──────────────┐
-│ User Mgmt   │     │     API      │  ← planned
-└─────────────┘     └──────────────┘
+│    Core     │  Organizations · RBAC · Audit
+│  (Phase 1)  │
+└──────┬──────┘
+       │
+       ├──────────────────────────────────┐
+       ▼                                  ▼
+┌─────────────┐                    ┌─────────────┐
+│   Events    │                    │   API v1    │
+│  (Phase 1)  │                    │  (Phase 1)  │
+└──────┬──────┘                    └─────────────┘
+       │
+       ▼
+┌─────────────┐
+│Sports & Reg │  Athletes · Teams · Venues · Schedule
+│  (Phase 2)  │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│ Competition │  Brackets · Results · Rankings · Medals
+│  (Phase 3)  │
+└──────┬──────┘
+       │
+       ├────────────────┬────────────────┐
+       ▼                ▼                ▼
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│ Operations  │  │   Public    │  │  AI Layer   │
+│  (Phase 4)  │  │  (Phase 5)  │  │  (Phase 6)  │
+└─────────────┘  └─────────────┘  └─────────────┘
 ```
+
+---
+
+## Module Pattern (Standard)
+
+Each new module follows:
+
+```
+database/migrations/         # Schema
+app/Models/                  # Eloquent models
+app/Policies/                # Authorization
+app/Http/Controllers/Admin/  # Inertia controllers
+app/Http/Controllers/Api/V1/ # API controllers
+app/Http/Requests/           # Validation
+app/Services/                # Business logic (if complex)
+resources/js/Pages/Admin/    # React pages
+tests/Feature/               # Feature tests
+```
+
+Update `DATABASE.md`, `API.md`, `MODULES.md`, and `ROADMAP.md` when adding a module.
+
+---
+
+## Related Documents
+
+| Document | Link |
+|----------|------|
+| Functional spec | [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) |
+| Roadmap | [ROADMAP.md](ROADMAP.md) |
+| Database | [DATABASE.md](DATABASE.md) |
+| Architecture | [ARCHITECTURE.md](ARCHITECTURE.md) |
