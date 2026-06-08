@@ -222,12 +222,16 @@ demo/
 
 ## Git
 
-This project has not been initialized as a Git repository yet.
+Repository: [github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo)
 
 ```powershell
-git init
-git add .
-git commit -m "Initial Laravel 13 setup"
+git clone https://github.com/ahmadzakiabdullah/demo.git
+cd demo
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
 ```
 
 Suggested branches: `main` or `develop`

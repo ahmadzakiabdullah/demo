@@ -11,7 +11,7 @@ A brief overview of the **Demo** project for developers and AI agents.
 | Status | Phase 1 complete — full auth + shadcn/ui |
 | Local URL | https://demo.test |
 | Location | `D:\www\demo` |
-| Git | Not initialized |
+| Git | [github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo) |
 
 ## Technology Stack
 

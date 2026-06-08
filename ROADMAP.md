@@ -13,7 +13,7 @@ Development plan for the **Demo** project.
 - [x] shadcn/ui initialized with base components
 - [x] All pages migrated to shadcn/ui
 - [x] Authenticated layout with dropdown + mobile sheet
-- [ ] Git repository init
+- [x] Git repository init ([github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo))
 - [ ] CI/CD pipeline
 
 ---

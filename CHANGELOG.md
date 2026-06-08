@@ -6,6 +6,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Git repository connected to [github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo)
+
 ### Removed
 
 - Unused Breeze legacy components: `PrimaryButton`, `SecondaryButton`, `DangerButton`, `TextInput`, `InputLabel`, `Checkbox`, `Modal`, `Dropdown`, `NavLink`, `ResponsiveNavLink`
@@ -66,5 +70,5 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Queue connection: database
 - Mail driver: log
 
-[Unreleased]: https://github.com/example/demo/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/example/demo/releases/tag/v0.1.0
+[Unreleased]: https://github.com/ahmadzakiabdullah/demo/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/ahmadzakiabdullah/demo/releases/tag/v0.1.0
