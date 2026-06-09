@@ -426,16 +426,16 @@ Based on product review — build order for Phase 1:
 | # | Task | Priority | Status |
 |---|------|----------|--------|
 | 4.1.1 | `accreditations` table with pass types | High | Done |
-| 4.1.2 | QR code generation and scanning | High | Not started |
-| 4.1.3 | Pass types: athlete, official, volunteer, media | High | Not started |
-| 4.1.4 | Badge PDF template + bulk print | Medium | Not started |
-| 4.1.5 | Entry gate validation endpoint | Medium | Not started |
+| 4.1.2 | QR code generation and scanning | High | Done |
+| 4.1.3 | Pass types: athlete, official, volunteer, media | High | Done |
+| 4.1.4 | Badge PDF template + bulk print | Medium | In Progress |
+| 4.1.5 | Entry gate validation endpoint | Medium | In Progress |
 
 ### 4.2 Certificate Module
 
 | # | Task | Priority | Status |
 |---|------|----------|--------|
-| 4.2.1 | `certificates` table + templates | High | Not started |
+| 4.2.1 | `certificates` table + templates | High | In Progress |
 | 4.2.2 | Participation, achievement, official certificate types | High | Not started |
 | 4.2.3 | PDF generation (DomPDF / Snappy) | High | Not started |
 | 4.2.4 | Bulk certificate issuance | Medium | Not started |

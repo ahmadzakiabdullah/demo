@@ -120,6 +120,11 @@ class Event extends Model
         return $this->hasMany(Accreditation::class);
     }
 
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
     public function resolveAuditOrganizationId(): ?int
     {
         return $this->organization_id;

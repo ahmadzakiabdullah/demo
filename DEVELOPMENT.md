@@ -220,7 +220,7 @@ Condensed from [ROADMAP.md](ROADMAP.md). See that file for full task tables per 
 | Phase 1 | Foundation (orgs, RBAC, events, audit, API v1) | Largely complete (infra gaps) | Multi-tenancy, RBAC, Events, Audit, basic API |
 | Phase 2 | Sports & Competition Setup (sports, athletes, teams, officials, venues, scheduling, participants) | Largely complete | Full registration + manual scheduling + Event Participants |
 | Phase 3 | Competition Engine (brackets, results, rankings, medals, live) | **Complete** | Automated brackets, score entry + appeals + live, auto rankings/medals |
-| Phase 4 | Operations (accreditation, certificates, reports, announcements, media, analytics) | In Progress | Started with accreditations table + model (4.1.1) |
+| Phase 4 | Operations (accreditation, certificates, reports, announcements, media, analytics) | In Progress | 4.1 Accreditation: table+model+QR+types+basic CRUD+UI stubs (4.1.1-4.1.5 partial). 4.2 Certificate table+model started. |
 | Phase 5 | Public Portal | Not started | Deferred |
 | Phase 6 | AI Layer | Not started | Deferred |
 

@@ -271,6 +271,7 @@ class AthleteController extends Controller
             'nationality' => $athlete->nationality,
             'id_number' => $athlete->id_number,
             'medical_clearance' => $athlete->medical_clearance,
+            'weight' => $athlete->weight,
             'user_id' => $athlete->user_id,
         ];
     }

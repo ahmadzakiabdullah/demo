@@ -21,6 +21,7 @@ export default function Edit({ event, athlete, genders }) {
         nationality: athlete.nationality || '',
         id_number: athlete.id_number || '',
         medical_clearance: athlete.medical_clearance,
+        weight: athlete.weight || '',
     });
 
     const submit = (e) => {
@@ -157,6 +158,22 @@ export default function Edit({ event, athlete, genders }) {
                                 </Label>
                             </div>
                             <InputError message={errors.medical_clearance} />
+
+                            <div>
+                                <Label htmlFor="weight">Weight (kg)</Label>
+                                <Input
+                                    id="weight"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    max="999.99"
+                                    value={data.weight}
+                                    onChange={(e) =>
+                                        setData('weight', e.target.value)
+                                    }
+                                />
+                                <InputError message={errors.weight} />
+                            </div>
 
                             <div className="flex gap-2">
                                 <Button type="submit" disabled={processing}>

@@ -23,6 +23,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
+        // Tambah pengguna Ahmad Zaki sebagai Admin
+        User::factory()->admin()->create([
+            'name' => 'Ahmad Zaki',
+            'email' => 'ahmadzaki@utem.edu.my',
+        ]);
+
         $this->call(OrganizationSeeder::class);
     }
 }

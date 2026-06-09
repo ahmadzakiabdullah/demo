@@ -2,60 +2,48 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\Auditable;
-use App\Models\Concerns\BelongsToOrganization;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-#[Fillable([
-    'organization_id',
-    'event_id',
-    'accreditable_type',
-    'accreditable_id',
-    'type',
-    'qr_code',
-    'status',
-    'issued_at',
-    'expires_at',
-    'issued_by',
-    'notes',
-])]
 class Accreditation extends Model
 {
-    /** @use HasFactory<\Database\Factories\AccreditationFactory> */
-    use Auditable, BelongsToOrganization, HasFactory;
+    protected $fillable = [
+        'organization_id', 'event_id', 'accreditable_type', 'accreditable_id', 
+        'type', 'qr_code', 'status', 'issued_at', 'expires_at', 'issued_by', 'notes'
+    ];
 
-    /**
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'issued_at' => 'datetime',
+        'expires_at' => 'datetime',
+    ];
+
+    protected static function boot()
     {
-        return [
-            'issued_at' => 'datetime',
-            'expires_at' => 'datetime',
-        ];
+        parent::boot();
+        
+        static::creating(function ($model) {
+            $model->qr_code = $model->qr_code ?? (string) Str::uuid();
+        });
     }
 
-    public function event(): BelongsTo
-    {
-        return $this->belongsTo(Event::class);
-    }
-
-    public function accreditable(): MorphTo
+    public function accreditable()
     {
         return $this->morphTo();
     }
 
-    public function issuedBy(): BelongsTo
+    public function generateQrData()
     {
-        return $this->belongsTo(User::class, 'issued_by');
+        return 'QR-' . strtoupper(Str::random(12));
     }
 
-    public function resolveAuditOrganizationId(): ?int
+    public function getQrCodeSvg()
     {
-        return $this->organization_id;
+        return (string) QrCode::format('svg')->size(200)->generate($this->qr_code);
+    }
+
+    public function issuedBy()
+    {
+        return $this->belongsTo(User::class, 'issued_by');
     }
 }

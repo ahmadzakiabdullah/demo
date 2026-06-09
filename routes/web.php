@@ -20,6 +20,8 @@ use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\OrganizationSwitchController;
 use App\Http\Controllers\Admin\SportController;
 use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\AccreditationController;
+use App\Http\Controllers\Admin\AccreditationBadgeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\DashboardController;
@@ -66,6 +68,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('events.athletes', AthleteController::class);
         Route::resource('events.officials', OfficialController::class);
         Route::resource('events.teams', TeamController::class);
+        Route::resource('events.accreditations', AccreditationController::class);
+        Route::get('events/{event}/accreditations/{accreditation}/badge', [AccreditationBadgeController::class, 'download'])
+            ->name('events.accreditations.badge');
         Route::resource('events.competitions', CompetitionController::class);
         Route::post('events/{event}/competitions/{competition}/groups', [CompetitionController::class, 'storeGroup'])
             ->name('events.competitions.groups.store');
