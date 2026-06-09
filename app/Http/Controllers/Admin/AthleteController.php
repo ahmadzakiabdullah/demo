@@ -103,7 +103,7 @@ class AthleteController extends Controller
                 'weight' => $validated['weight'] ?? null,
             ]);
 
-        $category = $validated['sport_category_id'] ? SportCategory::find($validated['sport_category_id']) : null;
+        $category = ($validated['sport_category_id'] ?? null) ? SportCategory::find($validated['sport_category_id']) : null;
         $issues = $eligibilityService->issues($athlete, $category, $event);
 
         if ($issues !== []) {
