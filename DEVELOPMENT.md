@@ -67,7 +67,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | In Progress | Backend: MatchOfficial, officials in store/update match requests with validation and ScheduleConflictDetector for officials conflicts. UI: basic form in Competitions/Show for officials. Full dedicated assignment page and per-match UI + warnings in progress. |
+| POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | Done | Full UI: "Officials" button per match in Competitions/Show opens editor to add/remove multiple officials with roles. Backend validation + conflict detection on save. Display in table. Supports edit on existing matches. |
 | POLISH-02 | Auto fixture/schedule generation driven by approved `participant_sport_entries` | 2.6.3 | High | In Progress | Manual fixtures work. DrawGenerator exists for seeding. Need service to pull approved entries and generate fixtures/matches. UI trigger in progress. |
 | POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Done (batch) | Migration columns added. Need data backfill script + usage in medal tally by fakulti/negeri + reports. |
 | POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Done (batch) | Current checklist covers up to "Schedule built". Add Results, Rankings, Medals steps + make more accurate/dynamic. |
@@ -146,7 +146,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | In Progress | Backend: MatchOfficial, officials in store/update match requests with validation and ScheduleConflictDetector for officials conflicts. UI: basic form in Competitions/Show for officials. Full dedicated assignment page and per-match UI + warnings in progress. |
+| POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | Done | Full UI: "Officials" button per match in Competitions/Show opens editor to add/remove multiple officials with roles. Backend validation + conflict detection on save. Display in table. Supports edit on existing matches. |
 
 #### 2.5 Venue Module
 

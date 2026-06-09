@@ -24,10 +24,12 @@ use App\Models\Official;
 use App\Models\Team;
 use App\Support\DrawGenerator;
 use App\Support\MatchScheduler;
+use App\Support\ScheduleConflictDetector;
 use Illuminate\Http\RedirectResponse;
 use RuntimeException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -306,6 +308,67 @@ class CompetitionController extends Controller
         app(MatchScheduler::class)->update($matchGame, $request->validated());
 
         return back()->with('success', 'Match updated.');
+    }
+
+    public function updateMatchOfficials(Request $request, Event $event, Competition $competition, Fixture $fixture, MatchGame $matchGame): RedirectResponse
+    {
+        $this->ensureBelongsToEvent($event, $competition);
+        $this->ensureFixtureBelongsToCompetition($competition, $fixture);
+        $this->ensureMatchBelongsToFixture($fixture, $matchGame);
+        $this->authorize('manageSchedule', $competition);
+
+        $validated = $request->validate([
+            'officials' => ['nullable', 'array'],
+            'officials.*.official_id' => ['required', 'integer', Rule::exists('officials', 'id')],
+            'officials.*.role' => ['nullable', Rule::in(\App\Enums\MatchOfficialRole::values())],
+        ]);
+
+        $officials = $validated['officials'] ?? [];
+
+        // Validate officials belong to the event's organization and are approved
+        foreach ($officials as $off) {
+            $official = Official::query()
+                ->where('organization_id', $event->organization_id)
+                ->whereHas('registrations', fn ($q) => $q->where('event_id', $event->id)->where('status', 'approved'))
+                ->find($off['official_id']);
+
+            if (! $official) {
+                return back()->withErrors(['officials' => 'One or more officials are not approved for this event.']);
+            }
+        }
+
+        // Check for conflicts if scheduled
+        if ($matchGame->scheduled_at) {
+            $conflicts = app(\App\Support\ScheduleConflictDetector::class)->detect(
+                $matchGame->scheduled_at,
+                $matchGame->duration_minutes,
+                $matchGame->venue_id,
+                $matchGame->facility_id,
+                $matchGame->participants->map(fn ($p) => [
+                    'participant_type' => $p->participant_type,
+                    'participant_id' => $p->participant_id,
+                ])->toArray(),
+                $officials,
+                $matchGame->id
+            );
+
+            if (! empty($conflicts['officials'])) {
+                return back()->withErrors(['officials' => $conflicts['officials']]);
+            }
+        }
+
+        // Replace officials
+        $matchGame->officials()->delete();
+
+        foreach ($officials as $off) {
+            MatchOfficial::create([
+                'match_id' => $matchGame->id,
+                'official_id' => $off['official_id'],
+                'role' => $off['role'] ?? 'referee',
+            ]);
+        }
+
+        return back()->with('success', 'Officials updated for match.');
     }
 
     public function destroyMatch(Event $event, Competition $competition, Fixture $fixture, MatchGame $matchGame): RedirectResponse

@@ -339,7 +339,7 @@ Based on product review — build order for Phase 1:
 |---|------|----------|--------|
 | 2.4.1 | `officials` table (referee, judge, technical officer) | High | Done |
 | 2.4.2 | Official registration and certification tracking | Medium | Done |
-| 2.4.3 | Official-to-match assignment | High | Not started |
+| 2.4.3 | Official-to-match assignment | High | Done |
 
 ### 2.5 Venue Module
 

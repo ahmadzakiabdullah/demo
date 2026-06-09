@@ -77,6 +77,8 @@ Route::middleware('auth')->group(function () {
             ->name('events.competitions.matches.store');
         Route::patch('events/{event}/competitions/{competition}/fixtures/{fixture}/matches/{matchGame}', [CompetitionController::class, 'updateMatch'])
             ->name('events.competitions.matches.update');
+        Route::patch('events/{event}/competitions/{competition}/fixtures/{fixture}/matches/{matchGame}/officials', [CompetitionController::class, 'updateMatchOfficials'])
+            ->name('events.competitions.matches.officials.update');
         Route::delete('events/{event}/competitions/{competition}/fixtures/{fixture}/matches/{matchGame}', [CompetitionController::class, 'destroyMatch'])
             ->name('events.competitions.matches.destroy');
         Route::get('events/{event}/schedule', [ScheduleController::class, 'index'])

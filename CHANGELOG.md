@@ -7,6 +7,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Full UI for POLISH-01: Official-to-match assignment with multi-official support, roles, per-match "Officials" editor in Competitions/Show, backend update endpoint with conflict validation.
+
+### Added
 
 - BelongsToOrganization trait (app/Models/Concerns/BelongsToOrganization.php) for clean, reusable tenant scoping.
 - OrganizationScope applied to additional models: EventSeries, MedalCeremony, ResultAppeal, Venue (POLISH-05 largely complete).
