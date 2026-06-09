@@ -343,12 +343,22 @@ tests/
 | Laravel 13 monolith | Active |
 | Inertia + React + shadcn | Active |
 | Session auth (Breeze) | Active |
-| Binary admin/user roles | Active (to be upgraded) |
+| RBAC (roles, permissions, policies) | Active |
 | Admin user CRUD | Active |
-| Multi-tenancy | Not started |
-| API v1 | Not started |
+| Organizations & multi-tenancy | Active |
+| Audit logs | Active |
+| Events module (lifecycle, edition year) | Active |
+| Event Participants & Sport Entries | Active |
+| Sports (disciplines, categories, divisions) | Active |
+| Athletes, Teams, Officials | Active |
+| Venues & Facilities | Active |
+| Scheduling & Competitions | Active |
+| Results, Rankings, Medals | Active |
+| API v1 (Sanctum, REST) | Active |
+| Admin shell layout (sidebar, switcher) | Active |
 | Redis | Not started |
-| Competition engine | Not started |
+| CI/CD (GitHub Actions) | Planned |
+| Full rebrand (`APP_NAME`, logos) | Planned |
 
 ---
 

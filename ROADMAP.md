@@ -131,17 +131,17 @@ Bootstrap work maps to early SportOS Phase 1 tasks:
 | 35 PHPUnit tests | Test foundation | Done |
 | Git repository | Source control | Done |
 
-**Not yet built:** API layer, Redis, sports-domain modules (sports, athletes, teams).
+**Not yet built:** Redis, CI/CD, full rebrand, public portal (Phase 5), AI layer (Phase 6).
 
 ### Implementation vs Documentation
 
 | Aspect | Documentation | Code |
 |--------|---------------|------|
 | Product vision | Complete | — |
-| Database ERD | Complete | ~5% tables exist |
-| API specification | Complete | Phase 1 core endpoints live |
-| UI patterns | Complete | Auth + admin users only |
-| Security model | Complete | Partial (binary admin) |
+| Database ERD | Complete | ~90% tables implemented (Phase 1–3) |
+| API specification | Complete | Full `/api/v1/` active for all core modules |
+| UI patterns | Complete | Admin shell + all module pages |
+| Security model | Complete | Full RBAC with policies + org scoping |
 
 ---
 

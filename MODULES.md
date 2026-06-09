@@ -75,7 +75,7 @@ Installed: Button, Input, Label, Card, Checkbox, Dialog, Dropdown Menu, Sheet, S
 |--------|------|--------|
 | Guest | `Layouts/GuestLayout.jsx` | Active |
 | Authenticated | `Layouts/AuthenticatedLayout.jsx` | Active |
-| Admin (sidebar) | `Layouts/AdminLayout.jsx` | Planned |
+| Admin (sidebar) | `Layouts/AdminLayout.jsx` | Active |
 
 ### 7. Infrastructure Tables
 

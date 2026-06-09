@@ -138,13 +138,24 @@ demo/
 ## Current Features
 
 - Full authentication (login, register, profile, password reset, email verification)
-- Admin user management (CRUD, search, role filter) — admin only
+- **Organizations & multi-tenancy** — tenant isolation, branch management, organization switcher
+- **RBAC** — 9 system roles, granular permissions, policies + middleware
+- **Events** — full CRUD, lifecycle (draft → published → active → completed → archived), edition year/cadence
+- **Event Participants & Sport Entries** — bulk CSV import, sport entry workflow, canonical competition flow
+- **Sports** — disciplines, categories, divisions, sport templates (Football, Badminton, etc.)
+- **Athletes & Teams** — profiles, registration workflow, roster management, eligibility checks
+- **Officials** — referee/judge/technical officer registration, certification tracking
+- **Venues & Facilities** — org-scoped CRUD, link to events/sports, availability calendar
+- **Scheduling & Competitions** — formats (league, knockout, Swiss, group, double-elim), fixtures, conflict detection
+- **Results, Rankings & Medals** — score entry, appeals, live results (WebSocket), auto rankings + medal tally
+- **API v1** — Sanctum tokens, REST endpoints for all core + sports/athletes/teams/competitions/results
+- **Audit logs** — append-only, admin activity UI
+- **173+ PHPUnit tests** passing
 - shadcn/ui across all pages
-- 35 passing tests
 
 ## Roadmap
 
-See [ROADMAP.md](ROADMAP.md). Current phase: **Phase 1 — Foundation** (organizations, RBAC, events, API v1).
+See [ROADMAP.md](ROADMAP.md). Current phase: **Phase 4 — Operations** (Phases 1–3 largely complete).
 
 ## Deployment
 
