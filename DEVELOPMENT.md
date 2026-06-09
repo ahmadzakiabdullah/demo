@@ -72,7 +72,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 | POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Done | Added columns + migration to medals/rankings. MedalAllocator & RankingCalculator now populate from the linked event_participant. MedalTallyAggregator + UI now has by_contingent. Backfill on regenerate. |
 | POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Done | Checklist extended to 8 steps (added Results published, Medals & rankings). Checks now include confirmed results and medals/rankings existence. |
 | POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | Largely Complete | BelongsToOrganization trait created. Applied to Event, Athlete, Team, EventParticipant, Competition, Official, Venue, EventSeries, MedalCeremony, ResultAppeal. Cross-tenant test added. Scope now consistent across tenant models. |
-| POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | In Progress | EligibilityService exists with age/gender/medical/official cert. Added weight to Athlete (migration, model, factory, UI in Create, enforcement in store with notes for issues). Full weight check in service. Enforcement in registration workflow in progress. |
+| POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | Done | EligibilityService fully updated with weight checks. Weight field added to Athlete (model, migration, factory, Edit/Create forms, payload). Enforcement: warnings on create, blocks on status transition to Submitted+. Updated registrationPayload to include issues. |
 | POLISH-07 | Basic venue/facility availability calendar + blocking | 2.5.2 | Medium | Done | Added 'bookings' list (upcoming scheduled matches) to venue detail payload and Venues/Show.jsx as simple table calendar. Blocking via existing ScheduleConflictDetector in match scheduling. |
 | POLISH-08 | Standardize form patterns (shadcn/ui Form + validation) across Admin pages | 1.7.5 | Medium | Done (batch) | Many pages still use ad-hoc forms. Audit and refactor key ones. |
 | POLISH-09 | Upgrade admin user panel to full org-scoped RBAC | 1.3.5 | Medium | Done (batch) | System roles done; org admin experience for roles/permissions needs polish. |
@@ -134,7 +134,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | In Progress | EligibilityService exists with age/gender/medical/official cert. Added weight to Athlete (migration, model, factory, UI in Create, enforcement in store with notes for issues). Full weight check in service. Enforcement in registration workflow in progress. |
+| POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | Done | EligibilityService fully updated with weight checks. Weight field added to Athlete (model, migration, factory, Edit/Create forms, payload). Enforcement: warnings on create, blocks on status transition to Submitted+. Updated registrationPayload to include issues. |
 
 #### 2.3 Team Module
 
@@ -188,7 +188,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 | POLISH-10 | Ongoing | Existing services (Bracket, RankingCalculator, etc.), PHPUnit | Expand Unit + Feature tests for each service; aim 80%+ coverage on Services | Run via composer test; add to CI |
 | POLISH-11 | 2 days | Existing API controllers/resources, routes/api.php | Update or generate OpenAPI spec; add tests that validate response against schema if possible | Keep in sync with code changes |
 | POLISH-08 | 2-3 days | React components in resources/js/Pages/Admin/* | Visual + form submission tests (Vitest or browser); ensure validation messages | Standardize on shadcn Form + zod/react-hook-form pattern |
-| POLISH-06 | 2 days | SportCategory, Athlete, Registration, eligibility helpers in models | Add unit tests for rules; feature tests that registration is blocked for invalid (age/weight/etc) | Update registration workflow to call rules engine |
+| POLISH-06 | 2 days | SportCategory, Athlete, Registration, eligibility helpers in models | Added weight checks in service, enforcement in workflow (blocks on submit+), tests updated | Full engine complete with weight support |
 
 **Note:** Low priority items (POLISH-07,09,12,18,19,20) have smaller effort (0.5-1.5 days each) and fewer dependencies. Update estimates as we progress. Sync this table when adding new items.
 
