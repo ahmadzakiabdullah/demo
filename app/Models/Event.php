@@ -6,6 +6,7 @@ use App\Enums\EventCadence;
 use App\Enums\EventStatus;
 use App\Enums\ParticipantUnitLabel;
 use App\Models\Concerns\Auditable;
+use App\Scopes\OrganizationScope;
 use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +49,11 @@ class Event extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new OrganizationScope);
     }
 
     public function organization(): BelongsTo
