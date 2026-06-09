@@ -115,6 +115,11 @@ class Event extends Model
         return $this->hasMany(Medal::class);
     }
 
+    public function accreditations(): HasMany
+    {
+        return $this->hasMany(Accreditation::class);
+    }
+
     public function resolveAuditOrganizationId(): ?int
     {
         return $this->organization_id;

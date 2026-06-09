@@ -7,6 +7,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- Phase 4 start: `accreditations` table migration, Accreditation model with BelongsToOrganization + Auditable traits, relation in Event model. (4.1.1)
+
+### Added
 - Refined full UI for POLISH-01: Official-to-match assignment with multi-official support, roles, per-match "Officials" editor in Competitions/Show (shadcn Dialog for UX), backend update endpoint with conflict validation. MatchForm creation upgraded to multi. Better error display and reload handling.
 - POLISH-03: Full event_participant_id on medals/rankings + migration, population in allocators, by_contingent tally in medals UI.
 - POLISH-04: Event Setup Checklist extended to full 8 unified lifecycle steps (Results, Medals/Rankings).
