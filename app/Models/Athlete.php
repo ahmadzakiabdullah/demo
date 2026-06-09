@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\SportGender;
 use App\Models\Concerns\Auditable;
+use App\Scopes\OrganizationScope;
 use Database\Factories\AthleteFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,6 +41,11 @@ class Athlete extends Model
             'gender' => SportGender::class,
             'medical_clearance' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new OrganizationScope);
     }
 
     public function organization(): BelongsTo

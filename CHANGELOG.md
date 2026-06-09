@@ -8,6 +8,26 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- OrganizationScope (app/Scopes/OrganizationScope.php) for automatic tenant filtering on models with `organization_id`.
+- Applied global scope to key tenant models: Event, Athlete, Team, EventParticipant, Competition, Official (POLISH-05 progress).
+- CI/CD GitHub Actions workflow (`.github/workflows/ci.yml`) covering PHPUnit tests, frontend build, and Pint lint (POLISH-15).
+
+### Changed
+
+- **Documentation realignment** (roadmap & context refresh)
+  - Updated `ROADMAP.md`: corrected "Current Phase" header (Phases 1–3 largely complete), refreshed Unified Operational Flow statuses, rewrote "Next Actions (Immediate)" with realistic post-Phase-3 priorities (infra closure → flow polish → start Phase 4 Accreditation), aligned Timeline table.
+  - Refreshed `PROJECT_CONTEXT.md`: updated Summary status, Development Layers, and "Current State / Implemented / Not Yet Built" to reflect actual completion of Sports, Participants, full competition engine, API v1, and 173+ tests.
+  - Synced `MODULES.md`: marked Participants + Entries as Active in workflow nav and Phase 2 inventory, updated test count reference.
+  - These changes bring high-level status docs in line with code (migrations, models, controllers, routes, Pages) and recent CHANGELOG entries for Event Participants + Phase 3 completion.
+
+- **Phase 1–3 Polish & Stabilization backlog** established
+  - 12 actionable items (POLISH-01 to POLISH-12) created for pre-Phase 4 hardening and flow completion work.
+  - Focus areas: official-to-match assignment UI (2.4.3), auto fixture generation from `participant_sport_entries` (2.6.3), full `event_participant_id` propagation + backfill (medals, reports, contingents), tenant scoping hardening (1.2.4), eligibility rules + weight categories (2.1.4, 2.2.4), Event Setup Checklist completion, form patterns standardization (1.7.5), service layer test expansion, and remaining Phase 1 partials (RBAC UI, rate limiting, API docs).
+  - These map directly to existing Partial/Not started tasks in ROADMAP.md detailed tables and the updated "Next Actions (Immediate)" section.
+  - Live working todos used for tracking; ROADMAP.md remains the persistent source of truth.
+
+### Added
+
 - **Unified competition lifecycle** (Event-first) documented across spec and architecture
   - Same operational flow for SAF, SUKMA, SEA Games: Event → Sports → Participants → Sport Entries → Athletes/Teams → Schedule → Results → Medals
   - Terminology: Organization = tenant; Event = games edition; Participant = fakulti/negeri/negara (not separate orgs)

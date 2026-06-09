@@ -69,7 +69,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 | POLISH-02 | Auto fixture/schedule generation driven by approved `participant_sport_entries` | 2.6.3 | High | Pending | Manual fixtures work. Need service + UI trigger for generating from approved entries. |
 | POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Pending | Migration columns added. Need data backfill script + usage in medal tally by fakulti/negeri + reports. |
 | POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Pending | Current checklist covers up to "Schedule built". Add Results, Rankings, Medals steps + make more accurate/dynamic. |
-| POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | Pending | Middleware exists but Partial. Critical for multi-tenancy correctness. |
+| POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | In Progress | Scope created + applied to Event, Athlete, Team, EventParticipant, Competition, Official (see app/Scopes/OrganizationScope.php). Next: full test coverage + more models. Critical for multi-tenancy correctness. |
 | POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | Pending | Age/gender/medical partial. Weight classes and full enforcement needed. |
 | POLISH-07 | Basic venue/facility availability calendar + blocking | 2.5.2 | Medium | Pending | Capacity fields exist. Simple availability checks when creating fixtures/matches. |
 | POLISH-08 | Standardize form patterns (shadcn/ui Form + validation) across Admin pages | 1.7.5 | Medium | Pending | Many pages still use ad-hoc forms. Audit and refactor key ones. |
@@ -100,7 +100,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | Pending | Middleware exists but Partial. Critical for multi-tenancy correctness. |
+| POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | In Progress | Scope created + applied to Event, Athlete, Team, EventParticipant, Competition, Official (see app/Scopes/OrganizationScope.php). Next: full test coverage + more models. Critical for multi-tenancy correctness. |
 | POLISH-18 | Organization settings (timezone, locale, branding) | 1.2.6 | Low | Pending | Per-org customization (currently partial). |
 
 #### 1.3 Users, Roles & Permissions (RBAC)

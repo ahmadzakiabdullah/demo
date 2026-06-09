@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CompetitionStatus;
 use App\Models\Concerns\Auditable;
+use App\Scopes\OrganizationScope;
 use Database\Factories\CompetitionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,6 +39,11 @@ class Competition extends Model
             'status' => CompetitionStatus::class,
             'settings' => 'array',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new OrganizationScope);
     }
 
     public function organization(): BelongsTo
