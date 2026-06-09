@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\Auditable;
+use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\VenueFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Venue extends Model
 {
     /** @use HasFactory<VenueFactory> */
-    use Auditable, HasFactory, SoftDeletes;
+    use Auditable, BelongsToOrganization, HasFactory, SoftDeletes;
 
     public function organization(): BelongsTo
     {

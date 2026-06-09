@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Enums\CompetitionStatus;
 use App\Models\Concerns\Auditable;
-use App\Scopes\OrganizationScope;
+use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\CompetitionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Competition extends Model
 {
     /** @use HasFactory<CompetitionFactory> */
-    use Auditable, HasFactory, SoftDeletes;
+    use Auditable, BelongsToOrganization, HasFactory, SoftDeletes;
 
     /**
      * @return array<string, string>
@@ -39,11 +39,6 @@ class Competition extends Model
             'status' => CompetitionStatus::class,
             'settings' => 'array',
         ];
-    }
-
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new OrganizationScope);
     }
 
     public function organization(): BelongsTo

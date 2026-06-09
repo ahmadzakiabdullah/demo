@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\Auditable;
-use App\Scopes\OrganizationScope;
+use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\TeamFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,12 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Team extends Model
 {
     /** @use HasFactory<TeamFactory> */
-    use Auditable, HasFactory, SoftDeletes;
-
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new OrganizationScope);
-    }
+    use Auditable, BelongsToOrganization, HasFactory, SoftDeletes;
 
     public function organization(): BelongsTo
     {

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Enums\OfficialType;
 use App\Models\Concerns\Auditable;
-use App\Scopes\OrganizationScope;
+use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\OfficialFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Official extends Model
 {
     /** @use HasFactory<OfficialFactory> */
-    use Auditable, HasFactory, SoftDeletes;
+    use Auditable, BelongsToOrganization, HasFactory, SoftDeletes;
 
     /**
      * @return array<string, string>
@@ -36,11 +36,6 @@ class Official extends Model
             'type' => OfficialType::class,
             'certification_expires_at' => 'date',
         ];
-    }
-
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new OrganizationScope);
     }
 
     public function organization(): BelongsTo

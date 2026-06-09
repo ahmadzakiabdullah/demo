@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Enums\EventParticipantStatus;
 use App\Enums\EventParticipantType;
 use App\Models\Concerns\Auditable;
-use App\Scopes\OrganizationScope;
+use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\EventParticipantFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class EventParticipant extends Model
 {
     /** @use HasFactory<EventParticipantFactory> */
-    use Auditable, HasFactory, SoftDeletes;
+    use Auditable, BelongsToOrganization, HasFactory, SoftDeletes;
 
     /**
      * @return array<string, string>
@@ -39,11 +39,6 @@ class EventParticipant extends Model
             'status' => EventParticipantStatus::class,
             'metadata' => 'array',
         ];
-    }
-
-    protected static function booted(): void
-    {
-        static::addGlobalScope(new OrganizationScope);
     }
 
     public function organization(): BelongsTo
