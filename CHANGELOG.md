@@ -8,6 +8,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - Refined full UI for POLISH-01: Official-to-match assignment with multi-official support, roles, per-match "Officials" editor in Competitions/Show (shadcn Dialog for UX), backend update endpoint with conflict validation. MatchForm creation upgraded to multi. Better error display and reload handling.
+- POLISH-02: Auto generation now driven by approved participant_sport_entries (new event participant flow). ParticipantResolver updated to prioritize approved entries for teams/athletes linked to event_participant. Falls back to legacy for compatibility. Draw generation (all formats) now uses the canonical approved entries.
 
 ### Added
 

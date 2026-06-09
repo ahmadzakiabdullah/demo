@@ -7,6 +7,7 @@ use App\Enums\SeedingStrategy;
 use App\Models\Athlete;
 use App\Models\Competition;
 use App\Models\CompetitionParticipant;
+use App\Models\ParticipantSportEntry;
 use App\Models\Team;
 use Illuminate\Support\Collection;
 
@@ -53,6 +54,59 @@ class ParticipantResolver
      */
     private function loadApprovedParticipants(Competition $competition): Collection
     {
+        // POLISH-02: Prefer approved participant_sport_entries for the new canonical flow (event participants + entries)
+        $approvedEntries = ParticipantSportEntry::query()
+            ->where('sport_id', $competition->sport_id)
+            ->where('status', RegistrationStatus::Approved)
+            ->whereHas('eventParticipant', fn ($q) => $q->where('event_id', $competition->event_id))
+            ->with('eventParticipant.teams', 'eventParticipant.athletes')
+            ->get();
+
+        if ($approvedEntries->isNotEmpty()) {
+            $participants = collect();
+
+            foreach ($approvedEntries as $entry) {
+                $ep = $entry->eventParticipant;
+
+                // Teams linked to this participant for the sport
+                $teams = $ep->teams()
+                    ->where('sport_id', $competition->sport_id)
+                    ->get(['id', 'name']);
+
+                if ($teams->isNotEmpty()) {
+                    foreach ($teams as $team) {
+                        $participants->push([
+                            'type' => Team::class,
+                            'id' => $team->id,
+                            'name' => $team->name,
+                        ]);
+                    }
+                    continue;
+                }
+
+                // Fallback to athletes linked to this participant
+                $athletes = $ep->athletes()
+                    ->whereHas('registrations', fn ($q) => $q
+                        ->where('event_id', $competition->event_id)
+                        ->where('sport_id', $competition->sport_id)
+                        ->where('status', RegistrationStatus::Approved))
+                    ->get(['id', 'name']);
+
+                foreach ($athletes as $athlete) {
+                    $participants->push([
+                        'type' => Athlete::class,
+                        'id' => $athlete->id,
+                        'name' => $athlete->name,
+                    ]);
+                }
+            }
+
+            if ($participants->isNotEmpty()) {
+                return $participants;
+            }
+        }
+
+        // Fallback to legacy registration-based for backward compatibility
         $teams = Team::query()
             ->where('event_id', $competition->event_id)
             ->where('sport_id', $competition->sport_id)
