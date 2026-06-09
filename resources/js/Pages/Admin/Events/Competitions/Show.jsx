@@ -539,6 +539,7 @@ export default function Show({
 
     const [officialsDialogOpen, setOfficialsDialogOpen] = useState(false);
     const [editingMatchForOfficials, setEditingMatchForOfficials] = useState(null);
+    const [pendingAddRole, setPendingAddRole] = useState('referee');
     const officialsForm = useForm({
         officials: [],
     });
@@ -558,6 +559,7 @@ export default function Show({
         setOfficialsDialogOpen(false);
         setEditingMatchForOfficials(null);
         officialsForm.reset();
+        setPendingAddRole('referee');
     };
 
     const addOfficial = (officialId, role = 'referee') => {
@@ -1130,7 +1132,7 @@ export default function Show({
                             <Label className="text-sm font-medium">Add Official</Label>
                             <div className="flex gap-2">
                                 <Select onValueChange={(val) => {
-                                    addOfficial(val, 'referee');
+                                    addOfficial(val, pendingAddRole);
                                 }}>
                                     <SelectTrigger className="flex-1">
                                         <SelectValue placeholder="Select official..." />
@@ -1145,9 +1147,7 @@ export default function Show({
                                             ))}
                                     </SelectContent>
                                 </Select>
-                                <Select defaultValue="referee" onValueChange={(role) => {
-                                    // If user wants to change default role before adding, but for simplicity we default and allow edit later if needed
-                                }}>
+                                <Select value={pendingAddRole} onValueChange={setPendingAddRole}>
                                     <SelectTrigger className="w-28">
                                         <SelectValue />
                                     </SelectTrigger>
