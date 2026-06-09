@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
     'event_id',
     'sport_id',
     'competition_id',
+    'event_participant_id',
     'medalable_type',
     'medalable_id',
     'type',
@@ -43,8 +44,18 @@ class Medal extends Model
         return $this->belongsTo(Competition::class);
     }
 
+    public function eventParticipant(): BelongsTo
+    {
+        return $this->belongsTo(EventParticipant::class);
+    }
+
     public function medalable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function resolveAuditOrganizationId(): ?int
+    {
+        return $this->eventParticipant?->organization_id ?? $this->event?->organization_id;
     }
 }

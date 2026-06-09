@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 #[Fillable([
     'competition_id',
+    'event_participant_id',
     'rankable_type',
     'rankable_id',
     'position',
@@ -25,6 +26,11 @@ class Ranking extends Model
     public function competition(): BelongsTo
     {
         return $this->belongsTo(Competition::class);
+    }
+
+    public function eventParticipant(): BelongsTo
+    {
+        return $this->belongsTo(EventParticipant::class);
     }
 
     public function rankable(): MorphTo

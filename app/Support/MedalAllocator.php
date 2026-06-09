@@ -133,6 +133,16 @@ class MedalAllocator
 
     private function storeMedal(Competition $competition, string $type, int $id, MedalType $medal): void
     {
+        $eventParticipantId = null;
+
+        if ($type === \App\Models\Team::class) {
+            $team = \App\Models\Team::find($id);
+            $eventParticipantId = $team?->event_participant_id;
+        } elseif ($type === \App\Models\Athlete::class) {
+            $athlete = \App\Models\Athlete::find($id);
+            $eventParticipantId = $athlete?->event_participant_id;
+        }
+
         Medal::query()->updateOrCreate(
             [
                 'competition_id' => $competition->id,
@@ -143,6 +153,7 @@ class MedalAllocator
             [
                 'event_id' => $competition->event_id,
                 'sport_id' => $competition->sport_id,
+                'event_participant_id' => $eventParticipantId,
             ],
         );
     }

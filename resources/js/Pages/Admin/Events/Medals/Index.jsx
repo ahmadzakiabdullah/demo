@@ -36,6 +36,7 @@ export default function Index({
     tally,
     tallyByOrganization = [],
     tallyByCountry = [],
+    tallyByContingent = [],
     sports,
     filters,
 }) {
@@ -96,6 +97,12 @@ export default function Index({
                         label: 'Organization',
                     },
                     { title: 'By country', rows: tallyByCountry, key: 'country', label: 'Country' },
+                    {
+                        title: 'By contingent (fakulti / negeri)',
+                        rows: tallyByContingent,
+                        key: 'contingent',
+                        label: 'Contingent',
+                    },
                 ].map((table) => (
                     <Card key={table.key}>
                         <CardHeader>

@@ -18,13 +18,14 @@ class MedalTallyAggregator
         $medals = Medal::query()
             ->where('event_id', $event->id)
             ->when($sportId, fn ($query) => $query->where('sport_id', $sportId))
-            ->with(['medalable', 'medalable.organization'])
+            ->with(['medalable', 'medalable.organization', 'eventParticipant'])
             ->get();
 
         return [
             'by_recipient' => $this->tallyBy($medals, fn (Medal $medal) => $medal->medalable?->name ?? 'Unknown'),
             'by_organization' => $this->tallyBy($medals, fn (Medal $medal) => $this->organizationLabel($medal)),
             'by_country' => $this->tallyBy($medals, fn (Medal $medal) => $this->countryLabel($medal)),
+            'by_contingent' => $this->tallyBy($medals, fn (Medal $medal) => $medal->eventParticipant?->name ?? $this->organizationLabel($medal)),
         ];
     }
 

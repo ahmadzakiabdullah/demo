@@ -39,6 +39,7 @@ class MedalController extends Controller
             'tally' => $aggregated['by_recipient'],
             'tallyByOrganization' => $aggregated['by_organization'],
             'tallyByCountry' => $aggregated['by_country'],
+            'tallyByContingent' => $aggregated['by_contingent'] ?? collect(),
             'sports' => $event->sports()->orderBy('name')->get(['id', 'name', 'slug']),
             'filters' => [
                 'sport_id' => $request->string('sport_id')->toString(),

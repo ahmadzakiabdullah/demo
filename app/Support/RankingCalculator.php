@@ -105,8 +105,11 @@ class RankingCalculator
 
         $position = 1;
         foreach ($stats as $entry) {
+            $eventParticipantId = $this->resolveEventParticipantId($entry['type'], $entry['id']);
+
             Ranking::query()->create([
                 'competition_id' => $competition->id,
+                'event_participant_id' => $eventParticipantId,
                 'rankable_type' => $entry['type'],
                 'rankable_id' => $entry['id'],
                 'position' => $position++,
@@ -144,6 +147,19 @@ class RankingCalculator
         return "{$participant->participant_type}:{$participant->participant_id}";
     }
 
+    private function resolveEventParticipantId(string $type, int $id): ?int
+    {
+        if ($type === \App\Models\Team::class) {
+            return \App\Models\Team::find($id)?->event_participant_id;
+        }
+
+        if ($type === \App\Models\Athlete::class) {
+            return \App\Models\Athlete::find($id)?->event_participant_id;
+        }
+
+        return null;
+    }
+
     /**
      * @param  array<string, array{type: string, id: int, points: int, played: int, won: int, drawn: int, lost: int, scored_for: int, scored_against: int}>  $stats
      */
@@ -163,8 +179,11 @@ class RankingCalculator
             $key = "{$entry->participant_type}:{$entry->participant_id}";
             $matchStats = $stats[$key] ?? null;
 
+            $eventParticipantId = $this->resolveEventParticipantId($entry->participant_type, $entry->participant_id);
+
             Ranking::query()->create([
                 'competition_id' => $competition->id,
+                'event_participant_id' => $eventParticipantId,
                 'rankable_type' => $entry->participant_type,
                 'rankable_id' => $entry->participant_id,
                 'position' => $position++,
