@@ -13,6 +13,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Cross-tenant isolation test (tests/Feature/MultiTenancyTest.php).
 - Enhanced CI workflow with MySQL 8 + Redis services for production parity (POLISH-15 completed, POLISH-14 in progress).
 - .env.example Redis configuration.
+- Weight support for athletes (migration, model, factory, UI, EligibilityService) for POLISH-06.
+- Progress on POLISH-01 (official assignment backend/UI review), POLISH-02 (auto generation notes), POLISH-06 (eligibility weight + enforcement).
 
 ### Changed
 

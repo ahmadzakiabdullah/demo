@@ -42,6 +42,14 @@ class EligibilityService
             $issues[] = "Athlete age ({$age}) exceeds the category maximum ({$category->max_age}).";
         }
 
+        if ($athlete->weight !== null && $category->min_weight !== null && $athlete->weight < $category->min_weight) {
+            $issues[] = "Athlete weight ({$athlete->weight}kg) is below the category minimum ({$category->min_weight}kg).";
+        }
+
+        if ($athlete->weight !== null && $category->max_weight !== null && $athlete->weight > $category->max_weight) {
+            $issues[] = "Athlete weight ({$athlete->weight}kg) exceeds the category maximum ({$category->max_weight}kg).";
+        }
+
         return $issues;
     }
 

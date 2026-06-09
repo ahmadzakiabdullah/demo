@@ -67,12 +67,12 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | Pending | Backend basics exist (`MatchOfficial`, CompetitionController). Need dedicated UI from Officials list + per-match assignment + warnings. |
-| POLISH-02 | Auto fixture/schedule generation driven by approved `participant_sport_entries` | 2.6.3 | High | Pending | Manual fixtures work. Need service + UI trigger for generating from approved entries. |
+| POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | In Progress | Backend: MatchOfficial, officials in store/update match requests with validation and ScheduleConflictDetector for officials conflicts. UI: basic form in Competitions/Show for officials. Full dedicated assignment page and per-match UI + warnings in progress. |
+| POLISH-02 | Auto fixture/schedule generation driven by approved `participant_sport_entries` | 2.6.3 | High | In Progress | Manual fixtures work. DrawGenerator exists for seeding. Need service to pull approved entries and generate fixtures/matches. UI trigger in progress. |
 | POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Pending | Migration columns added. Need data backfill script + usage in medal tally by fakulti/negeri + reports. |
 | POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Pending | Current checklist covers up to "Schedule built". Add Results, Rankings, Medals steps + make more accurate/dynamic. |
 | POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | Largely Complete | BelongsToOrganization trait created. Applied to Event, Athlete, Team, EventParticipant, Competition, Official, Venue, EventSeries, MedalCeremony, ResultAppeal. Cross-tenant test added. Scope now consistent across tenant models. |
-| POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | Pending | Age/gender/medical partial. Weight classes and full enforcement needed. |
+| POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | In Progress | EligibilityService exists with age/gender/medical/official cert. Added weight to Athlete (migration, model, factory, UI in Create, enforcement in store with notes for issues). Full weight check in service. Enforcement in registration workflow in progress. |
 | POLISH-07 | Basic venue/facility availability calendar + blocking | 2.5.2 | Medium | Pending | Capacity fields exist. Simple availability checks when creating fixtures/matches. |
 | POLISH-08 | Standardize form patterns (shadcn/ui Form + validation) across Admin pages | 1.7.5 | Medium | Pending | Many pages still use ad-hoc forms. Audit and refactor key ones. |
 | POLISH-09 | Upgrade admin user panel to full org-scoped RBAC | 1.3.5 | Medium | Pending | System roles done; org admin experience for roles/permissions needs polish. |
@@ -134,7 +134,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | Pending | Age/gender/medical partial. Weight classes and full enforcement needed. |
+| POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | In Progress | EligibilityService exists with age/gender/medical/official cert. Added weight to Athlete (migration, model, factory, UI in Create, enforcement in store with notes for issues). Full weight check in service. Enforcement in registration workflow in progress. |
 
 #### 2.3 Team Module
 

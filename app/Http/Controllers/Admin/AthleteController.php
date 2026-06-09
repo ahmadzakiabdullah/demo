@@ -85,7 +85,7 @@ class AthleteController extends Controller
         ]);
     }
 
-    public function store(StoreAthleteRequest $request, Event $event): RedirectResponse
+    public function store(StoreAthleteRequest $request, Event $event, EligibilityService $eligibilityService): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -100,7 +100,18 @@ class AthleteController extends Controller
                 'nationality' => $validated['nationality'] ?? null,
                 'id_number' => $validated['id_number'] ?? null,
                 'medical_clearance' => $validated['medical_clearance'] ?? false,
+                'weight' => $validated['weight'] ?? null,
             ]);
+
+        $category = $validated['sport_category_id'] ? SportCategory::find($validated['sport_category_id']) : null;
+        $issues = $eligibilityService->issues($athlete, $category, $event);
+
+        if ($issues !== []) {
+            // Allow draft but record issues in notes for review
+            $notes = ($validated['notes'] ?? '') . ' [Eligibility issues: ' . implode('; ', $issues) . ']';
+        } else {
+            $notes = $validated['notes'] ?? null;
+        }
 
         Registration::create([
             'event_id' => $event->id,
@@ -110,11 +121,15 @@ class AthleteController extends Controller
             'sport_category_id' => $validated['sport_category_id'] ?? null,
             'sport_division_id' => $validated['sport_division_id'] ?? null,
             'status' => RegistrationStatus::Draft,
-            'notes' => $validated['notes'] ?? null,
+            'notes' => $notes,
         ]);
 
+        $message = $issues !== [] 
+            ? 'Athlete registered with eligibility warnings. Review before approval.' 
+            : 'Athlete registered successfully.';
+
         return redirect()->route('admin.events.athletes.show', [$event, $athlete])
-            ->with('success', 'Athlete registered successfully.');
+            ->with('success', $message);
     }
 
     public function show(Request $request, Event $event, Athlete $athlete, EligibilityService $eligibilityService): Response

@@ -27,6 +27,7 @@ export default function Create({ event, sports, genders, existingAthletes }) {
         nationality: '',
         id_number: '',
         medical_clearance: false,
+        weight: '',
     });
 
     const selectedSport = useMemo(
@@ -344,6 +345,23 @@ export default function Create({ event, sports, genders, existingAthletes }) {
                                     />
                                 </>
                             )}
+
+                            <div>
+                                <Label htmlFor="weight">Weight (kg, for weight categories)</Label>
+                                <Input
+                                    id="weight"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    max="999.99"
+                                    value={data.weight}
+                                    onChange={(e) =>
+                                        setData('weight', e.target.value)
+                                    }
+                                    placeholder="e.g. 75.5"
+                                />
+                                <InputError message={errors.weight} />
+                            </div>
 
                             <div>
                                 <Label htmlFor="notes">Notes</Label>

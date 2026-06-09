@@ -68,6 +68,7 @@ class StoreAthleteRequest extends FormRequest
                 Rule::exists('organization_user', 'user_id')->where('organization_id', $event->organization_id),
             ],
             'medical_clearance' => ['nullable', 'boolean'],
+            'weight' => ['nullable', 'numeric', 'min:0', 'max:999.99'],
         ];
     }
 

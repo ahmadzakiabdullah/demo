@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'id_number',
     'photo_path',
     'medical_clearance',
+    'weight',
 ])]
 class Athlete extends Model
 {
@@ -40,6 +41,7 @@ class Athlete extends Model
             'dob' => 'date',
             'gender' => SportGender::class,
             'medical_clearance' => 'boolean',
+            'weight' => 'decimal:2',
         ];
     }
 

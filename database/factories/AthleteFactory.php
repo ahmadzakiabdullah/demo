@@ -26,6 +26,7 @@ class AthleteFactory extends Factory
             'nationality' => fake()->countryCode(),
             'id_number' => fake()->unique()->numerify('ID########'),
             'medical_clearance' => fake()->boolean(80),
+            'weight' => fake()->randomFloat(2, 40, 120),
         ];
     }
 }
