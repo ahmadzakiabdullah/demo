@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\Auditable;
+use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\MedalCeremonyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MedalCeremony extends Model
 {
     /** @use HasFactory<MedalCeremonyFactory> */
-    use Auditable, HasFactory;
+    use Auditable, BelongsToOrganization, HasFactory;
 
     /**
      * @return array<string, string>

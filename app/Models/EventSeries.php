@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\EventCadence;
+use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\EventSeriesFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class EventSeries extends Model
 {
     /** @use HasFactory<EventSeriesFactory> */
-    use HasFactory;
+    use BelongsToOrganization, HasFactory;
 
     /**
      * @return array<string, string>

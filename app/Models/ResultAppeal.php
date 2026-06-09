@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AppealStatus;
 use App\Models\Concerns\Auditable;
+use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\ResultAppealFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ResultAppeal extends Model
 {
     /** @use HasFactory<ResultAppealFactory> */
-    use Auditable, HasFactory;
+    use Auditable, BelongsToOrganization, HasFactory;
 
     /**
      * @return array<string, string>

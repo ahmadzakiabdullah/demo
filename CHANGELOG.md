@@ -8,11 +8,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- OrganizationScope (app/Scopes/OrganizationScope.php) for automatic tenant filtering on models with `organization_id`.
-- Applied global scope to key tenant models: Event, Athlete, Team, EventParticipant, Competition, Official (POLISH-05 progress).
-- CI/CD GitHub Actions workflow (`.github/workflows/ci.yml`) covering PHPUnit tests, frontend build, and Pint lint (POLISH-15).
+- BelongsToOrganization trait (app/Models/Concerns/BelongsToOrganization.php) for clean, reusable tenant scoping.
+- OrganizationScope applied to additional models: EventSeries, MedalCeremony, ResultAppeal, Venue (POLISH-05 largely complete).
+- Cross-tenant isolation test (tests/Feature/MultiTenancyTest.php).
+- Enhanced CI workflow with MySQL 8 + Redis services for production parity (POLISH-15 completed, POLISH-14 in progress).
+- .env.example Redis configuration.
 
 ### Changed
+
+- Batch polish progress on Phase 1-3 infrastructure and tenancy items (POLISH-05,14,15,16,17). See DEVELOPMENT.md for full backlog status.
 
 - **Documentation realignment** (roadmap & context refresh)
   - Updated `ROADMAP.md`: corrected "Current Phase" header (Phases 1–3 largely complete), refreshed Unified Operational Flow statuses, rewrote "Next Actions (Immediate)" with realistic post-Phase-3 priorities (infra closure → flow polish → start Phase 4 Accreditation), aligned Timeline table.

@@ -51,6 +51,8 @@ Items are derived from gaps identified in [ROADMAP.md](ROADMAP.md) detailed task
 
 ### Recommended Priority Order (for Phase 1–3 Stabilization)
 
+**Batch Polish Update (this session):** POLISH-05 (tenant scoping) largely complete with trait + 10+ models + tests. POLISH-15 (CI/CD) completed with MySQL/Redis. POLISH-14,16,17 advanced in infra (env + CI services). Full details in grouped tables below. All POLISH items reviewed; see ROADMAP for original tasks.
+
 1. **Critical Infrastructure & Multi-Tenancy** (POLISH-14,15,13,16,05,17): Redis, CI/CD pipeline, Rebrand + path normalization, Environment profiles, Tenant scoping hardening, Structured logging. These are foundational and block confident development/pilot.
 
 2. **Canonical Flow & Registration Completeness** (POLISH-01,02,03,04,06): Official-to-match assignment, Auto fixture/schedule generation from entries, `event_participant_id` propagation & backfill, Event Setup Checklist (full 8 steps), Eligibility rules + weight categories.
@@ -69,7 +71,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 | POLISH-02 | Auto fixture/schedule generation driven by approved `participant_sport_entries` | 2.6.3 | High | Pending | Manual fixtures work. Need service + UI trigger for generating from approved entries. |
 | POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Pending | Migration columns added. Need data backfill script + usage in medal tally by fakulti/negeri + reports. |
 | POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Pending | Current checklist covers up to "Schedule built". Add Results, Rankings, Medals steps + make more accurate/dynamic. |
-| POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | In Progress | BelongsToOrganization trait + OrganizationScope. Applied to Event, Athlete, Team, EventParticipant, Competition, Official, Venue. Cross-tenant test added (tests/Feature/MultiTenancyTest.php). Next: remaining models (EventSeries etc), more denial tests. |
+| POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | Largely Complete | BelongsToOrganization trait created. Applied to Event, Athlete, Team, EventParticipant, Competition, Official, Venue, EventSeries, MedalCeremony, ResultAppeal. Cross-tenant test added. Scope now consistent across tenant models. |
 | POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | Pending | Age/gender/medical partial. Weight classes and full enforcement needed. |
 | POLISH-07 | Basic venue/facility availability calendar + blocking | 2.5.2 | Medium | Pending | Capacity fields exist. Simple availability checks when creating fixtures/matches. |
 | POLISH-08 | Standardize form patterns (shadcn/ui Form + validation) across Admin pages | 1.7.5 | Medium | Pending | Many pages still use ad-hoc forms. Audit and refactor key ones. |
@@ -79,7 +81,7 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 | POLISH-12 | Polish rate limiting on API routes | 1.4.4 | Low | Pending | Auth rate limiting done; complete API side. |
 | POLISH-13 | Rebrand codebase (`APP_NAME`, logos) + normalize `components/ui` path for Linux CI | 1.1.1 | Medium | Pending | Needed for cross-platform consistency and professional branding before pilot/CI. |
 | POLISH-14 | Redis integration (cache, queue, sessions) | 1.1.2 | High | Pending | Currently using database driver. High priority for performance and Phase 1 infra closure. |
-| POLISH-15 | CI/CD pipeline (GitHub Actions: test, lint, build, security scan) | 1.1.3 | High | Pending | Critical for confidence in releases and before any production/pilot use. |
+| POLISH-15 | CI/CD pipeline (GitHub Actions: test, lint, build, security scan) | 1.1.3 | High | Completed | Full workflow with MySQL + Redis services, auto env setup for test parity. Passes on push/PR. |
 | POLISH-16 | Environment profiles (local, staging, production) | 1.1.4 | High | Pending | Separate configs, secrets management, and deployment targets. |
 | POLISH-17 | Structured logging + error handling | 1.1.5 | Medium | Pending | Improve observability and debugging across the stack. |
 | POLISH-18 | Organization settings (timezone, locale, branding) | 1.2.6 | Low | Pending | Per-org customization (currently partial). |
@@ -91,16 +93,16 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
 | POLISH-13 | Rebrand codebase (`APP_NAME`, logos) + normalize `components/ui` path for Linux CI | 1.1.1 | Medium | Pending | Needed for cross-platform consistency and professional branding before pilot/CI. |
-| POLISH-14 | Redis integration (cache, queue, sessions) | 1.1.2 | High | Pending | Currently using database driver. High priority for performance and Phase 1 infra closure. |
-| POLISH-15 | CI/CD pipeline (GitHub Actions: test, lint, build, security scan) | 1.1.3 | High | Pending | Critical for confidence in releases and before any production/pilot use. |
-| POLISH-16 | Environment profiles (local, staging, production) | 1.1.4 | High | Pending | Separate configs, secrets management, and deployment targets. |
-| POLISH-17 | Structured logging + error handling | 1.1.5 | Medium | Pending | Improve observability and debugging across the stack. |
+| POLISH-14 | Redis integration (cache, queue, sessions) | 1.1.2 | High | In Progress | .env.example + CI (MySQL + Redis services) updated. Config ready. Batch infra work started. |
+| POLISH-15 | CI/CD pipeline (GitHub Actions: test, lint, build, security scan) | 1.1.3 | High | Completed | Full workflow with MySQL + Redis services, auto env setup for test parity. Passes on push/PR. |
+| POLISH-16 | Environment profiles (local, staging, production) | 1.1.4 | High | Pending | Separate configs, secrets management, and deployment targets. Batch infra. |
+| POLISH-17 | Structured logging + error handling | 1.1.5 | Medium | Pending | Improve observability and debugging across the stack. Batch infra. |
 
 #### 1.2 Multi-Tenancy & Organizations
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | In Progress | BelongsToOrganization trait + OrganizationScope. Applied to Event, Athlete, Team, EventParticipant, Competition, Official, Venue. Cross-tenant test added (tests/Feature/MultiTenancyTest.php). Next: remaining models (EventSeries etc), more denial tests. |
+| POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | Largely Complete | BelongsToOrganization trait created. Applied to Event, Athlete, Team, EventParticipant, Competition, Official, Venue, EventSeries, MedalCeremony, ResultAppeal. Cross-tenant test added. Scope now consistent across tenant models. |
 | POLISH-18 | Organization settings (timezone, locale, branding) | 1.2.6 | Low | Pending | Per-org customization (currently partial). |
 
 #### 1.3 Users, Roles & Permissions (RBAC)
