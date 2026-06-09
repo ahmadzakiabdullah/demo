@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\EventAssignmentRole;
+use App\Enums\EventCadence;
 use App\Enums\EventStatus;
+use App\Enums\ParticipantUnitLabel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreEventAssignmentRequest;
 use App\Http\Requests\Admin\StoreEventRequest;
 use App\Http\Requests\Admin\UpdateEventRequest;
 use App\Models\Event;
 use App\Models\EventCategory;
+use App\Models\EventSeries;
 use App\Models\EventType;
 use App\Models\Organization;
 use App\Models\User;
@@ -44,6 +47,8 @@ class EventController extends Controller
             ->when($request->filled('organization_id') && $user->isSystemOwner(), function ($query) use ($request) {
                 $query->where('organization_id', $request->integer('organization_id'));
             })
+            ->when($request->filled('edition_year'), fn ($query) => $query->where('edition_year', $request->integer('edition_year')))
+            ->orderByDesc('edition_year')
             ->orderByDesc('starts_at')
             ->orderBy('name')
             ->paginate(10)
@@ -56,8 +61,17 @@ class EventController extends Controller
                 'search' => $request->string('search')->toString(),
                 'status' => $request->string('status')->toString(),
                 'organization_id' => $request->string('organization_id')->toString(),
+                'edition_year' => $request->string('edition_year')->toString(),
             ],
             'statuses' => EventStatus::values(),
+            'editionYears' => Event::query()
+                ->when(! $user->isSystemOwner(), fn ($query) => $this->scopeToAccessibleEvents($query, $user))
+                ->distinct()
+                ->orderByDesc('edition_year')
+                ->pluck('edition_year')
+                ->filter()
+                ->values()
+                ->all(),
             'organizations' => $this->selectableOrganizations($user),
         ]);
     }
@@ -73,7 +87,10 @@ class EventController extends Controller
             'eventTypes' => EventType::query()->orderBy('name')->get(['id', 'name', 'slug']),
             'eventCategories' => EventCategory::query()->orderBy('name')->get(['id', 'name', 'slug']),
             'statuses' => EventStatus::values(),
+            'cadences' => EventCadence::values(),
+            'participantUnitLabels' => ParticipantUnitLabel::values(),
             'defaultOrganizationId' => $organizations[0]['id'] ?? null,
+            'defaultEditionYear' => (int) now()->format('Y'),
         ]);
     }
 
@@ -89,7 +106,11 @@ class EventController extends Controller
                 'organization_id',
                 'event_type_id',
                 'event_category_id',
+                'event_series_id',
                 'name',
+                'edition_year',
+                'cadence',
+                'participant_unit_label',
                 'location',
                 'description',
                 'starts_at',
@@ -111,8 +132,9 @@ class EventController extends Controller
             'organization:id,name,slug',
             'eventType:id,name,slug',
             'eventCategory:id,name,slug',
+            'eventSeries:id,name,slug',
             'assignees:id,name,email',
-        ])->loadCount('sports');
+        ])->loadCount(['sports', 'eventParticipants']);
 
         return Inertia::render('Admin/Events/Show', [
             'event' => $this->eventDetailPayload($event),
@@ -141,10 +163,20 @@ class EventController extends Controller
                 'description' => $event->description,
                 'starts_at' => $event->starts_at?->format('Y-m-d\TH:i'),
                 'ends_at' => $event->ends_at?->format('Y-m-d\TH:i'),
+                'edition_year' => $event->edition_year,
+                'cadence' => $event->cadence?->value,
+                'participant_unit_label' => $event->participant_unit_label?->value,
+                'event_series_id' => $event->event_series_id,
             ],
             'eventTypes' => EventType::query()->orderBy('name')->get(['id', 'name', 'slug']),
             'eventCategories' => EventCategory::query()->orderBy('name')->get(['id', 'name', 'slug']),
+            'eventSeries' => EventSeries::query()
+                ->where('organization_id', $event->organization_id)
+                ->orderBy('name')
+                ->get(['id', 'name', 'slug']),
             'statuses' => EventStatus::values(),
+            'cadences' => EventCadence::values(),
+            'participantUnitLabels' => ParticipantUnitLabel::values(),
             'allowedTransitions' => $event->status->allowedTransitions(),
         ]);
     }
@@ -200,6 +232,8 @@ class EventController extends Controller
             'location' => $event->location,
             'starts_at' => $event->starts_at?->toDateString(),
             'ends_at' => $event->ends_at?->toDateString(),
+            'edition_year' => $event->edition_year,
+            'cadence' => $event->cadence?->value,
             'organization' => $event->organization?->only(['id', 'name', 'slug']),
             'event_type' => $event->eventType?->only(['id', 'name']),
             'event_category' => $event->eventCategory?->only(['id', 'name']),
@@ -223,6 +257,10 @@ class EventController extends Controller
             'organization' => $event->organization?->only(['id', 'name', 'slug']),
             'event_type' => $event->eventType?->only(['id', 'name', 'slug']),
             'event_category' => $event->eventCategory?->only(['id', 'name', 'slug']),
+            'event_series' => $event->eventSeries?->only(['id', 'name', 'slug']),
+            'edition_year' => $event->edition_year,
+            'cadence' => $event->cadence?->value,
+            'participant_unit_label' => $event->participant_unit_label?->value,
             'assignees' => $event->assignees->map(fn (User $user) => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -230,7 +268,12 @@ class EventController extends Controller
                 'role' => $user->pivot->role,
             ]),
             'stats' => [
-                'participants_count' => $event->registrations()
+                'participants_count' => $event->event_participants_count
+                    ?? $event->eventParticipants()->count(),
+                'sport_entries_count' => \App\Models\ParticipantSportEntry::query()
+                    ->whereHas('eventParticipant', fn ($q) => $q->where('event_id', $event->id))
+                    ->count(),
+                'registrations_count' => $event->registrations()
                     ->where('status', \App\Enums\RegistrationStatus::Approved)
                     ->count(),
                 'fixtures_count' => $event->competitions()
@@ -239,6 +282,7 @@ class EventController extends Controller
                     ->sum('fixtures_count'),
                 'sports_count' => $event->sports_count ?? $event->sports()->count(),
             ],
+            'setup_checklist' => $this->setupChecklist($event),
         ];
     }
 
@@ -249,6 +293,7 @@ class EventController extends Controller
     {
         if ($user->isSystemOwner()) {
             return Organization::query()
+                ->switchable()
                 ->orderBy('name')
                 ->get(['id', 'name', 'slug'])
                 ->map(fn (Organization $organization) => $organization->only(['id', 'name', 'slug']))
@@ -317,5 +362,58 @@ class EventController extends Controller
         }
 
         return $slug;
+    }
+
+    /**
+     * @return list<array{key: string, label: string, done: bool, href: string|null}>
+     */
+    private function setupChecklist(Event $event): array
+    {
+        $sportsCount = $event->sports_count ?? $event->sports()->count();
+        $participantsCount = $event->event_participants_count ?? $event->eventParticipants()->count();
+        $entriesCount = \App\Models\ParticipantSportEntry::query()
+            ->whereHas('eventParticipant', fn ($q) => $q->where('event_id', $event->id))
+            ->count();
+        $teamsCount = $event->teams()->count();
+        $fixturesCount = $event->competitions()->withCount('fixtures')->get()->sum('fixtures_count');
+
+        return [
+            [
+                'key' => 'event',
+                'label' => 'Event created',
+                'done' => true,
+                'href' => route('admin.events.edit', $event),
+            ],
+            [
+                'key' => 'sports',
+                'label' => 'Sports configured',
+                'done' => $sportsCount > 0,
+                'href' => route('admin.events.sports.index', $event),
+            ],
+            [
+                'key' => 'participants',
+                'label' => 'Participants registered',
+                'done' => $participantsCount > 0,
+                'href' => route('admin.events.participants.index', $event),
+            ],
+            [
+                'key' => 'entries',
+                'label' => 'Sport entries submitted',
+                'done' => $entriesCount > 0,
+                'href' => route('admin.events.participants.index', $event),
+            ],
+            [
+                'key' => 'teams',
+                'label' => 'Teams registered',
+                'done' => $teamsCount > 0,
+                'href' => route('admin.events.teams.index', $event),
+            ],
+            [
+                'key' => 'schedule',
+                'label' => 'Schedule built',
+                'done' => $fixturesCount > 0,
+                'href' => route('admin.events.schedule.index', $event),
+            ],
+        ];
     }
 }

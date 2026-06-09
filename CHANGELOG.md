@@ -8,6 +8,46 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **Unified competition lifecycle** (Event-first) documented across spec and architecture
+  - Same operational flow for SAF, SUKMA, SEA Games: Event → Sports → Participants → Sport Entries → Athletes/Teams → Schedule → Results → Medals
+  - Terminology: Organization = tenant; Event = games edition; Participant = fakulti/negeri/negara (not separate orgs)
+  - Planned schema: `event_participants`, `participant_sport_entries`; `teams.event_participant_id`
+  - Roadmap tasks EP-1–EP-8 for participants refactor; deprecate negeri-as-organization in SUKMA seeder
+  - Updated: `FUNCTIONAL_SPEC.md`, `ARCHITECTURE.md`, `DATABASE.md`, `MODULES.md`, `ROADMAP.md`, `PROJECT_CONTEXT.md`, `UI_UX.md`, `DOCUMENTATION.md`
+  - Planned `edition_year` + `cadence` on events for annual/biennial session sorting; optional `event_series` for recurring games
+
+- **Event participants + edition year** (implemented)
+  - Migrations: `event_series`, `edition_year`/`cadence`/`participant_unit_label` on `events`, `event_participants`, `participant_sport_entries`, `event_participant_id` on teams/athletes, `is_tenant` on organizations
+  - Admin UI: Participants CRUD, sport entries per participant, setup checklist on event dashboard
+  - Event form: edition year, cadence, participant label; events index filter/sort by year
+  - Teams require `event_participant_id`; org switcher hides non-tenant orgs (`is_tenant`)
+  - `Sukma2026Seeder` refactor: 16 negeri → `event_participants` on MSN tenant
+  - **173 PHPUnit tests** passing
+
+- **Admin UI: Participants bulk CSV import** (EP-2)
+  - Import page at `/admin/events/{event}/participants/import`
+  - CSV template download; reuses `EventParticipantCsvImporter`
+  - Row-level validation errors shown on import form
+  - 4 new tests in `EventParticipantManagementTest`
+
+- **API v1: Event participants** (EP-8)
+  - `GET/POST /api/v1/events/{event}/participants` (+ show/update/delete)
+  - `POST /api/v1/events/{event}/participants/import` — bulk CSV import
+  - `POST/DELETE /api/v1/events/{event}/participants/{id}/entries` — sport entries
+  - Resources: `EventParticipantResource`, `ParticipantSportEntryResource`
+  - Service: `EventParticipantCsvImporter`
+  - 8 feature tests in `EventParticipantApiTest`
+
+- **Event Participants module** (EP-1–EP-7) implemented
+  - Migrations: `event_series`, `event_participants`, `participant_sport_entries`, `edition_year`/`cadence`/`participant_unit_label` on events, `event_participant_id` on teams/athletes, `is_tenant` on organizations
+  - Admin UI: Participants CRUD + sport entries per participant; team registration requires participant
+  - Event list: filter/sort by `edition_year`; event form fields for edition year, cadence, participant label
+  - Event dashboard: setup checklist (flow steps 1–6)
+  - `EventModuleNav`: Participants tab after Sports
+  - Org switcher: hides non-tenant orgs (`is_tenant = false`)
+  - `Sukma2026Seeder` refactor: 16 negeri → `event_participants` on MSN tenant (not separate orgs)
+  - 3 new tests (`EventParticipantManagementTest`); **173 tests** total passing
+
 - Phase 3 (complete): Competition engine finished
   - Formats: double elimination, Swiss, ladder; hybrid group stage → knockout phase
   - Seeding: name, random, manual via `competition_participants` + `competitions.settings`

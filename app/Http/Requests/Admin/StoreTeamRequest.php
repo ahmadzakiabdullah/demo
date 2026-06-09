@@ -29,6 +29,11 @@ class StoreTeamRequest extends FormRequest
         $event = $this->route('event');
 
         return [
+            'event_participant_id' => [
+                'required',
+                'integer',
+                Rule::exists('event_participants', 'id')->where('event_id', $event->id),
+            ],
             'sport_id' => [
                 'required',
                 'integer',

@@ -74,6 +74,9 @@ class TeamController extends Controller
         return Inertia::render('Admin/Events/Teams/Create', [
             'event' => $event->only(['id', 'name', 'slug']),
             'sports' => $this->sportOptions($event),
+            'participants' => $event->eventParticipants()
+                ->orderBy('name')
+                ->get(['id', 'name', 'code']),
             'organizationMembers' => $this->organizationMembers($event),
         ]);
     }
@@ -89,6 +92,7 @@ class TeamController extends Controller
 
         $team = Team::create([
             'organization_id' => $event->organization_id,
+            'event_participant_id' => $validated['event_participant_id'],
             'event_id' => $event->id,
             'sport_id' => $validated['sport_id'],
             'name' => $validated['name'],

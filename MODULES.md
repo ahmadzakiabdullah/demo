@@ -128,8 +128,9 @@ Installed: Button, Input, Label, Card, Checkbox, Dialog, Dropdown Menu, Sheet, S
 | Module | Key Tables | Priority |
 |--------|-----------|----------|
 | Sports | `sports`, `sport_disciplines`, `sport_categories`, `sport_divisions` | **Active** |
-| Athletes | `athletes`, `registrations` | **Active** |
-| Teams | `teams`, `team_athlete` | **Active** |
+| **Event Participants** | `event_participants`, `participant_sport_entries` | **Planned** (canonical flow steps 3–4) |
+| Athletes | `athletes`, `registrations` | **Active** (partial — pending `event_participant_id`) |
+| Teams | `teams`, `team_athlete` | **Active** (partial — pending `event_participant_id`) |
 | Officials | `officials` (+ `registrations`) | **Active** |
 | Venues | `venues`, `facilities`, `event_venue`, `event_sport_venue` | **Active** |
 | Scheduling | `competition_formats`, `competitions`, `groups`, `fixtures`, `matches`, `match_participants`, `match_officials` | **Active** |
@@ -174,6 +175,27 @@ Installed: Button, Input, Label, Card, Checkbox, Dialog, Dropdown Menu, Sheet, S
 
 ---
 
+## Unified Event Workflow
+
+Same steps for SAF, SUKMA, SEA Games — see [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first):
+
+```
+Event → Sports → Participants → Sport Entries → Athletes/Teams → Schedule → Results → Medals
+```
+
+| Nav order (target) | Module | Status |
+|--------------------|--------|--------|
+| 1 | Overview | Active |
+| 2 | Sports | Active |
+| 3 | Participants | Planned |
+| 4 | Entries | Planned |
+| 5 | Athletes · Teams | Active |
+| 6 | Officials · Venues | Active |
+| 7 | Schedule · Competitions | Active |
+| 8 | Rankings · Medals · Ceremonies | Active |
+
+---
+
 ## Module Dependencies
 
 ```
@@ -188,6 +210,11 @@ Installed: Button, Input, Label, Card, Checkbox, Dialog, Dropdown Menu, Sheet, S
 │   Events    │                    │   API v1    │
 │  (Phase 1)  │                    │  (Phase 1)  │
 └──────┬──────┘                    └─────────────┘
+       │
+       ▼
+┌─────────────┐
+│ Participants│  event_participants · sport entries (planned)
+└──────┬──────┘
        │
        ▼
 ┌─────────────┐

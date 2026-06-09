@@ -67,6 +67,7 @@ export default function Create({ event, sports, types, existingOfficials }) {
 
     return (
         <AuthenticatedLayout
+            event={event}
             breadcrumbs={[
                 { label: 'Events', href: route('admin.events.index') },
                 { label: event.name, href: route('admin.events.show', event.id) },

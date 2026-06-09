@@ -29,7 +29,7 @@ export default function Show({
     assignmentRoles,
     organizationMembers,
 }) {
-    const { flash, auth } = usePage().props;
+    const { flash } = usePage().props;
     const {
         data: assignmentData,
         setData: setAssignmentData,
@@ -63,6 +63,11 @@ export default function Show({
 
     return (
         <AuthenticatedLayout
+            event={event}
+            breadcrumbs={[
+                { label: 'Events', href: route('admin.events.index') },
+                { label: event.name },
+            ]}
             header={
                 <div className="flex items-center justify-between">
                     <div>
@@ -78,140 +83,8 @@ export default function Show({
                             variant="outline"
                             render={<Link href={route('admin.events.index')} />}
                         >
-                            Back
+                            All Events
                         </Button>
-                        {auth.user?.can_view_sports && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route(
-                                            'admin.events.sports.index',
-                                            event.id,
-                                        )}
-                                    />
-                                }
-                            >
-                                Sports
-                            </Button>
-                        )}
-                        {auth.user?.can_view_athletes && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route(
-                                            'admin.events.athletes.index',
-                                            event.id,
-                                        )}
-                                    />
-                                }
-                            >
-                                Athletes
-                            </Button>
-                        )}
-                        {auth.user?.can_view_teams && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route(
-                                            'admin.events.teams.index',
-                                            event.id,
-                                        )}
-                                    />
-                                }
-                            >
-                                Teams
-                            </Button>
-                        )}
-                        {auth.user?.can_view_officials && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route(
-                                            'admin.events.officials.index',
-                                            event.id,
-                                        )}
-                                    />
-                                }
-                            >
-                                Officials
-                            </Button>
-                        )}
-                        {auth.user?.can_view_venues && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route(
-                                            'admin.events.venues.index',
-                                            event.id,
-                                        )}
-                                    />
-                                }
-                            >
-                                Venues
-                            </Button>
-                        )}
-                        {auth.user?.can_view_competitions && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route(
-                                            'admin.events.competitions.index',
-                                            event.id,
-                                        )}
-                                    />
-                                }
-                            >
-                                Competitions
-                            </Button>
-                        )}
-                        {auth.user?.can_view_competitions && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route(
-                                            'admin.events.schedule.index',
-                                            event.id,
-                                        )}
-                                    />
-                                }
-                            >
-                                Schedule
-                            </Button>
-                        )}
-                        {auth.user?.can_view_results && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route(
-                                            'admin.events.rankings.index',
-                                            event.id,
-                                        )}
-                                    />
-                                }
-                            >
-                                Rankings
-                            </Button>
-                        )}
-                        {auth.user?.can_view_results && (
-                            <Button
-                                variant="outline"
-                                render={
-                                    <Link
-                                        href={route('admin.events.medals.index', event.id)}
-                                    />
-                                }
-                            >
-                                Medals
-                            </Button>
-                        )}
                         <Button
                             render={<Link href={route('admin.events.edit', event.id)} />}
                         >
@@ -242,9 +115,23 @@ export default function Show({
                                     <StatusBadge status={event.status} />
                                 </div>
                                 <div>
+                                    <p className="text-sm text-muted-foreground">
+                                        Edition Year
+                                    </p>
+                                    <p className="font-medium">{event.edition_year}</p>
+                                </div>
+                                <div>
                                     <p className="text-sm text-muted-foreground">Type</p>
                                     <p className="font-medium">{event.event_type?.name}</p>
                                 </div>
+                                {event.cadence && (
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">
+                                            Cadence
+                                        </p>
+                                        <p className="font-medium">{event.cadence}</p>
+                                    </div>
+                                )}
                                 <div>
                                     <p className="text-sm text-muted-foreground">Category</p>
                                     <p className="font-medium">
@@ -310,6 +197,43 @@ export default function Show({
                             </CardContent>
                         </Card>
                     </div>
+
+                    {event.setup_checklist?.length > 0 && (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Setup Checklist</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ul className="space-y-2">
+                                    {event.setup_checklist.map((step) => (
+                                        <li
+                                            key={step.key}
+                                            className="flex items-center justify-between rounded-md border px-3 py-2"
+                                        >
+                                            <span
+                                                className={
+                                                    step.done
+                                                        ? 'text-foreground'
+                                                        : 'text-muted-foreground'
+                                                }
+                                            >
+                                                {step.done ? '✓' : '○'} {step.label}
+                                            </span>
+                                            {step.href && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    render={<Link href={step.href} />}
+                                                >
+                                                    Open
+                                                </Button>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     <Card>
                         <CardHeader>

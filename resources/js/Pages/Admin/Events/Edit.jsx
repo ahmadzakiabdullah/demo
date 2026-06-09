@@ -8,14 +8,21 @@ export default function Edit({
     eventTypes,
     eventCategories,
     statuses,
+    cadences,
+    participantUnitLabels,
+    eventSeries,
     allowedTransitions,
 }) {
     const { data, setData, put, processing, errors } = useForm({
         id: event.id,
         event_type_id: event.event_type_id,
         event_category_id: event.event_category_id,
+        event_series_id: event.event_series_id ?? null,
         name: event.name,
         slug: event.slug,
+        edition_year: event.edition_year,
+        cadence: event.cadence ?? '',
+        participant_unit_label: event.participant_unit_label ?? '',
         status: event.status,
         location: event.location ?? '',
         description: event.description ?? '',
@@ -30,6 +37,12 @@ export default function Edit({
 
     return (
         <AuthenticatedLayout
+            event={event}
+            breadcrumbs={[
+                { label: 'Events', href: route('admin.events.index') },
+                { label: event.name, href: route('admin.events.show', event.id) },
+                { label: 'Edit' },
+            ]}
             header={
                 <h2 className="text-xl font-semibold leading-tight text-foreground">
                     Edit Event
@@ -56,6 +69,9 @@ export default function Edit({
                                 eventTypes={eventTypes}
                                 eventCategories={eventCategories}
                                 statuses={statuses}
+                                cadences={cadences}
+                                participantUnitLabels={participantUnitLabels}
+                                eventSeries={eventSeries}
                                 allowedTransitions={allowedTransitions}
                                 onSubmit={submit}
                                 submitLabel="Save Changes"

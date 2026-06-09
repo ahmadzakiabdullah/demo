@@ -51,6 +51,8 @@ class HandleInertiaRequests extends Middleware
                     'can_view_venues' => $user->canViewVenues(),
                     'can_view_competitions' => $user->canViewCompetitions(),
                     'can_view_results' => $user->canViewResults(),
+                    'can_view_event_participants' => $user->canViewEventParticipants(),
+                    'can_view_participant_sport_entries' => $user->canViewParticipantSportEntries(),
                     'permissions' => $user->isSystemOwner()
                         ? ['*']
                         : $user->systemRoles()
@@ -82,6 +84,7 @@ class HandleInertiaRequests extends Middleware
 
         if ($user->isSystemOwner()) {
             return Organization::query()
+                ->switchable()
                 ->orderBy('name')
                 ->get(['id', 'name', 'slug'])
                 ->map(fn (Organization $organization) => $organization->only(['id', 'name', 'slug']))

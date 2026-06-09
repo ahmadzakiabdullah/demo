@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\CompetitionController;
 use App\Http\Controllers\Admin\OfficialController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\EventParticipantController;
+use App\Http\Controllers\Admin\ParticipantSportEntryController;
 use App\Http\Controllers\Admin\EventVenueController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\MedalCeremonyController;
@@ -49,6 +51,17 @@ Route::middleware('auth')->group(function () {
             ->name('organization.switch');
         Route::get('audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
         Route::resource('events', EventController::class);
+        Route::get('events/{event}/participants/import', [EventParticipantController::class, 'importForm'])
+            ->name('events.participants.import');
+        Route::post('events/{event}/participants/import', [EventParticipantController::class, 'import'])
+            ->name('events.participants.import.store');
+        Route::get('events/{event}/participants/import/template', [EventParticipantController::class, 'importTemplate'])
+            ->name('events.participants.import.template');
+        Route::resource('events.participants', EventParticipantController::class);
+        Route::post('events/{event}/participants/{participant}/entries', [ParticipantSportEntryController::class, 'store'])
+            ->name('events.participants.entries.store');
+        Route::delete('events/{event}/participants/{participant}/entries/{entry}', [ParticipantSportEntryController::class, 'destroy'])
+            ->name('events.participants.entries.destroy');
         Route::resource('events.sports', SportController::class);
         Route::resource('events.athletes', AthleteController::class);
         Route::resource('events.officials', OfficialController::class);

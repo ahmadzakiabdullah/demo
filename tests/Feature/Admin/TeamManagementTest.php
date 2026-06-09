@@ -7,6 +7,7 @@ use App\Enums\SportStatus;
 use App\Enums\TeamMemberRole;
 use App\Models\Athlete;
 use App\Models\Event;
+use App\Models\EventParticipant;
 use App\Models\Organization;
 use App\Models\Registration;
 use App\Models\Role;
@@ -53,8 +54,14 @@ class TeamManagementTest extends TestCase
             'status' => 'active',
         ]);
 
+        $participant = EventParticipant::withoutEvents(fn () => EventParticipant::factory()->create([
+            'organization_id' => $organization->id,
+            'event_id' => $event->id,
+        ]));
+
         $this->actingAs($orgAdmin)
             ->post(route('admin.events.teams.store', $event), [
+                'event_participant_id' => $participant->id,
                 'sport_id' => $sport->id,
                 'name' => 'UTeM Eagles',
                 'coach_user_id' => $coach->id,

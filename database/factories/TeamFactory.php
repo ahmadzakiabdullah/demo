@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Event;
+use App\Models\EventParticipant;
 use App\Models\Organization;
 use App\Models\Sport;
 use App\Models\Team;
@@ -20,11 +21,16 @@ class TeamFactory extends Factory
     public function definition(): array
     {
         $name = fake()->unique()->words(2, true);
+        $event = Event::factory()->create();
 
         return [
-            'organization_id' => Organization::factory(),
-            'event_id' => Event::factory(),
-            'sport_id' => Sport::factory(),
+            'organization_id' => $event->organization_id,
+            'event_participant_id' => EventParticipant::factory()->create([
+                'organization_id' => $event->organization_id,
+                'event_id' => $event->id,
+            ])->id,
+            'event_id' => $event->id,
+            'sport_id' => Sport::factory()->create(['event_id' => $event->id])->id,
             'name' => ucfirst($name),
             'slug' => Str::slug($name),
             'coach_user_id' => null,

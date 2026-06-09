@@ -238,6 +238,20 @@ class User extends Authenticatable
             || $this->assignedEvents()->exists();
     }
 
+    public function canViewEventParticipants(): bool
+    {
+        return $this->hasPermission(Permissions::slug('event_participants', 'view'))
+            || $this->hasPermissionInAnyOrganization(Permissions::slug('event_participants', 'view'))
+            || $this->assignedEvents()->exists();
+    }
+
+    public function canViewParticipantSportEntries(): bool
+    {
+        return $this->hasPermission(Permissions::slug('participant_sport_entries', 'view'))
+            || $this->hasPermissionInAnyOrganization(Permissions::slug('participant_sport_entries', 'view'))
+            || $this->assignedEvents()->exists();
+    }
+
     public function assignedEvents(): BelongsToMany
     {
         return $this->belongsToMany(Event::class)

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'organization_id',
+    'event_participant_id',
     'event_id',
     'sport_id',
     'name',
@@ -30,6 +31,11 @@ class Team extends Model
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
+    }
+
+    public function eventParticipant(): BelongsTo
+    {
+        return $this->belongsTo(EventParticipant::class);
     }
 
     public function event(): BelongsTo

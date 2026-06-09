@@ -29,6 +29,7 @@ export default function Edit({ event, competition, formats, statuses }) {
 
     return (
         <AuthenticatedLayout
+            event={event}
             breadcrumbs={[
                 { label: 'Events', href: route('admin.events.index') },
                 { label: event.name, href: route('admin.events.show', event.id) },

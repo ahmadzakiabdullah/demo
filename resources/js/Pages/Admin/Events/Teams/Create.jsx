@@ -14,8 +14,9 @@ import {
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useMemo } from 'react';
 
-export default function Create({ event, sports, organizationMembers }) {
+export default function Create({ event, sports, participants, organizationMembers }) {
     const { data, setData, post, processing, errors } = useForm({
+        event_participant_id: '',
         sport_id: '',
         name: '',
         slug: '',
@@ -59,6 +60,7 @@ export default function Create({ event, sports, organizationMembers }) {
 
     return (
         <AuthenticatedLayout
+            event={event}
             breadcrumbs={[
                 { label: 'Events', href: route('admin.events.index') },
                 { label: event.name, href: route('admin.events.show', event.id) },
@@ -79,6 +81,34 @@ export default function Create({ event, sports, organizationMembers }) {
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={submit} className="space-y-4">
+                            <div>
+                                <Label htmlFor="event_participant_id">Participant</Label>
+                                <Select
+                                    value={data.event_participant_id || ''}
+                                    onValueChange={(value) =>
+                                        setData('event_participant_id', value)
+                                    }
+                                >
+                                    <SelectTrigger id="event_participant_id">
+                                        <SelectValue placeholder="Select participant" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {participants.map((participant) => (
+                                            <SelectItem
+                                                key={participant.id}
+                                                value={String(participant.id)}
+                                            >
+                                                {participant.name}
+                                                {participant.code
+                                                    ? ` (${participant.code})`
+                                                    : ''}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <InputError message={errors.event_participant_id} />
+                            </div>
+
                             <div>
                                 <Label htmlFor="sport_id">Sport</Label>
                                 <Select

@@ -21,6 +21,9 @@ export default function EventForm({
     eventCategories,
     statuses,
     allowedTransitions = null,
+    cadences = [],
+    participantUnitLabels = [],
+    eventSeries = [],
     onSubmit,
     submitLabel,
     isEdit = false,
@@ -81,6 +84,110 @@ export default function EventForm({
                     aria-invalid={!!errors.slug}
                 />
                 <InputError message={errors.slug} />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                    <Label htmlFor="edition_year">Edition Year</Label>
+                    <Input
+                        id="edition_year"
+                        type="number"
+                        min="2000"
+                        max="2100"
+                        value={data.edition_year ?? ''}
+                        onChange={(e) =>
+                            setData('edition_year', Number(e.target.value))
+                        }
+                        aria-invalid={!!errors.edition_year}
+                    />
+                    <InputError message={errors.edition_year} />
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="cadence">Cadence</Label>
+                    <Select
+                        value={data.cadence || ''}
+                        onValueChange={(value) =>
+                            setData('cadence', value || null)
+                        }
+                    >
+                        <SelectTrigger id="cadence" className="w-full">
+                            <SelectValue placeholder="Select cadence" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="">Not set</SelectItem>
+                            {cadences.map((cadence) => (
+                                <SelectItem key={cadence} value={cadence}>
+                                    {cadence}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <InputError message={errors.cadence} />
+                </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                    <Label htmlFor="participant_unit_label">Participant Label</Label>
+                    <Select
+                        value={data.participant_unit_label || ''}
+                        onValueChange={(value) =>
+                            setData('participant_unit_label', value || null)
+                        }
+                    >
+                        <SelectTrigger
+                            id="participant_unit_label"
+                            className="w-full"
+                        >
+                            <SelectValue placeholder="Select label" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="">Not set</SelectItem>
+                            {participantUnitLabels.map((label) => (
+                                <SelectItem key={label} value={label}>
+                                    {label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <InputError message={errors.participant_unit_label} />
+                </div>
+
+                {isEdit && eventSeries.length > 0 && (
+                    <div className="space-y-2">
+                        <Label htmlFor="event_series_id">Event Series</Label>
+                        <Select
+                            value={
+                                data.event_series_id
+                                    ? String(data.event_series_id)
+                                    : ''
+                            }
+                            onValueChange={(value) =>
+                                setData(
+                                    'event_series_id',
+                                    value ? Number(value) : null,
+                                )
+                            }
+                        >
+                            <SelectTrigger id="event_series_id" className="w-full">
+                                <SelectValue placeholder="None" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="">None</SelectItem>
+                                {eventSeries.map((series) => (
+                                    <SelectItem
+                                        key={series.id}
+                                        value={String(series.id)}
+                                    >
+                                        {series.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.event_series_id} />
+                    </div>
+                )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">

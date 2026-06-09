@@ -31,6 +31,7 @@ class EventApiTest extends TestCase
             'event_type_id' => EventType::query()->first()->id,
             'event_category_id' => EventCategory::query()->first()->id,
             'name' => 'API Sports Day',
+            'edition_year' => 2026,
             'status' => EventStatus::Draft->value,
             'location' => 'Stadium',
         ])
@@ -64,6 +65,7 @@ class EventApiTest extends TestCase
                 'event_type_id' => EventType::query()->first()->id,
                 'event_category_id' => EventCategory::query()->first()->id,
                 'name' => 'Faculty Games API',
+                'edition_year' => 2026,
                 'status' => EventStatus::Draft->value,
             ])
             ->assertCreated();

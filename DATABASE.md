@@ -68,13 +68,18 @@ php artisan migrate
          │
          ├────< events ────< event_categories
          │         │
+         │         ├────< event_participants ────< participant_sport_entries  (planned)
+         │         │              │
+         │         │              └── optional branch_id → branches
+         │         │
          │         ├────< sports ────< disciplines ────< categories
          │         │
          │         ├────< venues ────< facilities
          │         │
          │         ├────< teams ────< team_athlete (pivot)
+         │         │         └── event_participant_id (planned)
          │         │
-         │         ├────< athletes (via registrations)
+         │         ├────< athletes (via registrations; event_participant_id planned)
          │         │
          │         ├────< officials
          │         │
@@ -328,11 +333,16 @@ Model: `App\Models\Event`
 | `description` | `text` | NULLABLE |
 | `starts_at` | `timestamp` | NULLABLE |
 | `ends_at` | `timestamp` | NULLABLE |
+| `edition_year` | `smallint unsigned` | NULLABLE → **planned NOT NULL** |
+| `cadence` | `varchar(20)` | NULLABLE — `annual`, `biennial`, `quadrennial`, `one_off` (planned) |
+| `event_series_id` | `bigint unsigned` | FK → event_series, NULLABLE (planned) |
 | `created_at` | `timestamp` | |
 | `updated_at` | `timestamp` | |
 | `deleted_at` | `timestamp` | NULLABLE (soft delete) |
 
-**Unique:** `(organization_id, slug)` · **Indexes:** `(organization_id, status)`
+**Unique:** `(organization_id, slug)` · **Indexes:** `(organization_id, status)`, `(organization_id, edition_year)` (planned)
+
+> **Edition year:** Nominal session year for sorting (e.g. SUKMA 2026 → `edition_year = 2026`). Distinct from `starts_at` — a biennial games may run Dec 2025–Jan 2026 but still label as edition 2026. Slug should include year: `sukma-selangor-2026`.
 
 **Lifecycle:** `draft` → `published` → `active` → `completed` → `archived`
 
@@ -459,7 +469,8 @@ Model: `App\Models\Registration` · Polymorphic `registrable` (athlete, team, of
 
 ### `teams`
 
-Model: `App\Models\Team` · Scoped to `organization_id`, `event_id`, `sport_id`
+Model: `App\Models\Team` · Scoped to `organization_id` (host tenant), `event_id`, `sport_id`  
+> **Planned:** `event_participant_id` FK for competing unit (fakulti/negeri/negara). See [§9](#9-planned-tables--event-participants-refactor).
 
 | Column | Type | Constraints |
 |--------|------|-------------|
@@ -792,6 +803,67 @@ Model: `App\Models\Medal` · Polymorphic `medalable` (team or athlete)
 | `type` | `varchar(10)` | `gold`, `silver`, `bronze` |
 
 **Unique:** `(competition_id, medalable_type, medalable_id, type)`
+
+---
+
+## 9. Planned Tables — Event Participants (Refactor)
+
+> **Status:** Designed, not migrated. Replaces modelling contingents (negeri/fakulti/negara) as separate `organizations`. See [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first).
+
+### `event_participants`
+
+Competing unit registered for an event (fakulti, negeri, negara).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | `bigint unsigned` | PK | |
+| `organization_id` | `bigint unsigned` | FK → organizations | Host tenant |
+| `event_id` | `bigint unsigned` | FK → events | |
+| `branch_id` | `bigint unsigned` | FK → branches, NULLABLE | SAF: link to fakulti branch |
+| `type` | `varchar(20)` | NOT NULL | `faculty`, `state`, `country`, `club`, `other` |
+| `name` | `varchar(255)` | NOT NULL | Display name (e.g. Selangor, FTK) |
+| `code` | `varchar(20)` | NULLABLE | Short code (e.g. SLG, MAS) |
+| `status` | `varchar(20)` | DEFAULT `active` | `active`, `inactive` |
+| `metadata` | `json` | NULLABLE | Flag URL, colors, contact |
+| `deleted_at` | `timestamp` | NULLABLE | Soft delete |
+
+**Unique:** `(event_id, code)` where `code` is not null  
+**Index:** `(event_id, type)`, `(organization_id, event_id)`
+
+### `participant_sport_entries`
+
+Participant declares which sports (and optional category/division) they enter — step 4 of canonical flow.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | `bigint unsigned` | PK | |
+| `event_participant_id` | `bigint unsigned` | FK → event_participants | |
+| `sport_id` | `bigint unsigned` | FK → sports | |
+| `sport_category_id` | `bigint unsigned` | FK → sport_categories, NULLABLE | |
+| `sport_division_id` | `bigint unsigned` | FK → sport_divisions, NULLABLE | |
+| `status` | `varchar(20)` | DEFAULT `draft` | Same as `registrations` workflow |
+| `notes` | `text` | NULLABLE | |
+| `rejected_reason` | `text` | NULLABLE | |
+| `submitted_at` | `timestamp` | NULLABLE | |
+| `approved_at` | `timestamp` | NULLABLE | |
+| `deleted_at` | `timestamp` | NULLABLE | |
+
+**Unique:** `(event_participant_id, sport_id, sport_category_id, sport_division_id)`
+
+### Planned column additions (existing tables)
+
+| Table | Column | Purpose |
+|-------|--------|---------|
+| `events` | `participant_unit_label` | UI copy: `faculty`, `state`, `country` |
+| `teams` | `event_participant_id` | FK → event_participants; replaces contingent-as-org pattern |
+| `athletes` | `event_participant_id` | Nullable; set when athlete registers for event via participant |
+| `medals` | tally via `event_participant_id` on team | Medal table by negeri/fakulti/negara |
+
+### Migration notes
+
+- `Sukma2026Seeder`: refactor 16 negeri from `organizations` → `event_participants` on MSN tenant
+- `teams.organization_id` retains host tenant; competing unit moves to `event_participant_id`
+- `registrations` may link to `participant_sport_entry_id` (optional future FK)
 
 ---
 

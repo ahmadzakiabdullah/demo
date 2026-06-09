@@ -34,13 +34,29 @@ The platform targets organizations at every level — international federations,
 ### Multi-Tenancy Hierarchy
 
 ```
-Organization (tenant)
-└── Event
-    └── Sport
-        └── Competition
+Organization (tenant)          ← UTeM, MSN — SaaS customer / host
+└── Event                      ← SAF 2026, SUKMA 2026, SEA Games
+    ├── Sports / Acara
+    ├── Event Participants     ← fakulti · negeri · negara (NOT separate orgs)
+    │   └── Sport Entries      ← participant chooses sports to enter
+    ├── Athletes & Teams
+    └── Competitions → Results → Medals
 ```
 
-Each organization has isolated data. Users, roles, and permissions are scoped per organization (and optionally per event).
+Each organization has isolated data. Users, roles, and permissions are scoped per organization (and optionally per event). **Contingents are event participants, not tenants.**
+
+### Unified Operational Flow (SAF · SUKMA · SEA Games)
+
+| # | Step | Module | Status |
+|---|------|--------|--------|
+| 1 | Pilih / cipta Event | Events | Done |
+| 2 | Pilih / cipta Sukan/Acara | Sports | Done |
+| 3 | Daftar Participant (fakulti/negeri/negara) | Event Participants | **Next priority** |
+| 4 | Pasukan pilih sukan/acara | Sport Entries | Planned |
+| 5 | Daftar atlet & pasukan | Athletes · Teams | Partial |
+| 6 | Jadual → pertandingan → keputusan → pingat | Schedule · Results · Medals | Done |
+
+Full spec: [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first).
 
 ### Target Users
 
@@ -141,6 +157,20 @@ Based on product review — build order for Phase 1:
 6. **Admin sidebar layout** — scalable navigation for growing modules
 
 **Deferred:** AI (Phase 6), public portal (Phase 5), international-scale features until pilot validated.
+
+### Event Participants Refactor (Cross-Cutting)
+
+| # | Task | Priority | Status |
+|---|------|----------|--------|
+| EP-1 | `event_participants` + `participant_sport_entries` migrations | High | Done |
+| EP-2 | Admin UI: Participants CRUD + bulk import | High | Done |
+| EP-3 | Admin UI: sport entry workflow per participant | High | Done |
+| EP-4 | Add `event_participant_id` to `teams` (and athletes) | High | Done |
+| EP-5 | Refactor `Sukma2026Seeder` — negeri as participants, not orgs | High | Done |
+| EP-6 | Event module nav reorder + setup checklist on event dashboard | Medium | Done |
+| EP-7 | Hide contingent orgs from organization switcher | Medium | Done (`is_tenant`) |
+| EP-8 | API v1 endpoints for participants and entries | Medium | Done |
+| EP-9 | `edition_year` + `cadence` + `event_series` on events | High | Done |
 
 ---
 

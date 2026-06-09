@@ -41,6 +41,7 @@ export default function Index({ event, competitions, sports, statuses, filters }
 
     return (
         <AuthenticatedLayout
+            event={event}
             breadcrumbs={[
                 { label: 'Events', href: route('admin.events.index') },
                 { label: event.name, href: route('admin.events.show', event.id) },

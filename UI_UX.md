@@ -206,6 +206,33 @@ Used for: users, organizations, events, athletes, teams.
 - Connector lines via CSS/SVG
 - Responsive: scroll horizontally on mobile
 
+### 5.5 Event Module Navigation
+
+Event-scoped pages use `EventModuleNav` — tab order follows the **canonical competition lifecycle** ([FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first)):
+
+| Order | Tab | Flow step | Status |
+|-------|-----|-----------|--------|
+| 1 | Overview | Event dashboard + setup checklist | Active |
+| 2 | Sports | Define sukan/acara | Active |
+| 3 | Participants | Register fakulti/negeri/negara | Planned |
+| 4 | Entries | Participant sport selection | Planned |
+| 5 | Athletes | Roster individuals | Active |
+| 6 | Teams | Roster teams per entry | Active |
+| 7 | Officials | Match officials | Active |
+| 8 | Venues | Event venues | Active |
+| 9 | Competitions | Draws and brackets | Active |
+| 10 | Schedule | Fixtures calendar | Active |
+| 11 | Rankings | Standings | Active |
+| 12 | Medals | Medal tally | Active |
+| 13 | Ceremonies | Medal ceremonies | Active |
+
+**Copy rules:**
+- `participant_unit_label` on event drives labels: *Faculty* (SAF), *State* (SUKMA), *Country* (SEA Games)
+- Event overview should show a **setup checklist** (steps 1–8) with completion status
+- Organization switcher shows **tenants only** — never list contingents (negeri/fakulti) as orgs
+
+**Current implementation:** `EventModuleNav.jsx` — Sports before Athletes/Teams; Participants and Entries tabs pending EP-2/EP-3.
+
 ---
 
 ## 6. Design Tokens

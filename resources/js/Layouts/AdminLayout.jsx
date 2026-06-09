@@ -1,4 +1,5 @@
 import AppSidebar from '@/Components/AppSidebar';
+import EventModuleNav from '@/Components/EventModuleNav';
 import OrganizationSwitcher from '@/Components/OrganizationSwitcher';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,6 +29,7 @@ import { Link, usePage } from '@inertiajs/react';
 export default function AdminLayout({
     header,
     breadcrumbs = [],
+    event = null,
     children,
 }) {
     const user = usePage().props.auth.user;
@@ -148,6 +150,8 @@ export default function AdminLayout({
                         {header}
                     </div>
                 )}
+
+                {event && <EventModuleNav event={event} />}
 
                 <main className="flex-1 p-4 md:p-6">{children}</main>
             </SidebarInset>

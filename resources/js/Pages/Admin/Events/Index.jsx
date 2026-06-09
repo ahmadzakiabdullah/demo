@@ -34,25 +34,31 @@ function StatusBadge({ status }) {
     return <Badge variant={variant}>{status}</Badge>;
 }
 
-export default function Index({ events, filters, statuses, organizations }) {
+export default function Index({ events, filters, statuses, organizations, editionYears }) {
     const { flash } = usePage().props;
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || '');
     const [organizationId, setOrganizationId] = useState(
         filters.organization_id || '',
     );
+    const [editionYear, setEditionYear] = useState(filters.edition_year || '');
 
     useEffect(() => {
         const timeout = setTimeout(() => {
             router.get(
                 route('admin.events.index'),
-                { search, status, organization_id: organizationId },
+                {
+                    search,
+                    status,
+                    organization_id: organizationId,
+                    edition_year: editionYear,
+                },
                 { preserveState: true, replace: true },
             );
         }, 300);
 
         return () => clearTimeout(timeout);
-    }, [search, status, organizationId]);
+    }, [search, status, organizationId, editionYear]);
 
     return (
         <AuthenticatedLayout
@@ -134,12 +140,36 @@ export default function Index({ events, filters, statuses, organizations }) {
                                         </SelectContent>
                                     </Select>
                                 )}
+                                {editionYears.length > 0 && (
+                                    <Select
+                                        value={editionYear || 'all'}
+                                        onValueChange={(value) =>
+                                            setEditionYear(value === 'all' ? '' : value)
+                                        }
+                                    >
+                                        <SelectTrigger className="w-full lg:w-32">
+                                            <SelectValue placeholder="All years" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">All years</SelectItem>
+                                            {editionYears.map((year) => (
+                                                <SelectItem
+                                                    key={year}
+                                                    value={String(year)}
+                                                >
+                                                    {year}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                )}
                             </div>
 
                             <Table>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Event</TableHead>
+                                        <TableHead>Year</TableHead>
                                         <TableHead>Organization</TableHead>
                                         <TableHead>Type</TableHead>
                                         <TableHead>Status</TableHead>
@@ -153,7 +183,7 @@ export default function Index({ events, filters, statuses, organizations }) {
                                     {events.data.length === 0 ? (
                                         <TableRow>
                                             <TableCell
-                                                colSpan={6}
+                                                colSpan={7}
                                                 className="text-center text-muted-foreground"
                                             >
                                                 No events found.
@@ -170,6 +200,7 @@ export default function Index({ events, filters, statuses, organizations }) {
                                                         {event.slug}
                                                     </div>
                                                 </TableCell>
+                                                <TableCell>{event.edition_year}</TableCell>
                                                 <TableCell>
                                                     {event.organization?.name}
                                                 </TableCell>

@@ -28,6 +28,7 @@ class EventFactory extends Factory
             'event_category_id' => EventCategory::query()->first()?->id ?? 1,
             'name' => ucfirst($name),
             'slug' => Str::slug($name),
+            'edition_year' => (int) fake()->year(),
             'status' => EventStatus::Draft,
             'location' => fake()->city(),
             'description' => fake()->sentence(),

@@ -8,7 +8,10 @@ export default function Create({
     eventTypes,
     eventCategories,
     statuses,
+    cadences,
+    participantUnitLabels,
     defaultOrganizationId,
+    defaultEditionYear,
 }) {
     const { data, setData, post, processing, errors } = useForm({
         organization_id: defaultOrganizationId ?? organizations[0]?.id ?? '',
@@ -16,6 +19,9 @@ export default function Create({
         event_category_id: eventCategories[0]?.id ?? '',
         name: '',
         slug: '',
+        edition_year: defaultEditionYear ?? new Date().getFullYear(),
+        cadence: '',
+        participant_unit_label: '',
         status: 'draft',
         location: '',
         description: '',
@@ -54,6 +60,8 @@ export default function Create({
                                 eventTypes={eventTypes}
                                 eventCategories={eventCategories}
                                 statuses={statuses}
+                                cadences={cadences}
+                                participantUnitLabels={participantUnitLabels}
                                 onSubmit={submit}
                                 submitLabel="Create Event"
                             />

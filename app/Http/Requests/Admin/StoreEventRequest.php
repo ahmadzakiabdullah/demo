@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\EventCadence;
 use App\Enums\EventStatus;
+use App\Enums\ParticipantUnitLabel;
 use App\Models\Organization;
 use App\Support\Permissions;
 use Illuminate\Foundation\Http\FormRequest;
@@ -39,6 +41,14 @@ class StoreEventRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'starts_at' => ['nullable', 'date'],
             'ends_at' => ['nullable', 'date', 'after_or_equal:starts_at'],
+            'edition_year' => ['required', 'integer', 'min:2000', 'max:2100'],
+            'cadence' => ['nullable', Rule::enum(EventCadence::class)],
+            'participant_unit_label' => ['nullable', Rule::enum(ParticipantUnitLabel::class)],
+            'event_series_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('event_series', 'id')->where('organization_id', $organizationId),
+            ],
         ];
     }
 

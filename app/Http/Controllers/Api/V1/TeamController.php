@@ -58,6 +58,7 @@ class TeamController extends Controller
 
         $team = Team::create([
             'organization_id' => $event->organization_id,
+            'event_participant_id' => $validated['event_participant_id'],
             'event_id' => $event->id,
             'sport_id' => $validated['sport_id'],
             'name' => $validated['name'],

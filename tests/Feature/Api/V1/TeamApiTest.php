@@ -7,6 +7,7 @@ use App\Enums\SportStatus;
 use App\Enums\TeamMemberRole;
 use App\Models\Athlete;
 use App\Models\Event;
+use App\Models\EventParticipant;
 use App\Models\Organization;
 use App\Models\Registration;
 use App\Models\Role;
@@ -35,9 +36,15 @@ class TeamApiTest extends TestCase
             'status' => SportStatus::Active,
         ]));
 
+        $participant = EventParticipant::withoutEvents(fn () => EventParticipant::factory()->create([
+            'organization_id' => $organization->id,
+            'event_id' => $event->id,
+        ]));
+
         Sanctum::actingAs($admin);
 
         $this->postJson("/api/v1/events/{$event->id}/teams", [
+            'event_participant_id' => $participant->id,
             'sport_id' => $sport->id,
             'name' => 'API Warriors',
         ])

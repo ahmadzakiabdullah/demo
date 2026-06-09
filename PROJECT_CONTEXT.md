@@ -49,6 +49,24 @@ First production use case: **university sports carnival** (e.g. UTeM inter-facul
 
 Defaults: timezone `Asia/Kuala_Lumpur`, locale `en`.
 
+## Unified Competition Flow
+
+**Same workflow for SAF, SUKMA, and SEA Games** — only participant labels change:
+
+| Step | Action |
+|------|--------|
+| 1 | Pilih / cipta **Event** |
+| 2 | Pilih / cipta **Sukan/Acara** |
+| 3 | Daftar **Participant** (fakulti / negeri / negara) |
+| 4 | Participant **pilih sukan** yang disertai |
+| 5 | Daftar **atlet & pasukan** |
+| 6 | **Jadual** → pertandingan → keputusan → pingat |
+
+- **Organization** = SaaS tenant (UTeM, MSN) — not shown as competing units in org switcher
+- **Event participant** = competing unit — fakulti, negeri, or negara
+
+Spec: [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first)
+
 ## Development Layers
 
 | Layer | Status |
@@ -84,8 +102,11 @@ Defaults: timezone `Asia/Kuala_Lumpur`, locale `en`.
 ```
 Organization (tenant)
 └── Event
-    └── Sport
-        └── Competition
+    ├── Sports / Acara
+    ├── Event Participants (fakulti · negeri · negara)
+    │   └── Sport Entries
+    ├── Athletes & Teams
+    └── Competitions → Results → Medals
 ```
 
 ## Important Configuration

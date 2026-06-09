@@ -226,6 +226,53 @@ curl -H "Authorization: Bearer {token}" \
 | `POST` | `/api/v1/events/{event}/teams/{id}/athletes` | Add athlete to roster | Team Manager |
 | `DELETE` | `/api/v1/events/{event}/teams/{id}/athletes/{athlete}` | Remove athlete from roster | Team Manager |
 
+## 7.1 Active API — Phase 2 (Event Participants)
+
+| Method | Path | Description | Auth |
+|--------|------|-------------|------|
+| `GET` | `/api/v1/events/{event}/participants` | List participants (filter: `search`, `type`, `status`) | Org member |
+| `POST` | `/api/v1/events/{event}/participants` | Register participant | Event staff / Org Admin |
+| `GET` | `/api/v1/events/{event}/participants/{id}` | Participant with sport entries | Org member |
+| `PUT` | `/api/v1/events/{event}/participants/{id}` | Update participant | Org Admin / Event staff |
+| `DELETE` | `/api/v1/events/{event}/participants/{id}` | Remove participant | Org Admin |
+| `POST` | `/api/v1/events/{event}/participants/import` | Bulk import from CSV | Event staff / Org Admin |
+| `POST` | `/api/v1/events/{event}/participants/{id}/entries` | Add sport entry for participant | Event staff / Org Admin |
+| `DELETE` | `/api/v1/events/{event}/participants/{id}/entries/{entry}` | Remove sport entry | Org Admin |
+
+**Create participant request:**
+```json
+{
+  "type": "state",
+  "name": "Selangor",
+  "code": "SGR",
+  "branch_id": null,
+  "status": "active"
+}
+```
+
+**CSV import** (`multipart/form-data`, field `file`):
+
+Required columns: `type`, `name`. Optional: `code`, `branch_id`, `status` (defaults to `active`).
+
+```csv
+type,name,code,status
+state,Selangor,SGR,active
+state,Johor,JHR,active
+```
+
+**Import response:**
+```json
+{
+  "data": {
+    "created": 2,
+    "participants": [
+      { "id": 1, "name": "Selangor", "code": "SGR", "type": "state", "status": "active" }
+    ]
+  },
+  "message": "Participants imported."
+}
+```
+
 ## 8. Active API — Phase 2 (Officials)
 
 | Method | Path | Description | Auth |

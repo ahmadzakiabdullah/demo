@@ -1,5 +1,5 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 
-export default function AuthenticatedLayout(props) {
-    return <AdminLayout {...props} />;
+export default function AuthenticatedLayout({ event, ...props }) {
+    return <AdminLayout event={event} {...props} />;
 }

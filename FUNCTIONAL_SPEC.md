@@ -18,6 +18,78 @@ Index: [DOCUMENTATION.md](DOCUMENTATION.md)
 
 ---
 
+## 0. Unified Competition Lifecycle (Event-First)
+
+SportOS uses **one operational workflow** for every multi-unit games scenario — university carnival (SAF), state games (SUKMA / MSSM), and international multi-sport games (SEA Games). Only labels and participant types change; the steps and data model stay the same.
+
+### 0.1 Canonical Flow
+
+```mermaid
+flowchart LR
+    A[1. Event] --> B[2. Sports & Categories]
+    B --> C[3. Register Participants]
+    C --> D[4. Sport Entries]
+    D --> E[5. Athletes & Teams]
+    E --> F[6. Schedule]
+    F --> G[7. Competitions & Results]
+    G --> H[8. Rankings & Medals]
+```
+
+| Step | Operator action | Output |
+|------|-----------------|--------|
+| **1** | Select or create **Event** | Event record (`draft` → `published` → `active`) |
+| **2** | Select or create **Sports / Acara** contested at this event | Sports, disciplines, categories, divisions |
+| **3** | Register **Participants** (competing units) | `event_participants` roster |
+| **4** | Each participant **chooses sports/categories** to enter | `participant_sport_entries` (approval workflow) |
+| **5** | Register **athletes** and form **teams** per entry | Athletes, teams, rosters, `registrations` |
+| **6** | Build **schedule** — fixtures, venues, officials | Fixtures, matches |
+| **7** | Run **competitions** and record **results** | Results, appeals, live scores |
+| **8** | Publish **rankings** and **medals** | Standings, medal tally, ceremonies |
+
+Steps 6–8 are **implemented** (Phase 2–3). Steps 3–4 require the **Event Participants** module (planned refactor). Step 5 is **partial** — athletes/teams exist but are not yet driven by participant sport entries.
+
+### 0.2 Terminology
+
+| Concept | Meaning | UI visibility |
+|---------|---------|---------------|
+| **Organization** | SaaS **tenant** — hosts the platform, owns venues, RBAC, audit | Org switcher (admin shell only) |
+| **Event** | Operational **games edition** for one **session year** (e.g. SUKMA 2026) | Primary admin context after selecting an event |
+| **Edition year** | Nominal year of the games session — primary sort/filter key | `events.edition_year` (e.g. 2026) |
+| **Cadence** | How often the games recur (annual, biennial, …) | On event or future `event_series` |
+| **Participant** | **Competing unit** registered for an event | Event module — *Participants* |
+| **Sport / Acara** | Discipline and category contested at the event | Event module — *Sports* |
+| **Sport entry** | A participant's declaration to enter a sport (± category/division) | Event module — *Entries* or within *Participants* |
+| **Team** | Roster-bearing unit for a sport entry (may be named after participant) | Event module — *Teams* |
+| **Branch** | Optional org subdivision (campus, district) — can seed participants | Org settings, not org switcher |
+
+**Rule:** Contingents (fakulti, negeri, negara) are **never** separate SaaS tenants. MSN, UTeM, and the host federation remain the **organization**; states/faculties/countries are **event participants**.
+
+### 0.3 Scenario Mapping
+
+| Step | SAF (UTeM) | SUKMA / MSSM | SEA Games |
+|------|------------|--------------|-----------|
+| Organization (tenant) | UTeM | MSN / host federation | OC / host NOC |
+| Event (edition) | SAF 2026 | SUKMA Selangor 2026 | SEA Games 2025 |
+| Edition year | 2026 | 2026 | 2025 |
+| Cadence | Annual (typical) | Biennial | Biennial |
+| Sports / Acara | Football, Badminton, … | Same structure | Same structure |
+| Participant label | **Fakulti** | **Negeri** | **Negara** |
+| Participant examples | FTK, FKE, FKM | Selangor, Johor, Sabah | Malaysia, Thailand, Singapore |
+| Participant source | Org `branches` or manual | Manual / import | Manual / NOC list |
+| Team | FTK Football (U21) | Selangor Football | Malaysia Badminton |
+| Medal tally group | By fakulti | By negeri | By negara |
+
+### 0.4 Anti-Patterns (Deprecated)
+
+| Wrong model | Correct model |
+|-------------|---------------|
+| Each negeri as `Organization` in org switcher | Negeri as `event_participants` on the SUKMA event |
+| MSN shown beside 16 states in tenant switcher | MSN = tenant; states = participants on event |
+| Team `organization_id` = competing negeri | Team `event_participant_id` = negeri; `organization_id` = host tenant |
+| Jump straight to athletes before participant roster | Register participants first, then sport entries, then rosters |
+
+---
+
 ## 1. Core Module
 
 ### 1.1 Organizations
@@ -70,6 +142,33 @@ Index: [DOCUMENTATION.md](DOCUMENTATION.md)
 | EVT-05 | Only published/active events visible on public portal | Planned |
 | EVT-06 | Assign event organizers and sports managers | Implemented |
 | EVT-07 | Event dashboard with status, participant count, schedule summary | Partial |
+| EVT-08 | Event setup checklist reflecting canonical flow (steps 1–8) | Planned |
+| EVT-09 | `participant_unit_label` on event (faculty / state / country) drives UI copy | Planned |
+| EVT-10 | `edition_year` on every event for sorting and filtering by tahun | Planned |
+| EVT-11 | `cadence` field: `annual`, `biennial`, `quadrennial`, `one_off` | Planned |
+| EVT-12 | Optional `event_series_id` to group recurring editions (SUKMA 2024, 2026, …) | Planned |
+| EVT-13 | Event list default sort: `edition_year` DESC, then `starts_at` | Planned |
+
+### 2.1 Event Participants
+
+| ID | Requirement | Status |
+|----|-------------|--------|
+| PAR-01 | Register competing units per event (`event_participants`) | Planned |
+| PAR-02 | Participant types: `faculty`, `state`, `country`, `club`, `other` | Planned |
+| PAR-03 | Optional link to org `branch_id` (SAF: fakulti from branches) | Planned |
+| PAR-04 | CRUD + bulk import (CSV) of participants | **Implemented** |
+| PAR-05 | Participant managers (team_manager role scoped to one participant) | Planned |
+| PAR-06 | Do not create separate `organizations` for contingents | Planned |
+
+### 2.2 Participant Sport Entries
+
+| ID | Requirement | Status |
+|----|-------------|--------|
+| ENT-01 | Participant selects sports/categories/divisions to enter (`participant_sport_entries`) | Planned |
+| ENT-02 | Entry workflow: draft → submitted → approved → rejected | Planned |
+| ENT-03 | Approved entries gate team and athlete registration for that sport | Planned |
+| ENT-04 | Event organizer can set entry deadlines per sport | Planned |
+| ENT-05 | Entry list visible on participant profile and event dashboard | Planned |
 
 ---
 
@@ -90,6 +189,7 @@ Index: [DOCUMENTATION.md](DOCUMENTATION.md)
 | ID | Requirement | Status |
 |----|-------------|--------|
 | ATH-01 | Athlete profile: name, DOB, gender, nationality, photo, ID number | Partial (photo deferred) |
+| ATH-07 | Athlete linked to `event_participant_id` when registered for an event | Planned |
 | ATH-02 | Link athlete to user account (optional) | Implemented |
 | ATH-03 | Registration workflow: draft → submitted → verified → approved → rejected | Implemented |
 | ATH-04 | Eligibility rules: age range, nationality, medical clearance flag | Partial (age, gender, medical) |
@@ -102,8 +202,10 @@ Index: [DOCUMENTATION.md](DOCUMENTATION.md)
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| TEM-01 | Team belongs to organization, event, and sport | Implemented |
+| TEM-01 | Team belongs to event, sport, and **event participant** (competing unit) | Partial (`organization_id` today; `event_participant_id` planned) |
 | TEM-02 | Team registration with approval workflow | Implemented |
+| TEM-06 | Team created only when participant has approved sport entry | Planned |
+| TEM-07 | Team name defaults from participant + sport (editable) | Planned |
 | TEM-03 | Roster management: add/remove athletes | Implemented |
 | TEM-04 | Assign coach and team manager | Implemented |
 | TEM-05 | Transfer request between teams (approve/reject) | Planned |

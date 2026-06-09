@@ -68,28 +68,71 @@ SportOS is a Laravel monolith with a React SPA frontend (via Inertia.js), design
 
 ---
 
-## 4. Multi-Tenancy Architecture
+## 4. Multi-Tenancy & Domain Model
+
+### 4.1 Three Layers
+
+SportOS separates **who pays for the platform**, **what games edition runs**, and **who competes**:
+
+```
+System Owner (global)
+    │
+    └── Organization (tenant)          ← RBAC, venues, billing, audit
+            │
+            └── Event                  ← SAF 2026, SUKMA 2026, SEA Games
+                    │
+                    ├── Sports / Acara (disciplines, categories)
+                    │
+                    ├── Event Participants (competing units)
+                    │       fakulti · negeri · negara
+                    │       └── Sport Entries (which sports they enter)
+                    │
+                    ├── Athletes & Teams (rosters per entry)
+                    │
+                    └── Competitions → Matches → Results → Medals
+```
+
+| Layer | Example (SUKMA) | `organization_id` | In org switcher? |
+|-------|-----------------|-------------------|------------------|
+| Tenant | MSN | Yes | Yes |
+| Event (edition) | SUKMA Selangor 2026 (`edition_year: 2026`) | Via event | No — pick from Events list |
+| Participant | Selangor, Johor (competing states) | No separate org | No — event module only |
+
+**Edition year:** Every event carries a session year for list sorting and historical grouping. Cadence (`annual` / `biennial`) describes recurrence; optional `event_series` links editions (SUKMA 2024 → 2026 → 2028).
+
+**Enforcement:**
+- `organization_id` on all domain tables for tenant isolation
+- `event_id` scopes competition data
+- `event_participant_id` scopes contingent data (teams, medals by state, etc.)
+- Middleware validates org membership; policies check org + event + participant scope
+- Contingents must **not** be provisioned as child organizations
+
+### 4.2 Unified Operational Flow
+
+Same sequence for SAF, SUKMA, and SEA Games — see [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first).
+
+```
+Event → Sports → Participants → Sport Entries → Athletes/Teams → Schedule → Results → Medals
+```
+
+### 4.3 Multi-Tenancy (Tenant Isolation)
 
 ```
 System Owner (global, no org scope)
     │
-    ├── Organization A (tenant)
+    ├── Organization A (tenant)          e.g. UTeM, MSN
     │   ├── Users (via organization_user pivot)
+    │   ├── Branches (optional — fakulti/campus)
+    │   ├── Venues & facilities
     │   ├── Events
+    │   │   ├── event_participants
     │   │   ├── Sports → Competitions → Matches → Results
-    │   │   ├── Athletes, Teams, Officials
-    │   │   └── Venues, Accreditations
+    │   │   └── Athletes, Teams, Officials
     │   └── Audit Logs (org-scoped)
     │
     └── Organization B (tenant)
         └── ... (isolated data)
 ```
-
-**Enforcement:**
-- `OrganizationScope` global Eloquent scope (planned)
-- `organization_id` foreign key on all domain tables
-- Middleware validates user's org membership per request
-- Policies check org + event + role permissions
 
 ---
 
@@ -168,16 +211,28 @@ System Owner (global, no org scope)
 │  Organizations · Branches · Users · RBAC · Audit        │
 └────────────────────────┬────────────────────────────────┘
                          │
+                         ▼
+              ┌─────────────────────┐
+              │    Event Module     │
+              └──────────┬──────────┘
+                         │
         ┌────────────────┼────────────────┐
         ▼                ▼                ▼
 ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-│ Event Module │ │ Sports Module│ │ Venue Module │
+│ Sports Module│ │ Participants │ │ Venue Module │
+│ (step 2)     │ │ (step 3–4)   │ │              │
 └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
        │                │                │
-       ▼                ▼                ▼
+       └────────────────┼────────────────┘
+                        ▼
+              ┌─────────────────────┐
+              │ Registration        │
+              │ Athletes · Teams    │  (step 5)
+              └──────────┬──────────┘
+                         ▼
 ┌─────────────────────────────────────────────────────────┐
-│              Competition Engine (Phase 3)                  │
-│  Fixtures · Matches · Results · Rankings · Medals        │
+│              Competition Engine (Phase 3)              │
+│  Schedule · Fixtures · Results · Rankings · Medals      │  (steps 6–8)
 └────────────────────────┬────────────────────────────────┘
                          │
         ┌────────────────┼────────────────┐
@@ -188,6 +243,8 @@ System Owner (global, no org scope)
 │ Reports      │ │ Rankings     │ │ Analytics    │
 └──────────────┘ └──────────────┘ └──────────────┘
 ```
+
+> **Participants module** (planned): `event_participants` + `participant_sport_entries` — see [DATABASE.md §9](DATABASE.md#9-planned-tables--event-participants-refactor).
 
 ---
 

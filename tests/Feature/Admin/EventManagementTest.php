@@ -45,6 +45,7 @@ class EventManagementTest extends TestCase
                 'event_type_id' => EventType::query()->first()->id,
                 'event_category_id' => EventCategory::query()->first()->id,
                 'name' => 'UTeM Sports Carnival 2026',
+                'edition_year' => 2026,
                 'status' => EventStatus::Draft->value,
                 'location' => 'Main Campus',
                 'description' => 'Annual university sports event.',
@@ -90,6 +91,7 @@ class EventManagementTest extends TestCase
                 'event_type_id' => EventType::query()->first()->id,
                 'event_category_id' => EventCategory::query()->first()->id,
                 'name' => 'Faculty Games',
+                'edition_year' => 2026,
                 'status' => EventStatus::Draft->value,
             ])
             ->assertRedirect();
@@ -123,6 +125,7 @@ class EventManagementTest extends TestCase
                 'event_type_id' => EventType::query()->first()->id,
                 'event_category_id' => EventCategory::query()->first()->id,
                 'name' => 'Blocked Event',
+                'edition_year' => 2026,
                 'status' => EventStatus::Draft->value,
             ])
             ->assertSessionHasErrors('organization_id');
@@ -147,6 +150,7 @@ class EventManagementTest extends TestCase
                 'event_category_id' => EventCategory::query()->first()->id,
                 'name' => 'Sports Day',
                 'slug' => 'sports-day',
+                'edition_year' => 2026,
                 'status' => EventStatus::Draft->value,
             ])
             ->assertSessionHasErrors('slug');
@@ -180,6 +184,7 @@ class EventManagementTest extends TestCase
                 'description' => $event->description,
                 'starts_at' => $event->starts_at?->format('Y-m-d\TH:i'),
                 'ends_at' => $event->ends_at?->format('Y-m-d\TH:i'),
+                'edition_year' => $event->edition_year ?? 2026,
             ])
             ->assertSessionHasErrors('status');
     }

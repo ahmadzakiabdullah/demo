@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AthleteController;
+use App\Http\Controllers\Api\V1\EventParticipantController;
 use App\Http\Controllers\Api\V1\CompetitionController;
 use App\Http\Controllers\Api\V1\OfficialController;
 use App\Http\Controllers\Api\V1\AuditLogController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Api\V1\ScheduleController;
 use App\Http\Controllers\Api\V1\EventController;
 use App\Http\Controllers\Api\V1\EventVenueController;
 use App\Http\Controllers\Api\V1\OrganizationController;
+use App\Http\Controllers\Api\V1\ParticipantSportEntryController;
 use App\Http\Controllers\Api\V1\SportController;
 use App\Http\Controllers\Api\V1\TeamController;
 use App\Http\Controllers\Api\V1\UserController;
@@ -38,6 +40,10 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::apiResource('events', EventController::class);
     Route::patch('events/{event}/status', [EventController::class, 'updateStatus']);
     Route::apiResource('events.sports', SportController::class);
+    Route::post('events/{event}/participants/import', [EventParticipantController::class, 'import']);
+    Route::apiResource('events.participants', EventParticipantController::class);
+    Route::post('events/{event}/participants/{participant}/entries', [ParticipantSportEntryController::class, 'store']);
+    Route::delete('events/{event}/participants/{participant}/entries/{entry}', [ParticipantSportEntryController::class, 'destroy']);
     Route::apiResource('events.athletes', AthleteController::class);
     Route::apiResource('events.officials', OfficialController::class);
     Route::apiResource('events.teams', TeamController::class);

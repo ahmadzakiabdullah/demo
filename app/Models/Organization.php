@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'timezone',
     'locale',
     'status',
+    'is_tenant',
 ])]
 class Organization extends Model
 {
@@ -35,6 +36,7 @@ class Organization extends Model
         return [
             'type' => OrganizationType::class,
             'status' => OrganizationStatus::class,
+            'is_tenant' => 'boolean',
         ];
     }
 
@@ -46,6 +48,20 @@ class Organization extends Model
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);
+    }
+
+    public function eventSeries(): HasMany
+    {
+        return $this->hasMany(EventSeries::class);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder<Organization>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<Organization>
+     */
+    public function scopeSwitchable($query)
+    {
+        return $query->where('is_tenant', true);
     }
 
     public function venues(): HasMany

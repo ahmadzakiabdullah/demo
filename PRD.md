@@ -82,14 +82,19 @@ Modular · Scalable · Multi-Tenant · API First · Mobile Ready · Cloud Ready 
 
 1. **Organization onboarding** — System Owner creates a federation; Org Admin configures branches and users.
 2. **Event setup** — Event Organizer creates a multi-sport event with categories and lifecycle states.
-3. **Registration** — Athletes and teams register; eligibility is verified before approval.
-4. **Scheduling** — Fixtures generated with venue and official allocation; conflicts detected.
-5. **Competition** — Brackets drawn; matches played; results entered and validated.
-6. **Medal tally** — Automatic gold/silver/bronze calculation by country, org, or team.
-7. **Accreditation** — QR-enabled passes for athletes, officials, volunteers, media.
-8. **Public portal** — Spectators view live results, rankings, and medal tables.
-9. **Reporting** — PDF/Excel/CSV exports for participation, medals, attendance.
-10. **AI assistance** — Smart scheduling and performance insights (Phase 6).
+3. **Sports programme** — Define sports, disciplines, categories, and divisions for the event.
+4. **Participant registration** — Register competing units (faculty / state / country) per event — same model for SAF, SUKMA, SEA Games.
+5. **Sport entries** — Each participant selects which sports/categories to enter; organizer approves entries.
+6. **Athlete & team registration** — Rosters built per approved entry; eligibility verified before approval.
+7. **Scheduling** — Fixtures generated with venue and official allocation; conflicts detected.
+8. **Competition** — Brackets drawn; matches played; results entered and validated.
+9. **Medal tally** — Automatic gold/silver/bronze calculation by participant unit (faculty, state, country).
+
+> Canonical flow: [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first)
+10. **Accreditation** — QR-enabled passes for athletes, officials, volunteers, media.
+11. **Public portal** — Spectators view live results, rankings, and medal tables.
+12. **Reporting** — PDF/Excel/CSV exports for participation, medals, attendance.
+13. **AI assistance** — Smart scheduling and performance insights (Phase 6).
 
 ---
 

@@ -66,6 +66,8 @@ First real-world target before international scale:
 | **Secondary** | School / state | MSSM-style events, state championships |
 | **Future** | National / international | SEA Games, multi-sport games |
 
+**Unified flow** (SAF · SUKMA · SEA Games): Event → Sports → Participants → Sport Entries → Athletes/Teams → Schedule → Results → Medals. See [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first).
+
 Default locale: `en`. Default timezone: `Asia/Kuala_Lumpur`.
 
 ---

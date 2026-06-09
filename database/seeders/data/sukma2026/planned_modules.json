@@ -1,0 +1,27 @@
+{
+    "note": "Modules below are not yet migrated in SportOS. Stored as reference data for SUKMA 2026 planning.",
+    "accommodation": [
+        {"name": "Hotel Dorsett Putrajaya", "type": "hotel", "capacity": 420, "contingents": ["Selangor", "Johor", "Kuala Lumpur"]},
+        {"name": "Hotel Bangi-Putrajaya", "type": "hotel", "capacity": 380, "contingents": ["Sarawak", "Sabah", "Perak"]},
+        {"name": "Kolej Kediaman UiTM Shah Alam", "type": "college", "capacity": 600, "contingents": ["Kedah", "Kelantan", "Terengganu", "Pahang"]},
+        {"name": "Asrama SUK Selangor", "type": "hostel", "capacity": 500, "contingents": ["Negeri Sembilan", "Melaka", "Perlis", "Pulau Pinang", "Labuan", "Putrajaya"]}
+    ],
+    "transport": [
+        {"registration": "BAM 1234", "type": "bus", "driver": "Encik Razali bin Osman", "capacity": 44, "route": "Hotel Dorsett → Stadium Shah Alam"},
+        {"registration": "VAN 5678", "type": "van", "driver": "Puan Siti Nurhaliza binti Ahmad", "capacity": 12, "route": "UiTM Kolej → Kompleks Sukan NSA"},
+        {"registration": "WA 9012 Q", "type": "official_car", "driver": "Encik Tan Boon Hock", "capacity": 4, "route": "SUKMA Command Centre → Bukit Jalil"}
+    ],
+    "accreditation": [
+        {"card_number": "SUK26-ATH-00001", "holder_type": "athlete", "access_level": "field_of_play", "status": "active"},
+        {"card_number": "SUK26-COA-00045", "holder_type": "coach", "access_level": "team_zone", "status": "active"},
+        {"card_number": "SUK26-OFF-00112", "holder_type": "official", "access_level": "technical_zone", "status": "active"},
+        {"card_number": "SUK26-MED-00008", "holder_type": "media", "access_level": "media_zone", "status": "active"},
+        {"card_number": "SUK26-VIP-00003", "holder_type": "vip", "access_level": "vip_lounge", "status": "active"},
+        {"card_number": "SUK26-VOL-00234", "holder_type": "volunteer", "access_level": "general", "status": "active"}
+    ],
+    "volunteers": [
+        {"name": "Nurul Izzati binti Kamal", "age": 21, "university": "UiTM Shah Alam", "task": "Venue usher", "location": "Stadium Shah Alam"},
+        {"name": "Arvind a/l Subramaniam", "age": 22, "university": "UM", "task": "Media centre support", "location": "Kompleks Sukan NSA"},
+        {"name": "Wong Li Ling", "age": 20, "university": "Sunway University", "task": "Accreditation desk", "location": "SUKMA Command Centre"}
+    ]
+}

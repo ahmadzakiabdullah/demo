@@ -1,0 +1,340 @@
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Unit\ExampleTest[39m
+  [32;1m✓[39;22m[90m [39m[90mthat true is true[39m
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\AthleteManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access athletes[39m[90m                                                                               [39m [90m0.28s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can register athlete for event[39m[90m                                                                    [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can advance registration workflow[39m[90m                                                                 [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mregistration submit blocked without medical clearance[39m[90m                                                       [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90meligibility checks category age rules[39m[90m                                                                       [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot register athlete[39m[90m                                                                              [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\AuditLogTest[39m
+  [32;1m✓[39;22m[90m [39m[90mcreating organization writes audit log[39m[90m                                                                      [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mupdating user writes audit log without password[39m[90m                                                             [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90maudit logs are append only[39m[90m                                                                                  [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can view audit logs[39m[90m                                                                            [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can view organization audit logs[39m[90m                                                                  [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot view audit logs[39m[90m                                                                               [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mregister route is rate limited[39m[90m                                                                              [39m [90m0.04s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\CompetitionEngineTest[39m
+  [32;1m✓[39;22m[90m [39m[90morg admin can generate round robin draw[39m[90m                                                                     [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mconfirming result updates rankings and medals[39m[90m                                                               [39m [90m0.07s[39m  
+  [32;1m✓[39;22m[90m [39m[90mknockout draw advances winner to next round[39m[90m                                                                 [39m [90m0.07s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\CompetitionManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access competitions[39m[90m                                                                           [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can create competition with fixture and match[39m[90m                                                     [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mvenue conflict blocks overlapping match[39m[90m                                                                     [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mathlete conflict blocks double booking[39m[90m                                                                      [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot create competition[39m[90m                                                                            [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\DashboardTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access dashboard[39m[90m                                                                              [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner sees dashboard stats[39m[90m                                                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin sees scoped dashboard stats[39m[90m                                                                       [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\EventManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access events[39m[90m                                                                                 [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot access events[39m[90m                                                                                 [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create and view event[39m[90m                                                                      [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can create event for their organization[39m[90m                                                           [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin cannot create event for other organization[39m[90m                                                        [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mslug is unique within organization[39m[90m                                                                          [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mstatus transition is validated[39m[90m                                                                              [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mevent assignments can be managed[39m[90m                                                                            [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90massigned organizer can view event[39m[90m                                                                           [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\EventParticipantManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can register event participant[39m[90m                                                                 [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mevent store requires edition year[39m[90m                                                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mevents index sorts by edition year[39m[90m                                                                          [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\EventVenueTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access event venues[39m[90m                                                                           [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can attach venue to event[39m[90m                                                                         [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can link and unlink sport to venue[39m[90m                                                                [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mdetach venue removes sport links[39m[90m                                                                            [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot attach venue[39m[90m                                                                                  [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\OfficialManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access officials[39m[90m                                                                              [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can register official for event[39m[90m                                                                   [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can advance registration workflow[39m[90m                                                                 [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mregistration submit blocked with expired certification[39m[90m                                                      [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot register official[39m[90m                                                                             [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\OrganizationManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access organizations[39m[90m                                                                          [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mnon admin users cannot access organizations[39m[90m                                                                 [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can view organization listing[39m[90m                                                                         [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can search organizations[39m[90m                                                                              [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can create organization with generated slug[39m[90m                                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can update organization[39m[90m                                                                               [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can delete organization[39m[90m                                                                               [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can add and remove branch[39m[90m                                                                             [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin cannot remove branch from another organization[39m[90m                                                        [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\OrganizationSwitchTest[39m
+  [32;1m✓[39;22m[90m [39m[90morg admin can switch to their organization[39m[90m                                                                  [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin cannot switch to foreign organization[39m[90m                                                             [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can clear organization scope[39m[90m                                                                   [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\Phase3CompletionTest[39m
+  [32;1m✓[39;22m[90m [39m[90mdouble elimination draw creates winners losers and grand final[39m[90m                                              [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mswiss draw creates round fixtures[39m[90m                                                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mladder draw creates challenge match[39m[90m                                                                         [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mgroup stage can generate knockout phase[39m[90m                                                                     [39m [90m0.09s[39m  
+  [32;1m✓[39;22m[90m [39m[90mresult confirmation broadcasts live update event[39m[90m                                                            [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can schedule medal ceremony[39m[90m                                                                       [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\RbacTest[39m
+  [32;1m✓[39;22m[90m [39m[90mroles and permissions are seeded by migration[39m[90m                                                               [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner has all permissions[39m[90m                                                                            [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin has organization scoped permissions[39m[90m                                                               [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember user has no system permissions[39m[90m                                                                       [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mlegacy admin users are migrated to system owner[39m[90m                                                             [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\ResultAppealTest[39m
+  [32;1m✓[39;22m[90m [39m[90mteam manager can submit appeal on confirmed result[39m[90m                                                          [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can overturn appeal and reset result[39m[90m                                                              [39m [90m0.08s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcannot submit appeal on pending result[39m[90m                                                                      [39m [90m0.08s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\ScheduleTest[39m
+  [32;1m✓[39;22m[90m [39m[90morg admin can view week schedule[39m[90m                                                                            [39m [90m0.04s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\SportManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access sports[39m[90m                                                                                 [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create sport from template[39m[90m                                                                 [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can manage sports for their event[39m[90m                                                                 [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot create sport[39m[90m                                                                                  [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msport slug is unique within event[39m[90m                                                                           [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\TeamManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access teams[39m[90m                                                                                  [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can register team for event[39m[90m                                                                       [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can manage roster and advance registration[39m[90m                                                        [39m [90m0.06s[39m  
+  [32;1m✓[39;22m[90m [39m[90mteam registration submit blocked without roster[39m[90m                                                             [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot register team[39m[90m                                                                                 [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\UserManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access admin users[39m[90m                                                                            [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mnon admin users cannot access admin users[39m[90m                                                                   [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can view user listing[39m[90m                                                                                 [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can search users[39m[90m                                                                                      [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can filter users by role[39m[90m                                                                              [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can create user[39m[90m                                                                                       [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can create system owner[39m[90m                                                                               [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can update user[39m[90m                                                                                       [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin can delete other users[39m[90m                                                                                [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90madmin cannot delete themselves[39m[90m                                                                              [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mnon admin cannot create users[39m[90m                                                                               [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Admin\VenueManagementTest[39m
+  [32;1m✓[39;22m[90m [39m[90mguests cannot access venues[39m[90m                                                                                 [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can view venues without selected organization[39m[90m                                                  [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can view venues index[39m[90m                                                                             [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can create venue[39m[90m                                                                                  [39m [90m0.04s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can manage facilities[39m[90m                                                                             [39m [90m0.05s[39m  
+  [32;1m✓[39;22m[90m [39m[90mvenue slug is unique within organization[39m[90m                                                                    [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot create venue[39m[90m                                                                                  [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\AthleteApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create and list athletes via api[39m[90m                                                           [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list athletes via api[39m[90m                                                                         [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can update registration status via api[39m[90m                                                            [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\AuditLogApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can list audit logs[39m[90m                                                                            [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can list audit logs for their organization[39m[90m                                                        [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list audit logs[39m[90m                                                                               [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\AuthTest[39m
+  [32;1m✓[39;22m[90m [39m[90muser can login and receive token[39m[90m                                                                            [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mlogin rejects invalid credentials[39m[90m                                                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mauthenticated user can fetch profile[39m[90m                                                                        [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mauthenticated user can logout[39m[90m                                                                               [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mauthenticated user can refresh token[39m[90m                                                                        [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mlogin includes organization memberships[39m[90m                                                                     [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90mprotected routes require authentication[39m[90m                                                                     [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\CompetitionApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create and list competitions via api[39m[90m                                                       [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list competitions via api[39m[90m                                                                     [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can create fixture and match via api[39m[90m                                                              [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcompetition formats endpoint returns seeded formats[39m[90m                                                         [39m [90m0.01s[39m  
+
+  [39;41;1m FAIL [39;49;22m[39m Tests\Feature\Api\V1\EventApiTest[39m
+  [31;1m⨯[39;22m[90m [39m[90msystem owner can create and list events[39m[90m                                                                     [39m [90m0.02s[39m  
+  [31;1m⨯[39;22m[90m [39m[90morg admin can create event for their organization[39m[90m                                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin cannot create event for other organization[39m[90m                                                        [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mevent status can be updated via api[39m[90m                                                                         [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list events[39m[90m                                                                                   [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\OfficialApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create and list officials via api[39m[90m                                                          [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list officials via api[39m[90m                                                                        [39m [90m0.01s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can update registration status via api[39m[90m                                                            [39m [90m0.03s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\OrganizationApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can list organizations[39m[90m                                                                         [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin cannot list all organizations[39m[90m                                                                     [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create organization[39m[90m                                                                        [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg member can view their organization[39m[90m                                                                      [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can list organization branches[39m[90m                                                                 [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\ResultApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90morg admin can submit and confirm result via api[39m[90m                                                             [39m [90m0.04s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\ResultAppealApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90morg admin can submit and resolve appeal via api[39m[90m                                                             [39m [90m0.05s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\SportApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create and list sports via api[39m[90m                                                             [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list sports via api[39m[90m                                                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can view sport with structure[39m[90m                                                                  [39m [90m0.02s[39m  
+
+  [39;41;1m FAIL [39;49;22m[39m Tests\Feature\Api\V1\TeamApiTest[39m
+  [31;1m⨯[39;22m[90m [39m[90msystem owner can create and list teams via api[39m[90m                                                              [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list teams via api[39m[90m                                                                            [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can manage roster via api[39m[90m                                                                         [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\UserApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can list users[39m[90m                                                                                 [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90morg admin can list users in their organization[39m[90m                                                              [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list users[39m[90m                                                                                    [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create user[39m[90m                                                                                [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90muser cannot delete themselves[39m[90m                                                                               [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Api\V1\VenueApiTest[39m
+  [32;1m✓[39;22m[90m [39m[90msystem owner can list venues without organization header[39m[90m                                                    [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can create and list venues via api[39m[90m                                                             [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mmember cannot list venues via api[39m[90m                                                                           [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90msystem owner can manage event venues via api[39m[90m                                                                [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\AuthenticationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mlogin screen can be rendered[39m[90m                                                                                [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can authenticate using the login screen[39m[90m                                                               [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can not authenticate with invalid password[39m[90m                                                            [39m [90m0.24s[39m  
+  [32;1m✓[39;22m[90m [39m[90musers can logout[39m[90m                                                                                            [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\EmailVerificationTest[39m
+  [32;1m✓[39;22m[90m [39m[90memail verification screen can be rendered[39m[90m                                                                   [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail can be verified[39m[90m                                                                                       [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail is not verified with invalid hash[39m[90m                                                                     [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\PasswordConfirmationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mconfirm password screen can be rendered[39m[90m                                                                     [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpassword can be confirmed[39m[90m                                                                                   [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpassword is not confirmed with invalid password[39m[90m                                                             [39m [90m0.23s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\PasswordResetTest[39m
+  [32;1m✓[39;22m[90m [39m[90mreset password link screen can be rendered[39m[90m                                                                  [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mreset password link can be requested[39m[90m                                                                        [39m [90m0.22s[39m  
+  [32;1m✓[39;22m[90m [39m[90mreset password screen can be rendered[39m[90m                                                                       [39m [90m0.24s[39m  
+  [32;1m✓[39;22m[90m [39m[90mpassword can be reset with valid token[39m[90m                                                                      [39m [90m0.24s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\PasswordUpdateTest[39m
+  [32;1m✓[39;22m[90m [39m[90mpassword can be updated[39m[90m                                                                                     [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcorrect password must be provided to update password[39m[90m                                                        [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\Auth\RegistrationTest[39m
+  [32;1m✓[39;22m[90m [39m[90mregistration screen can be rendered[39m[90m                                                                         [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mnew users can register[39m[90m                                                                                      [39m [90m0.02s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\ExampleTest[39m
+  [32;1m✓[39;22m[90m [39m[90mthe application returns a successful response[39m[90m                                                               [39m [90m0.01s[39m  
+
+  [30;42;1m PASS [39;49;22m[39m Tests\Feature\ProfileTest[39m
+  [32;1m✓[39;22m[90m [39m[90mprofile page is displayed[39m[90m                                                                                   [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90mprofile information can be updated[39m[90m                                                                          [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90memail verification status is unchanged when the email address is unchanged[39m[90m                                  [39m [90m0.02s[39m  
+  [32;1m✓[39;22m[90m [39m[90muser can delete their account[39m[90m                                                                               [39m [90m0.03s[39m  
+  [32;1m✓[39;22m[90m [39m[90mcorrect password must be provided to delete account[39m[90m                                                         [39m [90m0.03s[39m  
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Api\V1\EventApiTest[22m [90m>[39m system owner can create and list events                                  
+[39;1m  Expected response status code [201] but received 422.
+Failed asserting that 422 is identical to 201.
+
+The following errors occurred during the last request:
+
+{
+    "message": "The edition year field is required.",
+    "errors": {
+        "edition_year": [
+            "The edition year field is required."
+        ]
+    }
+}[39;22m
+
+  at [32mD:\www\demo\tests\Feature\Api\V1\EventApiTest.php[39m:[32m37[39m
+     33▕             'name' => 'API Sports Day',
+     34▕             'status' => EventStatus::Draft->value,
+     35▕             'location' => 'Stadium',
+     36▕         ])
+  ➜  37▕             ->assertCreated()
+     38▕             ->assertJsonPath('data.name', 'API Sports Day')
+     39▕             ->assertJsonPath('data.slug', 'api-sports-day');
+     40▕ 
+     41▕         $this->getJson('/api/v1/events')
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Api\V1\EventApiTest[22m [90m>[39m org admin can create event for their organization                        
+[39;1m  Expected response status code [201] but received 422.
+Failed asserting that 422 is identical to 201.
+
+The following errors occurred during the last request:
+
+{
+    "message": "The edition year field is required.",
+    "errors": {
+        "edition_year": [
+            "The edition year field is required."
+        ]
+    }
+}[39;22m
+
+  at [32mD:\www\demo\tests\Feature\Api\V1\EventApiTest.php[39m:[32m69[39m
+     65▕                 'event_category_id' => EventCategory::query()->first()->id,
+     66▕                 'name' => 'Faculty Games API',
+     67▕                 'status' => EventStatus::Draft->value,
+     68▕             ])
+  ➜  69▕             ->assertCreated();
+     70▕ 
+     71▕         $this->assertDatabaseHas('events', [
+     72▕             'organization_id' => $organization->id,
+     73▕             'name' => 'Faculty Games API',
+
+  [31m────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m  
+  [41;1m FAILED [49;22m [1mTests\Feature\Api\V1\TeamApiTest[22m [90m>[39m system owner can create and list teams via api                            
+[39;1m  Expected response status code [201] but received 422.
+Failed asserting that 422 is identical to 201.
+
+The following errors occurred during the last request:
+
+{
+    "message": "The event participant id field is required.",
+    "errors": {
+        "event_participant_id": [
+            "The event participant id field is required."
+        ]
+    }
+}[39;22m
+
+  at [32mD:\www\demo\tests\Feature\Api\V1\TeamApiTest.php[39m:[32m44[39m
+     40▕         $this->postJson("/api/v1/events/{$event->id}/teams", [
+     41▕             'sport_id' => $sport->id,
+     42▕             'name' => 'API Warriors',
+     43▕         ])
+  ➜  44▕             ->assertCreated()
+     45▕             ->assertJsonPath('data.name', 'API Warriors');
+     46▕ 
+     47▕         $this->getJson("/api/v1/events/{$event->id}/teams")
+     48▕             ->assertOk()
+
+
+  [90mTests:[39m    [31;1m3 failed[39;22m[90m,[39m[39m [39m[32;1m170 passed[39;22m[90m (663 assertions)[39m
+  [90mDuration:[39m [39m6.00s[39m
+

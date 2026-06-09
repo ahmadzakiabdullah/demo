@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\EventCadence;
 use App\Enums\EventStatus;
+use App\Enums\ParticipantUnitLabel;
 use App\Models\Concerns\Auditable;
 use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -17,8 +19,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'organization_id',
     'event_type_id',
     'event_category_id',
+    'event_series_id',
     'name',
     'slug',
+    'edition_year',
+    'cadence',
+    'participant_unit_label',
     'status',
     'location',
     'description',
@@ -37,6 +43,8 @@ class Event extends Model
     {
         return [
             'status' => EventStatus::class,
+            'cadence' => EventCadence::class,
+            'participant_unit_label' => ParticipantUnitLabel::class,
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
         ];
@@ -55,6 +63,16 @@ class Event extends Model
     public function eventCategory(): BelongsTo
     {
         return $this->belongsTo(EventCategory::class);
+    }
+
+    public function eventSeries(): BelongsTo
+    {
+        return $this->belongsTo(EventSeries::class);
+    }
+
+    public function eventParticipants(): HasMany
+    {
+        return $this->hasMany(EventParticipant::class);
     }
 
     public function assignees(): BelongsToMany
