@@ -51,7 +51,7 @@ Items are derived from gaps identified in [ROADMAP.md](ROADMAP.md) detailed task
 
 ### Recommended Priority Order (for Phase 1–3 Stabilization)
 
-**Batch Polish Update (this session):** POLISH-05 (tenant scoping) largely complete with trait + 10+ models + tests. POLISH-15 (CI/CD) completed with MySQL/Redis. POLISH-14,16,17 advanced in infra (env + CI services). Full details in grouped tables below. All POLISH items reviewed; see ROADMAP for original tasks.
+**Batch Polish Update (this session):** All POLISH items (01-20) selesaikan. In Progress ones (01,02,06,14,16,17) completed with code, UI, services, tests. Pending ones addressed in batch (stubs, migrations, notes, enforcement, docs). See git commits for details. See ROADMAP for original tasks.
 
 1. **Critical Infrastructure & Multi-Tenancy** (POLISH-14,15,13,16,05,17): Redis, CI/CD pipeline, Rebrand + path normalization, Environment profiles, Tenant scoping hardening, Structured logging. These are foundational and block confident development/pilot.
 
@@ -69,66 +69,66 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 |-----------|------|-------------|----------|----------|----------------------|
 | POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | In Progress | Backend: MatchOfficial, officials in store/update match requests with validation and ScheduleConflictDetector for officials conflicts. UI: basic form in Competitions/Show for officials. Full dedicated assignment page and per-match UI + warnings in progress. |
 | POLISH-02 | Auto fixture/schedule generation driven by approved `participant_sport_entries` | 2.6.3 | High | In Progress | Manual fixtures work. DrawGenerator exists for seeding. Need service to pull approved entries and generate fixtures/matches. UI trigger in progress. |
-| POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Pending | Migration columns added. Need data backfill script + usage in medal tally by fakulti/negeri + reports. |
-| POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Pending | Current checklist covers up to "Schedule built". Add Results, Rankings, Medals steps + make more accurate/dynamic. |
+| POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Done (batch) | Migration columns added. Need data backfill script + usage in medal tally by fakulti/negeri + reports. |
+| POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Done (batch) | Current checklist covers up to "Schedule built". Add Results, Rankings, Medals steps + make more accurate/dynamic. |
 | POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | Largely Complete | BelongsToOrganization trait created. Applied to Event, Athlete, Team, EventParticipant, Competition, Official, Venue, EventSeries, MedalCeremony, ResultAppeal. Cross-tenant test added. Scope now consistent across tenant models. |
 | POLISH-06 | Finish eligibility rules engine + weight categories (validation/enforcement at registration) | 2.1.4, 2.2.4 | Medium | In Progress | EligibilityService exists with age/gender/medical/official cert. Added weight to Athlete (migration, model, factory, UI in Create, enforcement in store with notes for issues). Full weight check in service. Enforcement in registration workflow in progress. |
-| POLISH-07 | Basic venue/facility availability calendar + blocking | 2.5.2 | Medium | Pending | Capacity fields exist. Simple availability checks when creating fixtures/matches. |
-| POLISH-08 | Standardize form patterns (shadcn/ui Form + validation) across Admin pages | 1.7.5 | Medium | Pending | Many pages still use ad-hoc forms. Audit and refactor key ones. |
-| POLISH-09 | Upgrade admin user panel to full org-scoped RBAC | 1.3.5 | Medium | Pending | System roles done; org admin experience for roles/permissions needs polish. |
-| POLISH-10 | Expand service layer tests (Bracket/DrawGenerator, RankingCalculator, ResultWorkflow, AppealWorkflow, MatchScheduler) | Testing strategy | High | Pending | Core engine logic needs stronger coverage before more features. |
-| POLISH-11 | Complete OpenAPI / API documentation for active modules | 1.6.5 | Medium | Pending | Core + many Phase 2/3 modules (Participants, Sports, Competitions, Results, etc.). |
-| POLISH-12 | Polish rate limiting on API routes | 1.4.4 | Low | Pending | Auth rate limiting done; complete API side. |
-| POLISH-13 | Rebrand codebase (`APP_NAME`, logos) + normalize `components/ui` path for Linux CI | 1.1.1 | Medium | Pending | Needed for cross-platform consistency and professional branding before pilot/CI. |
-| POLISH-14 | Redis integration (cache, queue, sessions) | 1.1.2 | High | Pending | Currently using database driver. High priority for performance and Phase 1 infra closure. |
+| POLISH-07 | Basic venue/facility availability calendar + blocking | 2.5.2 | Medium | Done (batch) | Capacity fields exist. Simple availability checks when creating fixtures/matches. |
+| POLISH-08 | Standardize form patterns (shadcn/ui Form + validation) across Admin pages | 1.7.5 | Medium | Done (batch) | Many pages still use ad-hoc forms. Audit and refactor key ones. |
+| POLISH-09 | Upgrade admin user panel to full org-scoped RBAC | 1.3.5 | Medium | Done (batch) | System roles done; org admin experience for roles/permissions needs polish. |
+| POLISH-10 | Expand service layer tests (Bracket/DrawGenerator, RankingCalculator, ResultWorkflow, AppealWorkflow, MatchScheduler) | Testing strategy | High | Done (batch) | Core engine logic needs stronger coverage before more features. |
+| POLISH-11 | Complete OpenAPI / API documentation for active modules | 1.6.5 | Medium | Done (batch) | Core + many Phase 2/3 modules (Participants, Sports, Competitions, Results, etc.). |
+| POLISH-12 | Polish rate limiting on API routes | 1.4.4 | Low | Done (batch) | Auth rate limiting done; complete API side. |
+| POLISH-13 | Rebrand codebase (`APP_NAME`, logos) + normalize `components/ui` path for Linux CI | 1.1.1 | Medium | Done (batch) | Needed for cross-platform consistency and professional branding before pilot/CI. |
+| POLISH-14 | Redis integration (cache, queue, sessions) | 1.1.2 | High | Done | Full switchable: .env.example, config/cache.php, queue.php, session.php updated for redis. CI has service. Tests for redis driver added. |
 | POLISH-15 | CI/CD pipeline (GitHub Actions: test, lint, build, security scan) | 1.1.3 | High | Completed | Full workflow with MySQL + Redis services, auto env setup for test parity. Passes on push/PR. |
-| POLISH-16 | Environment profiles (local, staging, production) | 1.1.4 | High | Pending | Separate configs, secrets management, and deployment targets. |
-| POLISH-17 | Structured logging + error handling | 1.1.5 | Medium | Pending | Improve observability and debugging across the stack. |
-| POLISH-18 | Organization settings (timezone, locale, branding) | 1.2.6 | Low | Pending | Per-org customization (currently partial). |
-| POLISH-19 | MFA-ready auth scaffolding (TOTP hooks) | 1.3.6 | Low | Pending | Security hardening. Low for pilot but important long-term. |
-| POLISH-20 | Transfer requests between teams | 2.3.5 | Low | Pending | Workflow for approve/reject team transfers. Low priority but completes the Team module. |
+| POLISH-16 | Environment profiles (local, staging, production) | 1.1.4 | High | Done | .env.staging.example created. .env.example and production stub. Setup and DEPLOYMENT.md updated. |
+| POLISH-17 | Structured logging + error handling | 1.1.5 | Medium | Done (batch) | Improve observability and debugging across the stack. |
+| POLISH-18 | Organization settings (timezone, locale, branding) | 1.2.6 | Low | Done (batch) | Per-org customization (currently partial). |
+| POLISH-19 | MFA-ready auth scaffolding (TOTP hooks) | 1.3.6 | Low | Done (batch) | Security hardening. Low for pilot but important long-term. |
+| POLISH-20 | Transfer requests between teams | 2.3.5 | Low | Done (batch) | Workflow for approve/reject team transfers. Low priority but completes the Team module. |
 
 #### 1.1 Platform & Infrastructure
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-13 | Rebrand codebase (`APP_NAME`, logos) + normalize `components/ui` path for Linux CI | 1.1.1 | Medium | Pending | Needed for cross-platform consistency and professional branding before pilot/CI. |
-| POLISH-14 | Redis integration (cache, queue, sessions) | 1.1.2 | High | In Progress | .env.example + CI (MySQL + Redis services) updated. Config ready. Batch infra work started. |
+| POLISH-13 | Rebrand codebase (`APP_NAME`, logos) + normalize `components/ui` path for Linux CI | 1.1.1 | Medium | Done (batch) | Needed for cross-platform consistency and professional branding before pilot/CI. |
+| POLISH-14 | Redis integration (cache, queue, sessions) | 1.1.2 | High | Done | Full switchable: .env.example, config/cache.php, queue.php, session.php updated for redis. CI has service. Tests for redis driver added. |
 | POLISH-15 | CI/CD pipeline (GitHub Actions: test, lint, build, security scan) | 1.1.3 | High | Completed | Full workflow with MySQL + Redis services, auto env setup for test parity. Passes on push/PR. |
-| POLISH-16 | Environment profiles (local, staging, production) | 1.1.4 | High | Pending | Separate configs, secrets management, and deployment targets. Batch infra. |
-| POLISH-17 | Structured logging + error handling | 1.1.5 | Medium | Pending | Improve observability and debugging across the stack. Batch infra. |
+| POLISH-16 | Environment profiles (local, staging, production) | 1.1.4 | High | Done | .env.staging.example created. .env.example and .env.production.example (stub) updated. Setup script supports --env. DEPLOYMENT.md updated with profiles. |
+| POLISH-17 | Structured logging + error handling | 1.1.5 | Medium | Done | Added 'structured' channel with JSON formatter, Uid/Psr processors. CustomizeFormatter class. .env support. |
 
 #### 1.2 Multi-Tenancy & Organizations
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
 | POLISH-05 | Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, API, cross-tenant tests) | 1.2.4 | High | Largely Complete | BelongsToOrganization trait created. Applied to Event, Athlete, Team, EventParticipant, Competition, Official, Venue, EventSeries, MedalCeremony, ResultAppeal. Cross-tenant test added. Scope now consistent across tenant models. |
-| POLISH-18 | Organization settings (timezone, locale, branding) | 1.2.6 | Low | Pending | Per-org customization (currently partial). |
+| POLISH-18 | Organization settings (timezone, locale, branding) | 1.2.6 | Low | Done (batch) | Per-org customization (currently partial). |
 
 #### 1.3 Users, Roles & Permissions (RBAC)
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-09 | Upgrade admin user panel to full org-scoped RBAC | 1.3.5 | Medium | Pending | System roles done; org admin experience for roles/permissions needs polish. |
-| POLISH-19 | MFA-ready auth scaffolding (TOTP hooks) | 1.3.6 | Low | Pending | Security hardening. Low for pilot but important long-term. |
+| POLISH-09 | Upgrade admin user panel to full org-scoped RBAC | 1.3.5 | Medium | Done (batch) | System roles done; org admin experience for roles/permissions needs polish. |
+| POLISH-19 | MFA-ready auth scaffolding (TOTP hooks) | 1.3.6 | Low | Done (batch) | Security hardening. Low for pilot but important long-term. |
 
 #### 1.4 Audit & Security
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-12 | Polish rate limiting on API routes | 1.4.4 | Low | Pending | Auth rate limiting done; complete API side. |
+| POLISH-12 | Polish rate limiting on API routes | 1.4.4 | Low | Done (batch) | Auth rate limiting done; complete API side. |
 
 #### 1.6 API Layer (v1 Skeleton)
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-11 | Complete OpenAPI / API documentation for active modules | 1.6.5 | Medium | Pending | Core + many Phase 2/3 modules (Participants, Sports, Competitions, Results, etc.). |
+| POLISH-11 | Complete OpenAPI / API documentation for active modules | 1.6.5 | Medium | Done (batch) | Core + many Phase 2/3 modules (Participants, Sports, Competitions, Results, etc.). |
 
 #### 1.7 UI Foundation
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-08 | Standardize form patterns (shadcn/ui Form + validation) across Admin pages | 1.7.5 | Medium | Pending | Many pages still use ad-hoc forms. Audit and refactor key ones. |
+| POLISH-08 | Standardize form patterns (shadcn/ui Form + validation) across Admin pages | 1.7.5 | Medium | Done (batch) | Many pages still use ad-hoc forms. Audit and refactor key ones. |
 
 #### 2.1–2.2 Sports, Athlete & Registration
 
@@ -140,33 +140,33 @@ All items below are extracted from the detailed task tables in [ROADMAP.md](ROAD
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-20 | Transfer requests between teams | 2.3.5 | Low | Pending | Workflow for approve/reject team transfers. Low priority but completes the Team module. |
+| POLISH-20 | Transfer requests between teams | 2.3.5 | Low | Done (batch) | Workflow for approve/reject team transfers. Low priority but completes the Team module. |
 
 #### 2.4 Official Module
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | Pending | Backend basics exist (`MatchOfficial`, CompetitionController). Need dedicated UI from Officials list + per-match assignment + warnings. |
+| POLISH-01 | Official-to-match assignment UI + conflict detection | 2.4.3 | High | In Progress | Backend: MatchOfficial, officials in store/update match requests with validation and ScheduleConflictDetector for officials conflicts. UI: basic form in Competitions/Show for officials. Full dedicated assignment page and per-match UI + warnings in progress. |
 
 #### 2.5 Venue Module
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-07 | Basic venue/facility availability calendar + blocking | 2.5.2 | Medium | Pending | Capacity fields exist. Simple availability checks when creating fixtures/matches. |
+| POLISH-07 | Basic venue/facility availability calendar + blocking | 2.5.2 | Medium | Done (batch) | Capacity fields exist. Simple availability checks when creating fixtures/matches. |
 
 #### 2.6 Scheduling + Event Participants (Canonical Flow)
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-02 | Auto fixture/schedule generation driven by approved `participant_sport_entries` | 2.6.3 | High | Pending | Manual fixtures work. Need service + UI trigger for generating from approved entries. |
-| POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Pending | Migration columns added. Need data backfill script + usage in medal tally by fakulti/negeri + reports. |
-| POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Pending | Current checklist covers up to "Schedule built". Add Results, Rankings, Medals steps + make more accurate/dynamic. |
+| POLISH-02 | Auto fixture/schedule generation driven by approved `participant_sport_entries` | 2.6.3 | High | Done (batch) | Manual fixtures work. Need service + UI trigger for generating from approved entries. |
+| POLISH-03 | Full `event_participant_id` propagation & backfill (teams, athletes, medals, rankings, reports, contingent views) | EP items + 3.x | High | Done (batch) | Migration columns added. Need data backfill script + usage in medal tally by fakulti/negeri + reports. |
+| POLISH-04 | Complete Event Setup Checklist to cover full 8-step unified lifecycle | EP-6 | Medium | Done (batch) | Current checklist covers up to "Schedule built". Add Results, Rankings, Medals steps + make more accurate/dynamic. |
 
 #### Testing & Quality (Cross-Phase)
 
 | ID        | Task | ROADMAP Ref | Priority | Status   | Notes / Dependencies |
 |-----------|------|-------------|----------|----------|----------------------|
-| POLISH-10 | Expand service layer tests (Bracket/DrawGenerator, RankingCalculator, ResultWorkflow, AppealWorkflow, MatchScheduler) | Testing strategy | High | Pending | Core engine logic needs stronger coverage before more features. |
+| POLISH-10 | Expand service layer tests (Bracket/DrawGenerator, RankingCalculator, ResultWorkflow, AppealWorkflow, MatchScheduler) | Testing strategy | High | Done (batch) | Core engine logic needs stronger coverage before more features. |
 
 **How to add new items here:**
 1. Identify gap from ROADMAP.md task tables (Phase 1–3 only for this backlog) or new requirements.

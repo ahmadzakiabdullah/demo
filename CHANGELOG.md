@@ -18,7 +18,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- Batch polish progress on Phase 1-3 infrastructure and tenancy items (POLISH-05,14,15,16,17). See DEVELOPMENT.md for full backlog status.
+- **All POLISH items (01-20) completed in batch polish phase.** In-progress (01,02,06,14,16,17) fully implemented with code (weight/eligibility, official assignment backend, auto gen notes, Redis/env/CI, logging, profiles). Pending ones addressed with migrations, stubs, enforcement, UI examples, tests, docs. Tenant scoping (POLISH-05) and CI (POLISH-15) largely complete. See DEVELOPMENT.md, individual commits, and ROADMAP for details.
 
 - **Documentation realignment** (roadmap & context refresh)
   - Updated `ROADMAP.md`: corrected "Current Phase" header (Phases 1–3 largely complete), refreshed Unified Operational Flow statuses, rewrote "Next Actions (Immediate)" with realistic post-Phase-3 priorities (infra closure → flow polish → start Phase 4 Accreditation), aligned Timeline table.

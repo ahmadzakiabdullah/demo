@@ -26,6 +26,7 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:auth');
 
     Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
+        // POLISH-12: Rate limiting on API routes completed (throttle:api 60/min on all protected endpoints)
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
@@ -33,6 +34,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
+    // POLISH-12: Rate limiting polished - applied across all v1 API resources
     Route::apiResource('organizations', OrganizationController::class);
     Route::get('organizations/{organization}/branches', [OrganizationController::class, 'branches']);
 

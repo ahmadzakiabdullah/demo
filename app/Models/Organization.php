@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'locale',
     'status',
     'is_tenant',
+    'settings',
 ])]
 class Organization extends Model
 {
@@ -37,6 +38,7 @@ class Organization extends Model
             'type' => OrganizationType::class,
             'status' => OrganizationStatus::class,
             'is_tenant' => 'boolean',
+            'settings' => 'array',
         ];
     }
 

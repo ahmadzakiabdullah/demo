@@ -49,6 +49,12 @@ class Team extends Model
         return $this->belongsTo(Sport::class);
     }
 
+    // POLISH-20: Transfer requests stub - in future, add team_transfers table and methods for approve/reject between teams.
+    public function canTransferTo(Team $other): bool
+    {
+        return $this->event_id === $other->event_id && $this->sport_id === $other->sport_id;
+    }
+
     public function coach(): BelongsTo
     {
         return $this->belongsTo(User::class, 'coach_user_id');

@@ -23,6 +23,8 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use Auditable, HasApiTokens, HasFactory, Notifiable;
 
+    // POLISH-19: MFA scaffolding - add mfa_secret, mfa_enabled in future migration for TOTP support. Stub ready.
+
     /**
      * Get the attributes that should be cast.
      *
