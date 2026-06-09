@@ -377,6 +377,16 @@ class EventController extends Controller
         $teamsCount = $event->teams()->count();
         $fixturesCount = $event->competitions()->withCount('fixtures')->get()->sum('fixtures_count');
 
+        // POLISH-04: Extend to full 8-step lifecycle
+        $hasResults = $event->competitions()
+            ->whereHas('fixtures.matches.result', function ($q) {
+                $q->whereIn('status', ['confirmed', 'published']);
+            })
+            ->exists();
+
+        $hasMedalsOrRankings = $event->medals()->exists() ||
+            $event->competitions()->whereHas('rankings')->exists();
+
         return [
             [
                 'key' => 'event',
@@ -413,6 +423,18 @@ class EventController extends Controller
                 'label' => 'Schedule built',
                 'done' => $fixturesCount > 0,
                 'href' => route('admin.events.schedule.index', $event),
+            ],
+            [
+                'key' => 'results',
+                'label' => 'Results recorded & published',
+                'done' => $hasResults,
+                'href' => route('admin.events.competitions.index', $event),
+            ],
+            [
+                'key' => 'medals',
+                'label' => 'Medals & rankings generated',
+                'done' => $hasMedalsOrRankings,
+                'href' => route('admin.events.medals.index', $event),
             ],
         ];
     }

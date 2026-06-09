@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreVenueRequest;
 use App\Http\Requests\Admin\UpdateVenueRequest;
 use App\Models\Event;
+use App\Models\Facility;
+use App\Models\MatchGame;
 use App\Models\Organization;
 use App\Models\Venue;
 use App\Support\OrganizationContext;
@@ -170,6 +172,29 @@ class VenueController extends Controller
      */
     private function venueDetailPayload(Venue $venue): array
     {
+        // POLISH-07: Basic availability - list upcoming bookings/matches using this venue
+        $bookings = MatchGame::query()
+            ->where('venue_id', $venue->id)
+            ->whereNotNull('scheduled_at')
+            ->with([
+                'facility:id,name',
+                'fixture.competition:id,name,sport_id,event_id',
+                'fixture.competition.sport:id,name',
+                'fixture.competition.event:id,name',
+            ])
+            ->orderBy('scheduled_at')
+            ->limit(15)
+            ->get()
+            ->map(fn ($match) => [
+                'id' => $match->id,
+                'scheduled_at' => $match->scheduled_at?->toDateTimeString(),
+                'duration_minutes' => $match->duration_minutes,
+                'facility' => $match->facility?->only(['id', 'name']),
+                'competition' => $match->fixture?->competition?->only(['id', 'name']),
+                'sport' => $match->fixture?->competition?->sport?->only(['id', 'name']),
+                'event' => $match->fixture?->competition?->event?->only(['id', 'name']),
+            ]);
+
         return [
             'id' => $venue->id,
             'name' => $venue->name,
@@ -186,6 +211,7 @@ class VenueController extends Controller
                 'capacity' => $facility->capacity,
                 'sort_order' => $facility->sort_order,
             ]),
+            'bookings' => $bookings,
         ];
     }
 

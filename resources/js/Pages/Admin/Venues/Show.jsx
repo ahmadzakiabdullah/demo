@@ -263,6 +263,47 @@ export default function Show({ venue, facilityTypes, canManageFacilities }) {
                         </Table>
                     </CardContent>
                 </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Upcoming Bookings (Basic Availability Calendar)</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        {venue.bookings && venue.bookings.length > 0 ? (
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Date/Time</TableHead>
+                                        <TableHead>Duration</TableHead>
+                                        <TableHead>Facility</TableHead>
+                                        <TableHead>Event / Sport / Competition</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {venue.bookings.map((booking) => (
+                                        <TableRow key={booking.id}>
+                                            <TableCell>{booking.scheduled_at}</TableCell>
+                                            <TableCell>{booking.duration_minutes} min</TableCell>
+                                            <TableCell>
+                                                {booking.facility?.name || '—'}
+                                            </TableCell>
+                                            <TableCell>
+                                                {booking.event?.name} / {booking.sport?.name} / {booking.competition?.name}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        ) : (
+                            <p className="text-sm text-muted-foreground">
+                                No upcoming bookings. Venue is available.
+                            </p>
+                        )}
+                        <p className="mt-2 text-xs text-muted-foreground">
+                            Blocking is enforced automatically via conflict detection when scheduling matches.
+                        </p>
+                    </CardContent>
+                </Card>
             </div>
         </AuthenticatedLayout>
     );
