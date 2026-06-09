@@ -19,11 +19,11 @@ class OrganizationScope implements Scope
 {
     public function apply(Builder $builder, Model $model): void
     {
-        // Safely resolve current organization from request attributes (set by middleware)
-        // or session fallback. Skips filter for system owners and when no org context.
+        // Only apply tenant filter if currentOrganization attribute is explicitly set
+        // (by SetCurrentOrganization middleware). This prevents unintended filtering
+        // in tests or system contexts. System owners bypass anyway.
         $req = request();
-        $organization = $req->attributes->get('currentOrganization')
-            ?? ($req->hasSession() ? $req->session()->get('current_organization_id') : null);
+        $organization = $req->attributes->get('currentOrganization');
 
         if ($organization && ! (auth()->check() && auth()->user()->isSystemOwner())) {
             $column = $model->getTable() . '.organization_id';

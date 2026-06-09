@@ -120,6 +120,7 @@ Test seeders must use separate accounts (e.g. `test@example.com`), never the own
 | [AGENTS.md](AGENTS.md) | AI agents | Coding rules |
 | [CLAUDE.md](CLAUDE.md) | AI agents | Quick reference |
 | [CHANGELOG.md](CHANGELOG.md) | Everyone | Release history |
+| [DEVELOPMENT.md](DEVELOPMENT.md) | Everyone | **Single source of truth** — all work items, active todos/backlog, roadmap snapshots, completed history, and versioning process |
 | [DOCUMENTATION.md](DOCUMENTATION.md) | Everyone | **This file** |
 
 ---
@@ -156,6 +157,7 @@ On Windows (case-insensitive FS) both resolve. On Linux CI, ensure directory cas
 4. Update [MODULES.md](MODULES.md) — status Active/Partial
 5. Update [ROADMAP.md](ROADMAP.md) — mark task Done
 6. Update [CHANGELOG.md](CHANGELOG.md) — under `[Unreleased]`
+7. Update [DEVELOPMENT.md](DEVELOPMENT.md) — the single consolidated record of todos, work items, backlog, roadmap snapshot, and history (used for versioning)
 
 ### Status labels
 

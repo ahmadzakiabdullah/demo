@@ -73,6 +73,15 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'structured' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/laravel-structured.log'),
+            'level' => env('LOG_LEVEL', 'info'),
+            'days' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+            'tap' => [App\Logging\CustomizeFormatter::class], // for structured json/context
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

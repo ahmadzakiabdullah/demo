@@ -9,7 +9,7 @@ A brief overview of **SportOS** for developers and AI agents.
 | Name | **SportOS** |
 | Tagline | *The Operating System for Sports Management* |
 | Type | Enterprise multi-tenant sports management SaaS |
-| Status | Phase 1 — Foundation (partial) |
+| Status | Phases 1–3 largely complete; Phase 4 (Operations) next |
 | Local URL | https://demo.test |
 | Location | `D:\www\demo` |
 | Git | [github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo) |
@@ -72,30 +72,48 @@ Spec: [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycl
 | Layer | Status |
 |-------|--------|
 | **Bootstrap** (Laravel, Breeze, shadcn, admin users) | Complete |
-| **SportOS Phase 1** (orgs, RBAC, events, API v1) | In progress |
-| **SportOS Phases 2–6** | Not started |
+| **SportOS Phase 1** (orgs, RBAC, events, audit, API v1 skeleton) | Largely complete (infra gaps remain) |
+| **SportOS Phase 2** (sports, athletes, teams, officials, venues, scheduling, event participants) | Largely complete |
+| **SportOS Phase 3** (competition engine, results, rankings, medals, appeals, live results) | **Complete** |
+| **SportOS Phase 4+** (accreditation, certificates, reports, public portal, AI) | Not started |
 
-**MVP** = Phases 1–3 (foundation + sports registration + competition engine).
+**MVP** = Phases 1–3 (foundation + full registration + competition engine). University pilot target first.
 
 ## Current State
 
-### Implemented
+### Implemented (Phases 1–3)
 
 - Laravel 13 + Breeze with full authentication (login, register, profile, password reset, email verification)
-- Inertia.js + React frontend with shadcn/ui (all pages migrated)
-- **RBAC** — `roles`, `permissions`, `role_permission`, `role_user`; org-scoped roles via `organization_user.role_id`
-- Admin user CRUD with system role assignment (`system_owner` / member)
-- **Organizations module** — CRUD, branches, `organization_user` pivot, UTeM pilot seeder
-- **Audit logs** — append-only `audit_logs`, `Auditable` trait, admin activity UI
-- **Events module** — CRUD, lifecycle, dashboard, team assignments (`event_user`)
-- Permission-based policies, admin middleware, 66 passing PHPUnit tests total
+- Inertia.js + React + shadcn/ui (AdminLayout with sidebar, OrganizationSwitcher, full module pages)
+- **RBAC** — full `roles`, `permissions`, `role_permission`, `role_user`; org-scoped via `organization_user.role_id`; policies + `EnsureUserHasPermission`
+- **Organizations + Branches** — CRUD, pilot UTeM seeder, organization switcher
+- **Audit logs** — `audit_logs` (append-only), `Auditable` trait, admin activity UI, 7+ tests
+- **Events module** — full CRUD, lifecycle (draft→published→active…), `edition_year`/`cadence`, event dashboard + setup checklist, user assignments
+- **Event Participants + Sport Entries** (canonical flow steps 3–4) — `event_participants`, `participant_sport_entries`, bulk CSV import, API + web UI, `Sukma2026Seeder` refactor (negeri as participants, not orgs), `event_participant_id` on teams/athletes
+- **Sports module** — `sports` + disciplines/categories/divisions, templates (Football, Badminton, etc.), event-scoped
+- **Athletes, Teams, Officials, Registrations** — full profiles, polymorphic registration workflow (draft→submitted→verified→approved), roster management, eligibility basics
+- **Venues + Facilities** — org-scoped, link to events/sports
+- **Scheduling + Competition Engine** (Phase 2.6 + 3) — competitions, formats (league, RR, knockout, group, double-elim, Swiss), fixtures, matches, venue/official assignment, conflict detection, week calendar
+- **Results, Appeals, Rankings, Medals** — score entry per sport schema, workflow (pending→confirmed→published), result appeals with overturn, auto rankings + medal allocation, live results via Reverb + Echo, medal ceremonies
+- **API v1** — Sanctum tokens, `/api/v1/` routes for core resources + sports/athletes/teams/participants/competitions/results/rankings/medals, API Resources, feature tests
+- **Admin UI patterns** — data tables, forms, navigation (EventModuleNav), shadcn components throughout
+- **173+ PHPUnit tests** passing (feature tests for every major module + API)
+
 - Git repository connected to GitHub
 
-### Not Yet Built
+### Not Yet Built / Remaining Gaps
 
-- Sports, competitions, athletes, teams
-- REST API `/api/v1/`
-- Redis, public portal, AI layer
+- Redis (still using database driver for cache/queue/sessions)
+- Full CI/CD (GitHub Actions)
+- Rebrand / `APP_NAME` + logo work + Linux CI path normalization
+- Some Phase 1 polish (org settings UI, full MFA scaffolding, complete tenant scope enforcement tests)
+- Phase 4 modules: Accreditation (QR passes), Certificates (PDF), Announcements, Reporting exports, Analytics
+- Phase 5: Public portal (no-auth live results, rankings, medal tables)
+- Phase 6: AI features
+- Auto schedule generation from approved participant entries (manual fixtures work today)
+- Complete event setup checklist reflecting all 8 lifecycle steps
+
+**Note:** The "Event Participants" canonical modeling (fakulti/negeri/negara as `event_participants` on the host org's event, **not** as child organizations) is now the correct pattern across the app.
 
 ## Multi-Tenancy Model (Target)
 

@@ -106,7 +106,7 @@ Installed: Button, Input, Label, Card, Checkbox, Dialog, Dropdown Menu, Sheet, S
 | Event admin | `resources/js/Pages/Admin/Events/` | Active |
 | Event tests | `tests/Feature/Admin/EventManagementTest.php` | Active (9 tests) |
 
-**Total tests: 66 passing.**
+**Total tests: 173+ passing** (see CHANGELOG for latest).
 
 ---
 
@@ -128,9 +128,9 @@ Installed: Button, Input, Label, Card, Checkbox, Dialog, Dropdown Menu, Sheet, S
 | Module | Key Tables | Priority |
 |--------|-----------|----------|
 | Sports | `sports`, `sport_disciplines`, `sport_categories`, `sport_divisions` | **Active** |
-| **Event Participants** | `event_participants`, `participant_sport_entries` | **Planned** (canonical flow steps 3–4) |
-| Athletes | `athletes`, `registrations` | **Active** (partial — pending `event_participant_id`) |
-| Teams | `teams`, `team_athlete` | **Active** (partial — pending `event_participant_id`) |
+| **Event Participants** | `event_participants`, `participant_sport_entries` | **Active** (canonical flow steps 3–4) |
+| Athletes | `athletes`, `registrations` | **Active** (with `event_participant_id`) |
+| Teams | `teams`, `team_athlete` | **Active** (with `event_participant_id`) |
 | Officials | `officials` (+ `registrations`) | **Active** |
 | Venues | `venues`, `facilities`, `event_venue`, `event_sport_venue` | **Active** |
 | Scheduling | `competition_formats`, `competitions`, `groups`, `fixtures`, `matches`, `match_participants`, `match_officials` | **Active** |
@@ -187,8 +187,8 @@ Event → Sports → Participants → Sport Entries → Athletes/Teams → Sched
 |--------------------|--------|--------|
 | 1 | Overview | Active |
 | 2 | Sports | Active |
-| 3 | Participants | Planned |
-| 4 | Entries | Planned |
+| 3 | Participants | Active |
+| 4 | Entries | Active |
 | 5 | Athletes · Teams | Active |
 | 6 | Officials · Venues | Active |
 | 7 | Schedule · Competitions | Active |

@@ -10,7 +10,7 @@ Enterprise-grade, multi-tenant sports management platform — from school sports
 | Repository | [github.com/ahmadzakiabdullah/demo](https://github.com/ahmadzakiabdullah/demo) |
 | Local URL | https://demo.test |
 | Stack | Laravel 13 · MySQL · Redis (planned) · React · Inertia · shadcn/ui |
-| Current Phase | **Phase 4 — Operations** (next) |
+| Current Phase | **Phase 4 — Operations** (next; Phases 1–3 largely complete) |
 | Documentation | **Specification complete** — see [DOCUMENTATION.md](DOCUMENTATION.md) |
 | MVP | Phases 1–3 (foundation + registration + competition engine) |
 | Pilot | University sports carnival first (e.g. UTeM) |
@@ -51,9 +51,9 @@ Each organization has isolated data. Users, roles, and permissions are scoped pe
 |---|------|--------|--------|
 | 1 | Pilih / cipta Event | Events | Done |
 | 2 | Pilih / cipta Sukan/Acara | Sports | Done |
-| 3 | Daftar Participant (fakulti/negeri/negara) | Event Participants | **Next priority** |
-| 4 | Pasukan pilih sukan/acara | Sport Entries | Planned |
-| 5 | Daftar atlet & pasukan | Athletes · Teams | Partial |
+| 3 | Daftar Participant (fakulti/negeri/negara) | Event Participants | **Done** |
+| 4 | Pasukan pilih sukan/acara | Sport Entries | **Done** |
+| 5 | Daftar atlet & pasukan | Athletes · Teams | **Done** |
 | 6 | Jadual → pertandingan → keputusan → pingat | Schedule · Results · Medals | Done |
 
 Full spec: [FUNCTIONAL_SPEC.md §0](FUNCTIONAL_SPEC.md#0-unified-competition-lifecycle-event-first).
@@ -661,9 +661,9 @@ Minimum gate: all tests pass in CI before merge. Target 80%+ coverage on service
 | Phase | Scope | Duration | Status |
 |-------|-------|----------|--------|
 | Bootstrap | Laravel + Breeze + shadcn + basic auth | Done | **Complete** |
-| Phase 1 | Foundation (orgs, RBAC, events, API v1) | 6–8 weeks | **In progress** |
-| Phase 2 | Sports, athletes, teams, venues, scheduling | 8–10 weeks | Not started |
-| Phase 3 | Competition engine, results, rankings, medals | 8–10 weeks | **Complete** |
+| Phase 1 | Foundation (orgs, RBAC, events, API v1, audit) | 6–8 weeks | Largely complete (infra gaps) |
+| Phase 2 | Sports, athletes, teams, venues, scheduling, participants | 8–10 weeks | Largely complete |
+| Phase 3 | Competition engine, results, rankings, medals, appeals, live | 8–10 weeks | **Complete** |
 | Phase 4 | Accreditation, certificates, reports, analytics | 6–8 weeks | Not started |
 | Phase 5 | Public portal | 4–6 weeks | Not started |
 | Phase 6 | AI layer | 6–8 weeks | Not started |
@@ -694,15 +694,37 @@ Minimum gate: all tests pass in CI before merge. Target 80%+ coverage on service
 5. Update `API.md` when endpoints are added.
 6. Update `UI_UX.md` when new shadcn components are adopted.
 7. Keep phase duration estimates realistic based on actual velocity.
+8. For the **single consolidated record** of all work items, active todos/backlog (including POLISH-* items), roadmap snapshots, completed history, and versioning process, update [DEVELOPMENT.md](DEVELOPMENT.md). Keep high-level statuses in sync with the detailed tables here.
 
 ---
 
 ## Next Actions (Immediate)
 
-Priority order for Phase 1 continuation:
+Phases 1–3 core functionality (including the Event Participants + Sport Entries refactor and full competition engine) are largely complete. Focus has shifted to closing Phase 1 infrastructure gaps and preparing Phase 4.
 
-1. **Phase 2** — Sports module (`sports`, disciplines, categories)
-2. **CI/CD pipeline** — GitHub Actions (test, lint, build)
-3. **Redis integration** — cache, queue, sessions
-4. **CI/CD pipeline** — GitHub Actions (test, lint, build)
-5. **Redis integration** — cache, queue, sessions
+Priority order:
+
+1. **Phase 1 Infrastructure & Hardening** (highest immediate priority)
+   - Redis integration (cache, queue, sessions) — task 1.1.2
+   - CI/CD pipeline — GitHub Actions (test, lint, build, security scan) — task 1.1.3
+   - Rebrand + component path normalization for cross-platform CI (1.1.1)
+   - Strengthen tenant scoping (`SetCurrentOrganization`, global scopes, policy tests for cross-tenant denial)
+   - Remaining Phase 1 partials: org settings UI, rate limiting on API, MFA scaffolding hooks
+
+2. **Canonical Flow Polish (Phase 2)**
+   - Complete Event setup checklist on event dashboard (reflecting all 8 steps of the unified lifecycle)
+   - Auto fixture / schedule generation driven by approved `participant_sport_entries`
+   - Official-to-match assignment UI + conflict resolution surface
+   - Ensure `event_participant_id` is fully backfilled and used for teams/athletes/medals in existing data and seeders
+
+3. **Start Phase 4 — Operations** (pilot-critical)
+   - Accreditation module (4.1): `accreditations` table, QR generation, pass types (athlete/official/volunteer/media), badge PDF, bulk print, gate validation endpoint
+   - Certificate module (4.2): templates, PDF generation (DomPDF/Snappy), bulk issuance
+   - Reporting foundation (4.4): at minimum event summary + participation + medal exports (PDF/Excel/CSV)
+
+4. **Supporting & Documentation**
+   - Update `API.md`, `MODULES.md`, `UI_UX.md` for all recently activated modules (Participants, full competition engine)
+   - Expand feature tests for service layer (Bracket, RankingCalculator, ResultWorkflow, AppealWorkflow)
+   - Prepare pilot seed data (UTeM + sample SUKMA-style event with real participant structure)
+
+**Note:** Phase 5 (Public Portal) and Phase 6 (AI) remain deferred until a successful university pilot validates the core operational flow.
