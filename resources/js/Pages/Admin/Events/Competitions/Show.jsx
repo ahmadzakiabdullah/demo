@@ -20,6 +20,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 
@@ -274,8 +281,7 @@ function MatchForm({
         facility_id: '',
         home_participant_id: '',
         away_participant_id: '',
-        official_id: '',
-        official_role: 'referee',
+        officials: [],
         notes: '',
     });
 
@@ -306,9 +312,10 @@ function MatchForm({
             facility_id: data.facility_id || null,
             notes: data.notes || null,
             participants,
-            officials: data.official_id
-                ? [{ official_id: Number(data.official_id), role: data.official_role }]
-                : [],
+            officials: (data.officials || []).map(o => ({
+                official_id: o.official_id,
+                role: o.role || 'referee',
+            })),
         }));
 
         form.post(
@@ -453,45 +460,52 @@ function MatchForm({
                     />
                 </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-                <div>
-                    <Label>Official</Label>
-                    <Select
-                        value={form.data.official_id || ''}
-                        onValueChange={(value) => form.setData('official_id', value)}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Optional" />
+            <div>
+                <Label>Officials (optional, multiple allowed)</Label>
+                <div className="mt-1 space-y-2">
+                    {(form.data.officials || []).map((off, idx) => {
+                        const official = officials.find(o => o.id === off.official_id);
+                        return (
+                            <div key={idx} className="flex items-center gap-2 rounded border px-2 py-1 text-sm">
+                                <span className="flex-1">{official?.name || 'Unknown'} ({off.role || 'referee'})</span>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => {
+                                        const newOffs = [...(form.data.officials || [])];
+                                        newOffs.splice(idx, 1);
+                                        form.setData('officials', newOffs);
+                                    }}
+                                >
+                                    ×
+                                </Button>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="mt-2 flex gap-2">
+                    <Select onValueChange={(value) => {
+                        const current = form.data.officials || [];
+                        if (current.some(o => o.official_id === Number(value))) return;
+                        form.setData('officials', [...current, { official_id: Number(value), role: 'referee' }]);
+                    }}>
+                        <SelectTrigger className="flex-1">
+                            <SelectValue placeholder="Add official..." />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">None</SelectItem>
-                            {officials.map((official) => (
-                                <SelectItem key={official.id} value={String(official.id)}>
-                                    {official.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <InputError message={form.errors.officials} />
-                </div>
-                <div>
-                    <Label>Official role</Label>
-                    <Select
-                        value={form.data.official_role}
-                        onValueChange={(value) => form.setData('official_role', value)}
-                    >
-                        <SelectTrigger>
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {officialRoles.map((role) => (
-                                <SelectItem key={role} value={role}>
-                                    {role.replace('_', ' ')}
-                                </SelectItem>
-                            ))}
+                            {officials
+                                .filter(o => !(form.data.officials || []).some(oo => oo.official_id === o.id))
+                                .map((o) => (
+                                    <SelectItem key={o.id} value={String(o.id)}>
+                                        {o.name}
+                                    </SelectItem>
+                                ))}
                         </SelectContent>
                     </Select>
                 </div>
+                <InputError message={form.errors.officials} />
             </div>
             <Button type="submit" size="sm" disabled={form.processing}>
                 Add Match
@@ -523,32 +537,51 @@ export default function Show({
         sort_order: 0,
     });
 
-    const [editingMatchOfficialsId, setEditingMatchOfficialsId] = useState(null);
+    const [officialsDialogOpen, setOfficialsDialogOpen] = useState(false);
+    const [editingMatchForOfficials, setEditingMatchForOfficials] = useState(null);
     const officialsForm = useForm({
         officials: [],
     });
 
-    const startEditOfficials = (match) => {
-        setEditingMatchOfficialsId(match.id);
-        officialsForm.setData('officials', match.officials.map(o => ({
-            official_id: o.official_id,
-            role: o.role,
-        })));
+    const openOfficialsDialog = (match, fixture) => {
+        setEditingMatchForOfficials({ match, fixture });
+        officialsForm.setData({
+            officials: match.officials.map(o => ({
+                official_id: o.official_id,
+                role: o.role,
+            })),
+        });
+        setOfficialsDialogOpen(true);
     };
 
-    const addOfficialToForm = (officialId, role = 'referee') => {
+    const closeOfficialsDialog = () => {
+        setOfficialsDialogOpen(false);
+        setEditingMatchForOfficials(null);
+        officialsForm.reset();
+    };
+
+    const addOfficial = (officialId, role = 'referee') => {
         const current = officialsForm.data.officials || [];
-        if (current.some(o => o.official_id === Number(officialId))) return;
-        officialsForm.setData('officials', [...current, { official_id: Number(officialId), role }]);
+        if (current.some(o => o.official_id === Number(officialId))) {
+            return;
+        }
+        officialsForm.setData('officials', [
+            ...current,
+            { official_id: Number(officialId), role },
+        ]);
     };
 
-    const removeOfficialFromForm = (index) => {
+    const removeOfficial = (index) => {
         const current = [...(officialsForm.data.officials || [])];
         current.splice(index, 1);
         officialsForm.setData('officials', current);
     };
 
-    const saveOfficials = (match, fixture) => {
+    const saveOfficials = () => {
+        if (!editingMatchForOfficials) return;
+
+        const { match, fixture } = editingMatchForOfficials;
+
         officialsForm.patch(
             route('admin.events.competitions.matches.officials.update', [
                 event.id,
@@ -559,18 +592,11 @@ export default function Show({
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    setEditingMatchOfficialsId(null);
-                    officialsForm.reset();
-                    // reload to refresh officials list
+                    closeOfficialsDialog();
                     router.reload({ only: ['competition'] });
                 },
             },
         );
-    };
-
-    const cancelEditOfficials = () => {
-        setEditingMatchOfficialsId(null);
-        officialsForm.reset();
     };
 
     const submitGroup = (e) => {
@@ -1017,7 +1043,7 @@ export default function Show({
                                                             <Button
                                                                 variant="outline"
                                                                 size="sm"
-                                                                onClick={() => startEditOfficials(match)}
+                                                                onClick={() => openOfficialsDialog(match, fixture)}
                                                             >
                                                                 Officials
                                                             </Button>
@@ -1042,123 +1068,6 @@ export default function Show({
                                 </TableBody>
                             </Table>
 
-                            {editingMatchOfficialsId && fixture.matches.some((m) => m.id === editingMatchOfficialsId) && (
-                                <div className="mt-4 border-t pt-4">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <p className="text-sm font-medium">
-                                            Edit Officials for Match #{editingMatchOfficialsId}
-                                        </p>
-                                        <Button variant="ghost" size="sm" onClick={cancelEditOfficials}>
-                                            Cancel
-                                        </Button>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        {(officialsForm.data.officials || []).map((off, idx) => (
-                                            <div key={idx} className="flex items-center gap-2">
-                                                <Select
-                                                    value={String(off.official_id)}
-                                                    onValueChange={(val) => {
-                                                        const newOffs = [...(officialsForm.data.officials || [])];
-                                                        newOffs[idx] = { ...newOffs[idx], official_id: Number(val) };
-                                                        officialsForm.setData('officials', newOffs);
-                                                    }}
-                                                >
-                                                    <SelectTrigger className="w-48">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {officials.map((o) => (
-                                                            <SelectItem key={o.id} value={String(o.id)}>
-                                                                {o.name}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-
-                                                <Select
-                                                    value={off.role || 'referee'}
-                                                    onValueChange={(val) => {
-                                                        const newOffs = [...(officialsForm.data.officials || [])];
-                                                        newOffs[idx] = { ...newOffs[idx], role: val };
-                                                        officialsForm.setData('officials', newOffs);
-                                                    }}
-                                                >
-                                                    <SelectTrigger className="w-32">
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {officialRoles.map((role) => (
-                                                            <SelectItem key={role} value={role}>
-                                                                {role}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-
-                                                <Button
-                                                    type="button"
-                                                    variant="destructive"
-                                                    size="sm"
-                                                    onClick={() => removeOfficialFromForm(idx)}
-                                                >
-                                                    Remove
-                                                </Button>
-                                            </div>
-                                        ))}
-
-                                        <div className="flex items-center gap-2">
-                                            <Select onValueChange={(val) => addOfficialToForm(val, 'referee')}>
-                                                <SelectTrigger className="w-48">
-                                                    <SelectValue placeholder="Add official" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {officials
-                                                        .filter(
-                                                            (o) =>
-                                                                !(officialsForm.data.officials || []).some(
-                                                                    (oo) => oo.official_id === o.id,
-                                                                ),
-                                                        )
-                                                        .map((o) => (
-                                                            <SelectItem key={o.id} value={String(o.id)}>
-                                                                {o.name}
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectContent>
-                                            </Select>
-
-                                            <Button
-                                                type="button"
-                                                size="sm"
-                                                onClick={() =>
-                                                    officialsForm.patch(
-                                                        route('admin.events.competitions.matches.officials.update', [
-                                                            event.id,
-                                                            competition.id,
-                                                            fixture.id,
-                                                            editingMatchOfficialsId,
-                                                        ]),
-                                                        {
-                                                            preserveScroll: true,
-                                                            onSuccess: () => {
-                                                                cancelEditOfficials();
-                                                                router.reload({ only: ['competition'] });
-                                                            },
-                                                        },
-                                                    )
-                                                }
-                                                disabled={officialsForm.processing}
-                                            >
-                                                Save Officials
-                                            </Button>
-                                        </div>
-
-                                        <InputError message={officialsForm.errors.officials} />
-                                    </div>
-                                </div>
-                            )}
-
                             <MatchForm
                                 event={event}
                                 competition={competition}
@@ -1174,6 +1083,110 @@ export default function Show({
                     </Card>
                 ))}
             </div>
+
+            {/* Full Officials Assignment Dialog for POLISH-01 */}
+            <Dialog open={officialsDialogOpen} onOpenChange={(open) => {
+                if (!open) closeOfficialsDialog();
+            }}>
+                <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                        <DialogTitle>
+                            Assign Officials to Match #{editingMatchForOfficials?.match?.id}
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-4 py-4">
+                        {/* Current Officials */}
+                        <div>
+                            <Label className="text-sm font-medium">Current Officials</Label>
+                            <div className="mt-2 space-y-2">
+                                {(officialsForm.data.officials || []).length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">No officials assigned.</p>
+                                ) : (
+                                    (officialsForm.data.officials || []).map((off, idx) => {
+                                        const official = officials.find(o => o.id === off.official_id);
+                                        return (
+                                            <div key={idx} className="flex items-center justify-between rounded border px-3 py-2 text-sm">
+                                                <span>
+                                                    {official?.name || 'Unknown'} ({off.role || 'referee'})
+                                                </span>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => removeOfficial(idx)}
+                                                >
+                                                    Remove
+                                                </Button>
+                                            </div>
+                                        );
+                                    })
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Add New Official */}
+                        <div className="space-y-2">
+                            <Label className="text-sm font-medium">Add Official</Label>
+                            <div className="flex gap-2">
+                                <Select onValueChange={(val) => {
+                                    addOfficial(val, 'referee');
+                                }}>
+                                    <SelectTrigger className="flex-1">
+                                        <SelectValue placeholder="Select official..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {officials
+                                            .filter(o => !(officialsForm.data.officials || []).some(oo => oo.official_id === o.id))
+                                            .map((o) => (
+                                                <SelectItem key={o.id} value={String(o.id)}>
+                                                    {o.name}
+                                                </SelectItem>
+                                            ))}
+                                    </SelectContent>
+                                </Select>
+                                <Select defaultValue="referee" onValueChange={(role) => {
+                                    // If user wants to change default role before adding, but for simplicity we default and allow edit later if needed
+                                }}>
+                                    <SelectTrigger className="w-28">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {officialRoles.map((role) => (
+                                            <SelectItem key={role} value={role}>
+                                                {role}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                                Officials will be checked for scheduling conflicts on save. Click Save to apply.
+                            </p>
+                        </div>
+
+                        {/* Role quick add if needed, but simple for now */}
+                        <div className="flex justify-end gap-2 pt-2">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={closeOfficialsDialog}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="button"
+                                onClick={saveOfficials}
+                                disabled={officialsForm.processing}
+                            >
+                                {officialsForm.processing ? 'Saving...' : 'Save Officials'}
+                            </Button>
+                        </div>
+
+                        <InputError message={officialsForm.errors.officials} />
+                    </div>
+                </DialogContent>
+            </Dialog>
         </AuthenticatedLayout>
     );
 }

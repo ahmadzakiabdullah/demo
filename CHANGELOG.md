@@ -7,7 +7,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
-- Full UI for POLISH-01: Official-to-match assignment with multi-official support, roles, per-match "Officials" editor in Competitions/Show, backend update endpoint with conflict validation.
+- Refined full UI for POLISH-01: Official-to-match assignment with multi-official support, roles, per-match "Officials" editor in Competitions/Show (shadcn Dialog for UX), backend update endpoint with conflict validation. MatchForm creation upgraded to multi. Better error display and reload handling.
 
 ### Added
 
