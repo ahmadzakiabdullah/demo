@@ -37,7 +37,20 @@ php artisan migrate
 ## 2. Design Principles
 
 | Principle | Rule |
-|-----------|------|
+|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |--|------|
 | Naming | Plural snake_case tables; `{model}_id` foreign keys |
 | Tenancy | `organization_id` on all domain tables (planned) |
 | Timestamps | `created_at`, `updated_at` on all tables |
@@ -112,7 +125,33 @@ Migrations: `0001_01_01_000000_create_users_table.php`, `2026_06_08_032134_migra
 Model: `App\Models\User`
 
 | Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK | Primary key |
 | `name` | `varchar(255)` | NOT NULL | Display name |
 | `email` | `varchar(255)` | UNIQUE, NOT NULL | Login email |
@@ -127,7 +166,20 @@ Model: `App\Models\User`
 ### `password_reset_tokens`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `email` | `varchar(255)` | PK |
 | `token` | `varchar(255)` | NOT NULL |
 | `created_at` | `timestamp` | NULLABLE |
@@ -135,7 +187,20 @@ Model: `App\Models\User`
 ### `sessions`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `varchar(255)` | PK |
 | `user_id` | `bigint unsigned` | NULLABLE, FK → users |
 | `ip_address` | `varchar(45)` | NULLABLE |
@@ -162,7 +227,33 @@ Migration: `2026_06_08_031123_create_organizations_table.php`
 Model: `App\Models\Organization`
 
 | Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK | |
 | `name` | `varchar(255)` | NOT NULL | Organization name |
 | `slug` | `varchar(255)` | UNIQUE | URL identifier |
@@ -180,7 +271,20 @@ Model: `App\Models\Organization`
 Model: `App\Models\Branch`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `name` | `varchar(255)` | NOT NULL |
@@ -194,7 +298,20 @@ Model: `App\Models\Branch`
 Migration: `2026_06_08_032133_upgrade_organization_user_for_rbac.php`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `user_id` | `bigint unsigned` | FK → users |
 | `role_id` | `bigint unsigned` | FK → roles |
@@ -216,7 +333,20 @@ Seeder: `RolesAndPermissionsSeeder`
 Model: `App\Models\Role`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `name` | `varchar(255)` | NOT NULL |
 | `slug` | `varchar(255)` | NOT NULL |
@@ -234,7 +364,20 @@ Model: `App\Models\Role`
 Model: `App\Models\Permission`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `name` | `varchar(255)` | NOT NULL |
 | `slug` | `varchar(255)` | UNIQUE |
@@ -247,7 +390,20 @@ Model: `App\Models\Permission`
 ### `role_permission`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `role_id` | `bigint unsigned` | FK → roles |
 | `permission_id` | `bigint unsigned` | FK → permissions |
 
@@ -258,7 +414,20 @@ Model: `App\Models\Permission`
 System/global role assignments.
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `role_id` | `bigint unsigned` | FK → roles |
 | `user_id` | `bigint unsigned` | FK → users |
 
@@ -272,7 +441,20 @@ Migration: `2026_06_08_033040_create_audit_logs_table.php`
 Model: `App\Models\AuditLog` · Trait: `App\Models\Concerns\Auditable` · Service: `App\Support\AuditLogger`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | NULLABLE, FK → organizations |
 | `user_id` | `bigint unsigned` | NULLABLE, FK → users |
@@ -299,7 +481,20 @@ Seeder: `EventReferenceDataSeeder`
 ### `event_types`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `name` | `varchar(255)` | NOT NULL |
 | `slug` | `varchar(255)` | UNIQUE |
@@ -309,7 +504,20 @@ Seeder: `EventReferenceDataSeeder`
 ### `event_categories`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `name` | `varchar(255)` | NOT NULL |
 | `slug` | `varchar(255)` | UNIQUE |
@@ -321,7 +529,20 @@ Seeder: `EventReferenceDataSeeder`
 Model: `App\Models\Event`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `event_type_id` | `bigint unsigned` | FK → event_types |
@@ -351,7 +572,20 @@ Model: `App\Models\Event`
 Event team assignments.
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `event_id` | `bigint unsigned` | FK → events |
 | `user_id` | `bigint unsigned` | FK → users |
 | `role` | `varchar(50)` | `event_organizer`, `sports_manager`, or `team_manager` |
@@ -363,7 +597,20 @@ Event team assignments.
 Model: `App\Models\Sport` · Scoped to `event_id`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `event_id` | `bigint unsigned` | FK → events |
 | `name` | `varchar(255)` | NOT NULL |
@@ -380,7 +627,20 @@ Model: `App\Models\Sport` · Scoped to `event_id`
 Model: `App\Models\SportDiscipline`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `sport_id` | `bigint unsigned` | FK → sports |
 | `name` | `varchar(255)` | NOT NULL |
@@ -394,7 +654,20 @@ Model: `App\Models\SportDiscipline`
 Model: `App\Models\SportCategory`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `sport_discipline_id` | `bigint unsigned` | FK → sport_disciplines |
 | `name` | `varchar(255)` | NOT NULL |
@@ -413,7 +686,20 @@ Model: `App\Models\SportCategory`
 Model: `App\Models\SportDivision`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `sport_category_id` | `bigint unsigned` | FK → sport_categories |
 | `name` | `varchar(255)` | NOT NULL |
@@ -427,7 +713,20 @@ Model: `App\Models\SportDivision`
 Model: `App\Models\Athlete` · Scoped to `organization_id`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `user_id` | `bigint unsigned` | FK → users, NULLABLE |
@@ -447,7 +746,20 @@ Model: `App\Models\Athlete` · Scoped to `organization_id`
 Model: `App\Models\Registration` · Polymorphic `registrable` (athlete, team, official)
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `event_id` | `bigint unsigned` | FK → events |
 | `sport_id` | `bigint unsigned` | FK → sports |
@@ -473,7 +785,20 @@ Model: `App\Models\Team` · Scoped to `organization_id` (host tenant), `event_id
 > **Planned:** `event_participant_id` FK for competing unit (fakulti/negeri/negara). See [§9](#9-planned-tables--event-participants-refactor).
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `event_id` | `bigint unsigned` | FK → events |
@@ -492,7 +817,20 @@ Model: `App\Models\Team` · Scoped to `organization_id` (host tenant), `event_id
 Roster pivot between teams and athletes.
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `team_id` | `bigint unsigned` | FK → teams |
 | `athlete_id` | `bigint unsigned` | FK → athletes |
@@ -506,7 +844,20 @@ Roster pivot between teams and athletes.
 Model: `App\Models\Official` · Scoped to `organization_id`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `user_id` | `bigint unsigned` | FK → users, NULLABLE |
@@ -526,7 +877,20 @@ Event registration via polymorphic `registrations` (same workflow as athletes/te
 Model: `App\Models\Venue` · Scoped to `organization_id`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `name` | `varchar(255)` | NOT NULL |
@@ -544,7 +908,20 @@ Model: `App\Models\Venue` · Scoped to `organization_id`
 Model: `App\Models\Facility` · Child of `venues`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `venue_id` | `bigint unsigned` | FK → venues |
 | `name` | `varchar(255)` | NOT NULL |
@@ -560,7 +937,20 @@ Model: `App\Models\Facility` · Child of `venues`
 Pivot: attach org venues to events.
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `event_id` | `bigint unsigned` | FK → events |
 | `venue_id` | `bigint unsigned` | FK → venues |
@@ -574,7 +964,20 @@ Pivot: attach org venues to events.
 Pivot: link event venues to sports within an event.
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `event_id` | `bigint unsigned` | FK → events |
 | `sport_id` | `bigint unsigned` | FK → sports |
@@ -587,7 +990,20 @@ Pivot: link event venues to sports within an event.
 Global reference table (seeded). Model: `App\Models\CompetitionFormat`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `name` | `varchar(255)` | NOT NULL |
 | `slug` | `varchar(255)` | UNIQUE (`league`, `round_robin`, `knockout`, `group_stage`) |
@@ -599,7 +1015,20 @@ Global reference table (seeded). Model: `App\Models\CompetitionFormat`
 Model: `App\Models\Competition` · Scoped to `organization_id`, `event_id`, `sport_id`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `event_id` | `bigint unsigned` | FK → events |
@@ -618,7 +1047,20 @@ Model: `App\Models\Competition` · Scoped to `organization_id`, `event_id`, `spo
 Model: `App\Models\CompetitionGroup` (table `groups`) · For group-stage competitions
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `competition_id` | `bigint unsigned` | FK → competitions |
 | `name` | `varchar(255)` | NOT NULL |
@@ -632,7 +1074,20 @@ Model: `App\Models\CompetitionGroup` (table `groups`) · For group-stage competi
 Model: `App\Models\Fixture`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `competition_id` | `bigint unsigned` | FK → competitions |
 | `group_id` | `bigint unsigned` | FK → groups, NULLABLE |
@@ -645,7 +1100,20 @@ Model: `App\Models\Fixture`
 Model: `App\Models\MatchGame` (table `matches`)
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `fixture_id` | `bigint unsigned` | FK → fixtures |
 | `venue_id` | `bigint unsigned` | FK → venues, NULLABLE |
@@ -664,7 +1132,20 @@ Model: `App\Models\MatchGame` (table `matches`)
 Polymorphic participants (team or athlete). Model: `App\Models\MatchParticipant`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `match_id` | `bigint unsigned` | FK → matches |
 | `participant_type` | `varchar(255)` | NOT NULL |
@@ -679,7 +1160,20 @@ Polymorphic participants (team or athlete). Model: `App\Models\MatchParticipant`
 Model: `App\Models\MatchOfficial`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `match_id` | `bigint unsigned` | FK → matches |
 | `official_id` | `bigint unsigned` | FK → officials |
@@ -692,7 +1186,20 @@ Model: `App\Models\MatchOfficial`
 Model: `App\Models\Result` · One result per match
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `match_id` | `bigint unsigned` | FK → matches, UNIQUE |
 | `entered_by` | `bigint unsigned` | FK → users, NULLABLE |
@@ -711,7 +1218,20 @@ Migration: `2026_06_08_064824_create_result_appeals_table.php`
 Model: `App\Models\ResultAppeal` · Appeals against confirmed/published results
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `result_id` | `bigint unsigned` | FK → results |
@@ -732,7 +1252,20 @@ Migration: `2026_06_08_065249_create_competition_participants_table.php`
 Model: `App\Models\CompetitionParticipant` · Seeding, Swiss points, ladder rank
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `competition_id` | `bigint unsigned` | FK → competitions |
 | `participant_type` | `varchar` | Polymorphic type |
@@ -748,7 +1281,20 @@ Migration: `2026_06_08_065250_create_medal_ceremonies_table.php`
 Model: `App\Models\MedalCeremony`
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `organization_id` | `bigint unsigned` | FK → organizations |
 | `event_id` | `bigint unsigned` | FK → events |
@@ -762,7 +1308,20 @@ Model: `App\Models\MedalCeremony`
 ### Phase 3 column additions
 
 | Table | Column | Purpose |
-|-------|--------|---------|
+|-------|--------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering ||
 | `competitions` | `settings` JSON | Seeding, ranking rules, Swiss rounds, group advance count |
 | `sports` | `score_schema` JSON | Sport-specific score entry schema |
 | `matches` | `loser_advances_to_match_id`, `loser_advances_side`, `bracket_lane` | Double elimination progression |
@@ -772,7 +1331,20 @@ Model: `App\Models\MedalCeremony`
 Model: `App\Models\Ranking` · Polymorphic `rankable` (team or athlete)
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `competition_id` | `bigint unsigned` | FK → competitions |
 | `rankable_type` | `varchar(255)` | NOT NULL |
@@ -793,7 +1365,20 @@ Model: `App\Models\Ranking` · Polymorphic `rankable` (team or athlete)
 Model: `App\Models\Medal` · Polymorphic `medalable` (team or athlete)
 
 | Column | Type | Constraints |
-|--------|------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK |
 | `event_id` | `bigint unsigned` | FK → events |
 | `sport_id` | `bigint unsigned` | FK → sports |
@@ -815,7 +1400,33 @@ Model: `App\Models\Medal` · Polymorphic `medalable` (team or athlete)
 Competing unit registered for an event (fakulti, negeri, negara).
 
 | Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK | |
 | `organization_id` | `bigint unsigned` | FK → organizations | Host tenant |
 | `event_id` | `bigint unsigned` | FK → events | |
@@ -835,7 +1446,33 @@ Competing unit registered for an event (fakulti, negeri, negara).
 Participant declares which sports (and optional category/division) they enter — step 4 of canonical flow.
 
 | Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
+|--------|------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `id` | `bigint unsigned` | PK | |
 | `event_participant_id` | `bigint unsigned` | FK → event_participants | |
 | `sport_id` | `bigint unsigned` | FK → sports | |
@@ -853,7 +1490,20 @@ Participant declares which sports (and optional category/division) they enter �
 ### Implemented column additions (existing tables)
 
 | Table | Column | Purpose | Status |
-|-------|--------|---------|--------|
+|-------|--------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering ||--------|
 | `events` | `participant_unit_label` | UI copy: `faculty`, `state`, `country` | Implemented |
 | `events` | `edition_year` | Nominal session year for sorting | Implemented |
 | `events` | `cadence` | `annual`, `biennial`, `quadrennial`, `one_off` | Implemented |
@@ -873,7 +1523,20 @@ Participant declares which sports (and optional category/division) they enter �
 ## 11. Planned Tables — Phase 4 (Operations)
 
 | Table | Key Columns |
-|-------|-------------|
+|-------|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |----|
 | `accreditations` | `id`, `event_id`, `accreditable_type`, `accreditable_id`, `type`, `qr_code`, `status` |
 | `certificates` | `id`, `event_id`, `certifiable_type`, `certifiable_id`, `type`, `file_path` |
 | `announcements` | `id`, `organization_id`, `event_id`, `title`, `body`, `published_at` |
@@ -886,7 +1549,33 @@ Participant declares which sports (and optional category/division) they enter �
 ## 10. Indexing Strategy
 
 | Pattern | Example | Reason |
+|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
 |---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering ||## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering ||--------|
 | Tenant + status | `(organization_id, status)` | Filter active records per org |
 | Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
 | Event scope | `(event_id, sport_id)` | Event dashboard queries |
@@ -915,7 +1604,33 @@ $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 ### Current (`DatabaseSeeder`)
 
 | Account | Purpose |
-|---------|---------|
+|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering ||## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering ||
 | `test@example.com` | Test admin for `migrate:fresh --seed` in dev/CI |
 | `ahmadzaki@utem.edu.my` | **Project owner** — created manually; set `admin` via migration |
 
@@ -949,7 +1664,20 @@ php artisan tinker
 ## 14. Related Documents
 
 | Document | Link |
-|----------|------|
+|## 10. Indexing Strategy
+
+| Pattern | Example | Reason |
+|---------|---------|--------|
+| Tenant + status | `(organization_id, status)` | Filter active records per org |
+| Tenant + slug | `(organization_id, slug)` UNIQUE | URL lookup per org |
+| Event scope | `(event_id, sport_id)` | Event dashboard queries |
+| Match schedule | `(scheduled_at, venue_id)` | Conflict detection |
+| Audit timeline | `(organization_id, created_at)` | Audit log pagination |
+| Polymorphic | `(auditable_type, auditable_id)` | Audit lookups |
+| **Participant Lookup** | `(event_id, event_participant_id)` | Fast filter for contingent-specific views |
+| **Athlete Roster** | `(event_participant_id, sport_id)` | Quick roster retrieval per sport |
+| **Result Performance** | `(event_id, sport_category_id, results_value)` | Fast ranking calculation for medals |
+| **Fixture Timeline** | `(event_id, scheduled_at)` | Efficient calendar/timeline rendering |-|------|
 | Architecture | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Functional spec | [FUNCTIONAL_SPEC.md](FUNCTIONAL_SPEC.md) |
 | Roadmap | [ROADMAP.md](ROADMAP.md) |
